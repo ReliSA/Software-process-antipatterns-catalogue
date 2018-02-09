@@ -1,1 +1,1 @@
-# Software-process-antipatterns-catalogue
+# Software process antipatterns catalogue
