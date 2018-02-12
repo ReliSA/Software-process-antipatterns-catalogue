@@ -11,5 +11,8 @@ An idea that adding more resources (developers) to the project will increase pro
 ## Specific Projects
 No
 ## Related Anti-patterns
+|Anti-pattern  | Relation |
+|--|--|
+| [Nine Pregnant Women](Nine_Pregnant_Women.md) | more general derivative |
 ## Sources
 [[SIL'15]](References.md), [[RAP'12]](References.md), [[WIK'13]](References.md), [[LAP'05]](References.md), [[BRO'00]](References.md)
