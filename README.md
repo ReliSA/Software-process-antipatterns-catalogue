@@ -1,3 +1,3 @@
 # Software process antipatterns catalogue
-## [Antipatterns catalogue](Anti-patterns_catalogue.md)
+## [Antipatterns catalogue](Antipatterns_catalogue.md)
 ## [References](References.md)
