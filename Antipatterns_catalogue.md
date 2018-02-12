@@ -2,4 +2,4 @@
 ## B
 [Brooks' Law](catalogue/Brooks_Law.md)
 ## N
-[Nine Pregnant Women](catalog/Nine_Pregnant_Women.md)
+[Nine Pregnant Women](catalogue/Nine_Pregnant_Women.md)
