@@ -15,4 +15,4 @@ No
 |--|--|
 | [Nine Pregnant Women](Nine_Pregnant_Women.md) | more general derivative |
 ## Sources
-[[SIL'15]](References.md), [[RAP'12]](References.md), [[WIK'13]](References.md), [[LAP'05]](References.md), [[BRO'00]](References.md)
+[[SIL'15]](../References.md), [[RAP'12]](../References.md), [[WIK'13]](../References.md), [[LAP'05]](../References.md), [[BRO'00]](../References.md)

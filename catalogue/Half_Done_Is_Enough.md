@@ -1,4 +1,4 @@
-﻿# Half Done Is Enough
+# Half Done Is Enough
 **Also Known As:**
 ## Summary
 Major enhancements or changes are required to an existing deployed system with high technical debt, which exist because of management being overly focused on "visible" progress, i.e.: only increasing functionality matters and testing and maintenance is diminished or ignored.
@@ -12,4 +12,4 @@ Major enhancements or changes are required to an existing deployed system with h
 No
 ## Related Anti-patterns
 ## Sources
-[[CUN'10]](References.md)
+[[CUN'10]](../References.md)

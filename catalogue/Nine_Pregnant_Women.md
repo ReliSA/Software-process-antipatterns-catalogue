@@ -15,4 +15,4 @@ No
 |--|--|
 | [Brooks' Law](Brooks_Law.md) | more specific case |
 ## Sources
-[[SIL'15]](References.md), [[RAP'12]](References.md), [[WIK'13]](References.md), [[LAP'05]](References.md), [[BRO'00]](References.md), experience
+[[SIL'15]](../References.md), [[RAP'12]](../References.md), [[WIK'13]](../References.md), [[LAP'05]](../References.md), [[BRO'00]](../References.md), experience
