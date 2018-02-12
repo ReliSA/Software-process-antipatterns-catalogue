@@ -1,6 +1,8 @@
 # Antipatterns Catalogue
 ## B
 [Brooks' Law](catalogue/Brooks_Law.md)
+## C
+[Collective Procrastination](catalogue/Collective_Procrastination.md)
 ## H
 [Half Done Is Enough](catalogue/Half_Done_Is_Enough.md)
 ## L
