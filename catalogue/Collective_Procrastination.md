@@ -1,4 +1,4 @@
-﻿# Collective Procrastination
+# Collective Procrastination
 **Also Known As:**
 ## Summary
 The project team does not do much (or anything) until a deadline is approaching
@@ -11,6 +11,6 @@ No
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|
-| [Fire Drill](Fire_Drill.md) | specific cause of mgmt spending to much time on pre-development activities |
+| Fire Drill | specific cause of mgmt spending to much time on pre-development activities |
 ## Sources
 experience
