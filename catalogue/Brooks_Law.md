@@ -1,4 +1,4 @@
-﻿# Brooks' Law
+# Brooks' Law
 **Also Known As:** Size Isn’t Everything
 ## Summary
 An idea that adding more resources (developers) to the project will increase productivity, pace or quality results in project being overdue.
