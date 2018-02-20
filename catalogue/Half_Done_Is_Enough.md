@@ -1,3 +1,4 @@
+[Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Half Done Is Enough
 # Half Done Is Enough
 **Also Known As:**
 ## Summary
