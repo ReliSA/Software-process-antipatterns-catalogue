@@ -1,4 +1,4 @@
-# Collective Procrastination
+# Fire Drill
 **Also Known As:**
 ## Summary
 Prolonged Requirements and Analysis phases by management, who want to do them "just right". Then frantic "everything needs to be done yesterday" period when management finds out they wasted most of project's schedule.
