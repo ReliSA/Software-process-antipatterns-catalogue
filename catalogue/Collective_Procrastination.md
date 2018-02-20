@@ -11,6 +11,6 @@ No
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|
-| Fire Drill | specific cause of mgmt spending to much time on pre-development activities |
+| [Fire Drill](Fire_Drill.md) | specific cause of management spending to much time on pre-development activities |
 ## Sources
 experience

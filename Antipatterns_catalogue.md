@@ -3,6 +3,8 @@
 [Brooks' Law](catalogue/Brooks_Law.md)
 ## C
 [Collective Procrastination](catalogue/Collective_Procrastination.md)
+## F
+[Fire Drill](catalogue/Fire_Drill.md)
 ## H
 [Half Done Is Enough](catalogue/Half_Done_Is_Enough.md)
 ## L
