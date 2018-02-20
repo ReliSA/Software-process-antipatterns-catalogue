@@ -2,7 +2,7 @@
 # Nine Pregnant Women
 **Also Known As:** Size Isn’t Everything
 ## Summary
-An idea that adding more resources (developers) to the project will increase productivity, pace or quality has the opposite effect. As oppose to [Brooks' Law](Brooks_Law.md), the concern is not an overdue project, but slower pace and drop in productivity and quality in general. Therefore failure to meet mid-project milestones, release criteria, etc.
+An idea that adding more resources (developers) to the project will increase productivity, pace or quality has the opposite effect. As oppose to [Brooks' Law](Brooks_Law.md), the concern is not an overdue project, but slower pace and drop in productivity and quality in general. Therefore failure to meet mid-project milestones, release criteria, etc. The name is derived from the colloquial expression "nine women can't make a baby in one month".
 ## Symptoms
  - adding new people mid project
  - the overall productivity stays the same (productivity per capita drops) or drops
