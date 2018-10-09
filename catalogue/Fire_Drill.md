@@ -1,15 +1,17 @@
 [Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Fire Drill
 # Fire Drill
 **Also Known As:**
+Analysis Paralysis
 ## Summary
-Prolonged Requirements and Analysis phases by management, who want to do them "just right". Then frantic "everything needs to be done yesterday" period when management finds out they wasted most of project's schedule.
+Requirements and Analysis phases prolonged and consuming disproportionate amount of resources (because management want to do them "right"), then frantic "everything needs to be done yesterday" period to finish on time (when management finds out they wasted most of project's schedule and resources on analysis).
 ## Symptoms
  - rock-edge burndown (especially when viewing implementation tasks only)
- - for too long only activities connected to requirements, anylsis and planning occur with nothing designed or implemented
+ - long period at project start where activities connected to requirements, analysis and planning prevale, and design and implementation activities are rare
  - only analytical or documentational artefacts for a long time
- - sudden increase in development efforts with little to none testing and poor quality
- - many bugs, poor documantation of progress and product
- - stark contrast between interlevel communication in project hierarchy (management - developers) during the first phase (close to silence) and after realizating the problem (panic and loud noise)
+ - relatively short period towards project end with sudden increase in development efforts 
+ - little testing/QA and project progress tracking activities during development period
+ - final product with poor code quality, many open bug reports, poor or patchy documentation 
+ - stark contrast between interlevel communication in project hierarchy (management - developers) during the first period (close to silence) and after realizating the problem (panic and loud noise)
 ## Specific Projects
 No
 ## Related Anti-patterns
