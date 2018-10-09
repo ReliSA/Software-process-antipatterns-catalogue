@@ -2,13 +2,13 @@
 # Brooks' Law
 **Also Known As:** Size Isn’t Everything
 ## Summary
-An idea that adding more resources (developers) to the project will increase productivity, pace or quality results in project being overdue.
+Project becomes late (overdue) due to following the idea that adding more resources (developers) to the project will increase productivity, pace or quality.
 ## Symptoms
- - adding new people mid project
- - the overall productivity stays the same (productivity per capita drops) or drops
+ - new people added mid-project
+ - the overall productivity stays the same or drops, productivity per capita always drops
  - higher bug rate per developer, lower feature rate per developer, higher duplicate ratio
- - higher communication overhead due to new people getting acquainted with the project
- - failure to meet the project delivery date
+ - more ticket comments, email messages per capita (signs of higher communication overhead due to new people getting acquainted with and communicating during the project)
+ - failure to meet the project delivery date, possibly also interim deadlines
 ## Specific Projects
 No
 ## Related Anti-patterns
