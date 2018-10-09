@@ -13,6 +13,6 @@
 ## N
 [Nine Pregnant Women](catalogue/Nine_Pregnant_Women.md)
 ## S
-Size Isn’t Everything -- see [Brooks' Law](catalogue/Brooks_Law.md)
+Size Isn’t Everything -- _see [Brooks' Law](catalogue/Brooks_Law.md)_
 
 [Stovepipe Or Silos](catalogue/Stovepipe_Or_Silos.md)
