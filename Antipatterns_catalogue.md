@@ -11,6 +11,8 @@
 ## L
 [Lone-Wolf](catalogue/Lone-Wolf.md)
 ## N
+[Net Negative Producing Programmer](catalogue/Net_Negative_Producing_Programmer.md)
+
 [Nine Pregnant Women](catalogue/Nine_Pregnant_Women.md)
 ## S
 Size Isn’t Everything -- _see [Brooks' Law](catalogue/Brooks_Law.md)_
