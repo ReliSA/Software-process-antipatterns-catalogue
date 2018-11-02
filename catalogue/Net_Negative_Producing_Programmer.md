@@ -10,6 +10,6 @@ No
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|
-| [Lone Wolf](Lone_Wolf.md) | NNPP person might be a Lone Wolf |
+| [Lone Wolf](Lone-Wolf.md) | NNPP person might be a Lone Wolf |
 ## Sources
 TODO
