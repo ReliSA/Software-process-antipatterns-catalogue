@@ -9,8 +9,8 @@ Major enhancements or changes are required to an existing deployed system with h
  - rising technical debt
  - project is slipping - slower feature rate, higher bug rate, postponing deadlines
  - prolonged periods of bugfixing and other maintenance necessary
-## Specific Projects
-No
+## Specific To
+
 ## Related Anti-patterns
 ## Sources
 [[CUN'10]](../References.md)

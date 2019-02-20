@@ -10,8 +10,8 @@ Prolonged Requirements and Analysis phases by management, who want to do them "j
  - sudden increase in development efforts with little to none testing and poor quality
  - many bugs, poor documantation of progress and product
  - stark contrast between interlevel communication in project hierarchy (management - developers) during the first phase (close to silence) and after realizating the problem (panic and loud noise)
-## Specific Projects
-No
+## Specific To
+
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|

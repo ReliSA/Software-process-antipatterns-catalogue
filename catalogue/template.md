@@ -7,7 +7,7 @@ A short summary of the AP
  - first symptom
  - second symptom
  - ...
-## Specific Projects
+## Specific To
 types of projects the AP applies to (if exist) separated by comma (e.g. Agile, brown-field projects, open source projects, etc.)
 ## Related Anti-patterns
 |Anti-pattern  | Relation |

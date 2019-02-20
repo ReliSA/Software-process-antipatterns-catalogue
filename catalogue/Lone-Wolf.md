@@ -8,8 +8,8 @@ A person disregarding other contributors, decisions made, plans and communicatio
  - frequently doing thing out of order (not yet planned or planned for distant future) and without regarding priorities (i.e. lower first)
  - frequently duplicating someone else's work
  - not paying enough attention to the goings on in the project
-## Specific Projects
-No
+## Specific To
+
 ## Related Anti-patterns
 ## Sources
 [[TAM'17]](../References.md)

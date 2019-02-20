@@ -9,8 +9,8 @@ An idea that adding more resources (developers) to the project will increase pro
  - higher bug rate per developer, lower feature rate per developer, higher duplicate ratio
  - higher communication overhead due to new people getting acquainted with the project
  - underdelivering or overdue releases, milestones postponed 
-## Specific Projects
-No
+## Specific To
+
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|
