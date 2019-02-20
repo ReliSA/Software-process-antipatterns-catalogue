@@ -2,11 +2,17 @@
 # Collective Procrastination
 **Also Known As:**
 ## Summary
-The project team does not do much (or anything) until a deadline is approaching
+The project team does not do much (or anything) until a deadline is approaching, then rushes to finish off everything.
 ## Symptoms
  - rock-edge (one occurrence spanning the whole project) or staircase (repeated occurence usually coinciding with a meeting, milestone or release date) burndown
  - progress stalled for a time, then sudden increase
  - a dramatic and fast paced (quasi-immediate) burst of issues solved prefaced by a stagnation period
+### Example
+
+![burndown chart showing Collective Procrastination anti-pattern](Collective_Procrastination_-_burndown_example.png)
+
+The anti-pattern occurs on 10-13th April.
+
 ## Specific To
 
 ## Related Anti-patterns

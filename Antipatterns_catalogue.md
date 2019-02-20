@@ -1,7 +1,6 @@
 [Home](README.md) > Catalogue
 # Antipatterns Catalogue
 ## A
-*Absent Artifact
 Absentee Manager
 All You Have Is a Hammer
 An Athena
@@ -11,7 +10,6 @@ Appointed Team
 Architects Don't Code
 Architects Play Golf
 ## B
-*Backlog Not Deep
 Bad Management By Metrics
 Band Aid
 Bicycle Shed
@@ -32,7 +30,6 @@ Business As Usual
 Bystander Apathy
 ## C
 Cage Match Negotiator
-*Camel-Hump Burndown
 Car Park Syndrome
 Carbon Copy His Manager
 Cargo Cult
@@ -59,7 +56,6 @@ Design By Committee
 Detailitis Plan
 Discordant Reward Mechanisms
 DLL Hell
-*Done It? Tag It!
 Doppelganger
 Dragon Slaying
 Dry Waterhole
@@ -72,7 +68,6 @@ Emperor’s New Clothes
 Empire Building
 Escalation Of Commitment
 Every Fool Their Own Tool
-*Exhausting Laziness
 Extension Conflict
 ## F
 False Economy
@@ -108,7 +103,6 @@ Improbability Factor
 Inappropriate Technical Objective
 Indifferent Specialist
 Inflexible Plan
-*Insufficient Prioritization
 Intellectual Violence
 Invented Here
 Invisible Progress
@@ -141,7 +135,7 @@ Mushroom Management
 Myopic Delivery
 Mythical Man Month
 ## N
-Net Negative Producing Programmer
+[Net Negative Producing Programmer](catalogue/Net_Negative_Producing_Programmer.md)
 [Nine Pregnant Women](catalogue/Nine_Pregnant_Women.md)
 Ninety-Ninety Rule
 No Sprint Retrospective
@@ -150,11 +144,8 @@ Not Invented Here
 ## O
 Online Backstabber
 One Trick Pony
-*One Type Fits All
 Organisational Silo
 Ostrich
-*Over-/Underestimation
-*Overdue Work
 Overengineering
 ## P
 Pairing Prison
@@ -164,9 +155,6 @@ Peter Principle
 Plate Spinning
 Plug Compatible Interchangeable Engineers
 PMs Who Write Specs
-*Poor SCM Traceability
-*Poor Ticket Workflow
-*Poor Work Decomposition
 Premature Optimization
 Process Disintegration
 Process Mismatch
@@ -181,8 +169,8 @@ Radio-Silence
 Requirement Creep
 Rising Upstart
 Road To Nowhere
-*Rogue Tasks
 ## S
+<<<<<<< HEAD
 Scapegoat
 Scope Creep
 Seagull Management
@@ -192,7 +180,7 @@ Semi-Functional Teams
 Shaken But Not Stirred
 Shoot The Messenger
 Silver Bullet
-[Size Isn’t Everything](catalogue/Brooks_Law.md)
+Size Isn’t Everything -- _see [Brooks' Law](catalogue/Brooks_Law.md)
 Smoke And Mirrors
 Software Merger
 Spammer
@@ -211,15 +199,12 @@ The Customer
 The Customers Are Idiots
 The Domino Effect
 The Feud
-*The Flash
 The Quick Fix
 The Process Is The Deliverable
 They Understood Me
 Third-World Information Systems Troubles
 Three Headed Knight
 Thrown Over The Wall
-*Ticket QA Potemkin
-*To Infinity And Beyond
 Too Long Sprint
 Train The Trainer
 True Believer
@@ -227,8 +212,6 @@ Turf Wars
 Typecasting
 ## U
 Ultimate Weapon
-*Unbalanced Workload
-*Unfinished Business
 Unjustified Criticizer
 Unknown Poster
 Unordered Product Backlog
@@ -245,8 +228,6 @@ Warm Bodies
 Waterfall
 We Are Idiots
 Weekend Hackathons
-*What Are We Doing Again?
-*What Did I Do?
 Wild Goose Chase
 Work Estimates Given To Teams
 ## Y
