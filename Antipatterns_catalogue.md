@@ -45,7 +45,7 @@ Broken Iron Triangle
 
 [Brooks' Law](catalogue/Brooks_Law.md)
 
-Brownie's Works
+[Brownie's Works](catalogue/Brownies_Works.md)
 
 Buff And Shine A Rusty Car
 
