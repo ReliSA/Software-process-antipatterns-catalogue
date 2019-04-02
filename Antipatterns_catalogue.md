@@ -13,7 +13,7 @@ Anybody Syndrome
 
 Appointed Team
 
-Architects Don't Code
+[Architects Don't Code](catalogue/Architects_Dont_Code.md)
 
 Architects Play Golf
 ## B
