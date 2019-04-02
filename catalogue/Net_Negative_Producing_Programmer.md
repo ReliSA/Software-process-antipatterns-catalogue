@@ -5,8 +5,8 @@
 Person who contributes more trouble than benefits.
 ## Symptoms
  - TODO
-## Specific Projects
-No
+## Specific To
+
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|

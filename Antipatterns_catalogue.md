@@ -323,7 +323,7 @@ Shoot The Messenger
 
 Silver Bullet
 
-Size Isn’t Everything -- _see [Brooks' Law](catalogue/Brooks_Law.md)
+Size Isn’t Everything - _see [Brooks' Law](catalogue/Brooks_Law.md)_
 
 Smoke And Mirrors
 
