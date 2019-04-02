@@ -48,3 +48,5 @@
 [AMB'14-2] Ambler, S. W. (2014). The "Change Prevention Process" Anti-Pattern [online]. http://www.ambysoft.com/essays/changePrevention.html.
 
 [HEB'12] Hebig, R., Gabrysiak, G., & Giese, H. (2012, June). Towards patterns for MDE-related processes to detect and handle changeability risks. In *Proceedings of the International Conference on Software and System Process* (pp. 38-47). IEEE Press.
+
+[COP'04] Coplien, J. O., & Harrison, N. B. (2004). Organizational patterns of agile software development. Prentice-Hall, Inc..

@@ -67,6 +67,8 @@ Cash Cow
 
 Change Prevention Process
 
+[Collective Ownership](catalogue/Collective_Ownership.md)
+
 [Collective Procrastination](catalogue/Collective_Procrastination.md)
 
 Confusion Of Objectives
