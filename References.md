@@ -15,7 +15,7 @@
 
 [BRO'98] Brown, W. H., Malveau, R. C., McCormick, H. W., & Mowbray, T. J. (1998). *AntiPatterns: refactoring software, architectures, and projects in crisis*. John Wiley & Sons, Inc..
 
-[KUR'04] Kuranuki, Y., & Hiranabe, K. (2004, June). Antipractices: Antipatterns for xp practices. In *Agile Development Conference, 2004* (pp. 83-86). IEEE.
+[KUR'04] Kuranuki, Y., & Hiranabe, K. (2004, June). Antipractices: Antipatterns for XP practices. In *Agile Development Conference, 2004* (pp. 83-86). IEEE.
 
 [AMB'14] Ambler, S. W. (2014). Common Role Anti-Patterns in Online Discussion Forums [online]. http://www.ambysoft.com/essays/discussionListAntiPatterns.html.
 
@@ -23,7 +23,7 @@
 
 [ELO'16] Eloranta, V. P., Koskimies, K., & Mikkonen, T. (2016). Exploring ScrumBut—An empirical study of Scrum anti-patterns. *Information and Software Technology*, 74, 194-203.
 
-[RAP'12] Raptopoulou, C., Berki, E., Poranen, T., Stamelos, I., & Aggelis, L. (2012). Management anti-patterns in finnish software industry. In *Proceedings of the Software Quality Management* (pp. 173-187).
+[RAP'12] Raptopoulou, C., Berki, E., Poranen, T., Stamelos, I., & Aggelis, L. (2012). Management anti-patterns in Finnish software industry. In *Proceedings of the Software Quality Management* (pp. 173-187).
 
 [AYD'16] Aydinli, D., Berki, E., Poranen, T., & Stamelos, I. (2016, October). Management anti-patterns in IT innovation projects. In *Proceedings of the 20th International Academic Mindtrek Conference* (pp. 1-10). ACM. 
 
