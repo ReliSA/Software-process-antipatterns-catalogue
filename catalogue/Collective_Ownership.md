@@ -1,5 +1,5 @@
-[Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Collective Ownership (as anti-pattern)
-# Collective Ownership
+[Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Collective Ownership 
+# Collective Ownership (as anti-pattern)
 **Also Known As:**
 ## Summary
 System modules are developed in quasi-equal measure by many developers. Therefore no-one has the responsibility for and complete understanding of the module's functionality and implementation details. This makes precise, systematic and maintainable changes harder or even impossible.
