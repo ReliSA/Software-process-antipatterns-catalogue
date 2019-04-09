@@ -2,11 +2,15 @@
 # Collective Procrastination
 **Also Known As:**
 ## Summary
-The project team does not do much (or anything) until a deadline is approaching, then rushes to finish off everything.
+The team needs to handle several commitments in parallel, so it focuses on most pressing issues (from other commitments) until the iteration commitment becomes pressing, then rushes to finish off the iteration.  The bad consequence is that from the outside, actual status of work done is not known during the iteration which hinders planning and problem solving.
+
+(Alternative cause with the same symptoms and consequences: Team wants reduce the administrative overhead of reporting time spent on tasks, so it delays reporting until it becomes a pressing issue. Additional bad consequence is that from the inside, the data reported does not correctly reflect reality.)
+
 ## Symptoms
  - rock-edge (one occurrence spanning the whole project) or staircase (repeated occurence usually coinciding with a meeting, milestone or release date) burndown
  - progress stalled for a time, then sudden increase
  - a dramatic and fast paced (quasi-immediate) burst of issues solved prefaced by a stagnation period
+ 
 ### Example
 
 ![burndown chart showing Collective Procrastination anti-pattern](Collective_Procrastination_-_burndown_example.png)
