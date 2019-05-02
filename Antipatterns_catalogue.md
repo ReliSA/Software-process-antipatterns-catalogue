@@ -176,7 +176,7 @@ Heir Apparent
 
 Hero Culture
 
-Hidden Requirements
+[Hidden Requirements](catalogue/Hidden_Requirements.md)
 
 Hours In Progress Monitoring
 
@@ -202,7 +202,7 @@ Invented Here
 
 Invisible Progress
 
-Irrational Management
+[Irrational Management](catalogue/Irrational_Management.md)
 
 It's Not Rocket Science
 ## J
@@ -376,7 +376,7 @@ Third-World Information Systems Troubles
 
 Three Headed Knight
 
-Thrown Over The Wall
+[Thrown Over The Wall](catalogue/Thrown_Over_The_Wall.md)
 
 Too Long Sprint
 
