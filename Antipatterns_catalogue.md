@@ -1,7 +1,8 @@
 [Home](README.md) > Catalogue
 # Antipatterns Catalogue
 ## A
-Absentee Manager
+
+[Absentee Manager](catalogue/Absentee_Manager.md)
 
 All You Have Is a Hammer
 
