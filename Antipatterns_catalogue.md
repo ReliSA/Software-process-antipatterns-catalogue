@@ -1,7 +1,7 @@
 [Home](README.md) > Catalogue
 # Antipatterns Catalogue
 
-[Template](Template.md) for new anti-pattern contents.
+[Template](catalogue/Template.md) for new anti-pattern contents.
 
 
 ## A
