@@ -12,7 +12,7 @@ All You Have Is a Hammer
 
 An Athena
 
-Analysis Paralysis
+[Analysis Paralysis](catalogue/Analysis_Paralysis.md)
 
 Anybody Syndrome
 
@@ -24,7 +24,7 @@ Architects Play Golf
 ## B
 Bad Management By Metrics
 
-Band Aid
+[Band Aid](catalogue/Band_Aid.md)
 
 Bicycle Shed
 
@@ -40,7 +40,7 @@ Blamer
 
 Bleeding Edge
 
-Blowhard Jamboree
+[Blowhard Jamboree](catalogue/Blowhard_Jamboree.md)
 
 Born Again Developer
 
@@ -64,7 +64,7 @@ Car Park Syndrome
 
 Carbon Copy His Manager
 
-Cargo Cult
+[Cargo Cult](catalogue/Cargo_Cult.md)
 
 Cart Before The Horse
 
