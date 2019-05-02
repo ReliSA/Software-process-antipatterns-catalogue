@@ -1,4 +1,4 @@
-[Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > MODIFY___Antipattern_Name___MODIFY
+[Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Antipattern Name !!!MODIFY_THIS!!!
 
 
 # The Antipattern Name
