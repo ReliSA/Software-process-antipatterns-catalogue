@@ -1,5 +1,9 @@
 [Home](README.md) > Catalogue
 # Antipatterns Catalogue
+
+[Template](Template.md) for new anti-pattern contents.
+
+
 ## A
 
 [Absentee Manager](catalogue/Absentee_Manager.md)
