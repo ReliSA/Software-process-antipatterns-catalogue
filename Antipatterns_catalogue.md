@@ -96,7 +96,7 @@ Customer Product Owner
 ## D
 Deadwood
 
-Death By Planning
+[Death By Planning](catalogue/Death_By_Planning.md)
 
 Death March
 
@@ -106,7 +106,7 @@ Dependency Hell
 
 Design By Committee
 
-Detailitis Plan
+[Detailitis Plan](catalogue/Death_By_Planning.md)
 
 Discordant Reward Mechanisms
 
@@ -136,7 +136,7 @@ Every Fool Their Own Tool
 
 Extension Conflict
 ## F
-False Economy
+[False Economy](catalogue/False_Economy.md)
 
 False Surrogate Endpoint
 
@@ -406,11 +406,11 @@ Vendor Lock-In
 
 Vietnam War
 
-Viewgraph Engineering
+[Viewgraph Engineering](catalogue/Viewgraph_Engineering.md)
 
 Visibility Gets You Shot
 ## W
-Warm Bodies
+[Warm Bodies](catalogue/Warm_Bodies.md)
 
 Waterfall
 

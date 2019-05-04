@@ -3,7 +3,7 @@
 
 # Thrown Over The Wall
 
-**Also Known As:** n/a
+**Also Known As:** Throw It over the Wall
 
 
 ## Summary
@@ -23,8 +23,15 @@ n/a
 
 |Anti-pattern  | Relation |
 |--|--|
-| Stovepipes Or Silos | common org context |
+| [Stovepipes or Silos](Stovepipe_Or_Silos.md) | common org context |
+| [Collective Ownership](Collective_Ownership.md) | opposite |
+
+## Notes
+
+The semantics of the pattern differs slightly between sources.  In [[CUN'13]] the key problem is that each role in development process creates its artefacts independently and passes them on to other roles without discussion and coordination.  [[BRO'98]] is more concerned with the internal documentation (guidelines etc.) being used formally, without actually understanding their proper purpose and intent.  
+
+Though different in focus, the two descriptions share the "lack of communication about an artifact's purpose and content, leading to their mis-interpretation and improper use" as the underlying issue.  This is at the core of the description we use here.
 
 ## Sources
 
-[[BRO'98]](../References.md), [[CUN'13]](../References.md)
+[[BRO'98]](../References.md), [[CUN'13]](../References.md) -- [ThrownOverTheWall](http://wiki.c2.com/?ThrownOverTheWall)

@@ -13,7 +13,9 @@ The project manager strive for completeness and perfection in the analysis phase
 
 ## Symptoms
 
- - TBD
+ - time spent reported on analysis and design activities much higher than on development activities, late in the project
+ - analysis-related artefacts numerous and/or big
+ - analysis-related artefacts frequently updated and new ones created late in the project
 
 ## Specific To
 
@@ -26,4 +28,4 @@ Especially waterfall projects
 
 ## Sources
 
-[[[CUN'13]](../References.md), [[[BRO'98]](../References.md)
+[[[CUN'13]](../References.md) -- [AnalysisParalysis](http://wiki.c2.com/?AnalysisParalysis), [[[BRO'98]](../References.md)
