@@ -8,7 +8,7 @@
 
 ## Summary
 
-A short summary of the AP
+A short summary of the anti-pattern
 
 
 ## Symptoms
@@ -19,7 +19,7 @@ A short summary of the AP
 
 ## Specific To
 
-types of projects the AP applies to (if exist) separated by comma (e.g. Agile, brown-field projects, open source projects, etc.)
+types of projects the AP applies to (if exist) separated by comma (e.g. Agile, brown-field projects, open source projects, etc.), or "any" in case the anti-pattern is methodology agnostic
 
 ## Related Anti-patterns
 
@@ -29,4 +29,4 @@ types of projects the AP applies to (if exist) separated by comma (e.g. Agile, b
 
 ## Sources
 
-shortcuts for references in References.md (with link for each to that file) and/or the word "experience" separated by comma; e.g. [[[LAP'05]](../References.md)
+shortcuts for references in References.md (with link for each to that file) and/or the word "experience" separated by comma; e.g. [[LAP'05]](../References.md)
