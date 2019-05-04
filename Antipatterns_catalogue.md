@@ -106,7 +106,7 @@ Dependency Hell
 
 Design By Committee
 
-[Detailitis Plan](catalogue/Death_By_Planning.md)
+Detailitis Plan -- _see [Death By Planning](catalogue/Death_By_Planning.md)_
 
 Discordant Reward Mechanisms
 
