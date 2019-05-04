@@ -29,4 +29,4 @@ Especially waterfall projects
 
 ## Sources
 
-[[[CUN'13]](../References.md) -- [AnalysisParalysis](http://wiki.c2.com/?AnalysisParalysis), [[[BRO'98]](../References.md)
+[[CUN'13]](../References.md) -- [AnalysisParalysis](http://wiki.c2.com/?AnalysisParalysis), [[BRO'98]](../References.md)
