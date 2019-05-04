@@ -18,13 +18,13 @@ Expensive development (or similar) staff being slowed down by the inadequacies o
 
 ## Specific To
 
-n/a
+any
 
 ## Related Anti-patterns
 
 |Anti-pattern  | Relation |
 |--|--|
-| [Half Done Is Enough](Half_Done_Is_Enough.md) | opposite case |
+| [Half Done Is Enough](Half_Done_Is_Enough.md) | opposite case (?) |
 
 ## Sources
 
