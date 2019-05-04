@@ -8,7 +8,7 @@
 
 ## Summary
 
-Software project is staffed with too many programmers, many of which (the warm bodies) with inadequate skills and productivity levels hired perhaps to meet staff size objectives or as a "solution" to speed-up a late project.  Exceptionally productive programmers become frustrated, partly because they spend time fixing the damage of the warm bodies.
+Software project is staffed with too many programmers, many of which (the warm bodies) have inadequate skills and productivity levels and were hired perhaps to meet staff size objectives or as a "solution" to speed-up a late project.  Exceptionally productive programmers become frustrated, partly because they spend time fixing the damage of the warm bodies.
 
 
 ## Symptoms
@@ -28,6 +28,7 @@ any
 |--|--|
 | [Net Negative Producing Programmer](Net_Negative_Producing_Programmer.md) | extreme case of a warm body |
 | Never Fire Anyone ([C2 wiki](http://wiki.c2.com/?NeverFireAnyone) | one source of warm bodies |
+| [Brooks' Law](Brooks_Law.md) | one source of warm bodies |
 
 ## Notes
 
