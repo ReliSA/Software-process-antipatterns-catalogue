@@ -8,7 +8,7 @@
 
 ## Summary
 
-There is a deep-rooted problem in a company/project that will cause the company/project to fail unless addressed. The person(s) solving the problem wants the solution to be quick and painless for the majority or satisfy the "pointy haired bosses".  The workaround solution gives the company/project a new gloss when really nothing has changed.
+There is a deep-rooted problem in a company/project that will cause the company/project to fail unless addressed. The person(s) solving the problem wants the solution to be quick and painless for the majority or to satisfy the "pointy haired bosses".  The workaround solution gives the company/project a new gloss when really nothing has changed.
 
 
 ## Symptoms
@@ -17,14 +17,14 @@ There is a deep-rooted problem in a company/project that will cause the company/
 
 ## Specific To
 
-n/a
+any
 
 ## Related Anti-patterns
 
 |Anti-pattern  | Relation |
 |--|--|
 |Emperor’s New Clothes| TBD |
-|Thrown Over The Wall| TBD |
+|[Thrown Over The Wall](Thrown_Over_The_Wall.md)| a Band Aid can be Thrown Over The Wall |
 
 ## Sources
 
