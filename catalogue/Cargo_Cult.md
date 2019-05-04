@@ -17,14 +17,14 @@ A project which is far too visible is about to melt down. Much criticism is dire
 
 ## Specific To
 
-n/a
+any
 
 ## Related Anti-patterns
 
 |Anti-pattern  | Relation |
 |--|--|
-|Scapegoat| TBD |
+|Scapegoat| one case of Cargo Cult solution |
 
 ## Sources
 
-[[[CUN'13]](../References.md)
+[[CUN'13]](../References.md)
