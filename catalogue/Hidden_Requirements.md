@@ -8,16 +8,18 @@
 
 ## Summary
 
-System requirements are not adequately documented, either through carelessness, ignorance, or malice.  As a result, different assumptions about design requirements are made among some team members.
+System requirements are not adequately documented, either through carelessness, ignorance, or malice.  As a result, different assumptions about system functionalities or design aspects are made among some team members.
 
 
 ## Symptoms
 
- - TBD
+ - lack of requirements-type artifacts
+ - escalations from an operational system, indicating significant feature is missing or incorrectly implemented
+ - heavy, architectural refactorings late in development project
 
 ## Specific To
 
-n/a
+any
 
 ## Related Anti-patterns
 
@@ -27,4 +29,4 @@ n/a
 
 ## Sources
 
-[[[CUN'13]](../References.md)
+[[CUN'13]](../References.md)
