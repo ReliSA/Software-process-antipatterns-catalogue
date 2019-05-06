@@ -62,7 +62,7 @@ Cage Match Negotiator
 
 Car Park Syndrome
 
-Carbon Copy His Manager
+[Carbon Copy His Manager](catalogue/Carbon_Copy_His_Manager.md)
 
 [Cargo Cult](catalogue/Cargo_Cult.md)
 
