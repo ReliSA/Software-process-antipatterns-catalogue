@@ -32,7 +32,7 @@ Big Requirements Documentation
 
 Black-Cloud
 
-Blame Storming
+[Blame Storming](catalogue/Blame_Storming.md)
 
 Blame The Messenger
 
