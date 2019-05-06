@@ -76,7 +76,7 @@ Change Prevention Process
 
 [Collective Procrastination](catalogue/Collective_Procrastination.md)
 
-Confusion Of Objectives
+[Confusion Of Objectives](catalogue/Confusion_Of_Objectives.md)
 
 Copy And Paste Programming
 
