@@ -16,7 +16,7 @@ All You Have Is a Hammer
 
 Anybody Syndrome
 
-Appointed Team
+[Appointed Team](catalogue/Appointed_Team.md)
 
 [Architects Don't Code](catalogue/Architects_Dont_Code.md)
 
