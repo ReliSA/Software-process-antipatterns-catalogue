@@ -26,14 +26,13 @@ any
 
 |Anti-pattern  | Relation |
 |--|--|
-| [Net Negative Producing Programmer](Net_Negative_Producing_Programmer.md) | extreme case of a warm body |
-| Never Fire Anyone ([C2 wiki](http://wiki.c2.com/?NeverFireAnyone) | one source of warm bodies |
-| [Brooks' Law](Brooks_Law.md) | one source of warm bodies |
+| [Brooks' Law](Brooks_Law.md) | one source of Warm Bodies |
+| [Net Negative Producing Programmer](Net_Negative_Producing_Programmer.md) | extreme case of a Warm Body |
 
 ## Notes
 
-The description in [CUN'13] and the full mini-AntiPattern description in [BRO'98] (taken from there) is rather unclear, focuses on staff size and differences in programmer productivity, does not explain what "warm body" actually is.  The NeverFireAnyone anti-pattern in [CUN'13] actually explains this, to some extent.
+The description in [CUN'13] and the full mini-AntiPattern description in [BRO'98] (taken from there) is rather unclear, focuses on staff size and differences in programmer productivity, does not explain what "warm body" actually is.  The [Never Fire Anyone](http://wiki.c2.com/?NeverFireAnyone) anti-pattern actually explains this, to some extent.
 
 ## Sources
 
-[[CUN'13]](../References.md)
+[[CUN'13]](../References.md), [[BRO'98]](../References.md)

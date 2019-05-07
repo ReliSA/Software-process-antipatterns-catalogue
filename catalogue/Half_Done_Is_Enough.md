@@ -11,5 +11,8 @@ Project activities overly focused on "visible" progress by management decision, 
 ## Specific To
 
 ## Related Anti-patterns
+|Anti-pattern  | Relation |
+|--|--|
+| [False Economy](False_Economy.md) | opposite case (?) |
 ## Sources
 [[CUN'10]](../References.md)

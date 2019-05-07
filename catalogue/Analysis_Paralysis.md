@@ -26,6 +26,8 @@ Especially waterfall projects
 | Anti-pattern  | Relation |
 |--|--|
 | Big Design Up Front | general form |
+| [Death By Planning](Death_By_Planning.md) | similar in kind (primary activities rather than overhead) |
+| [Viewgraph Engineering](Viewgraph_Engineering.md) | similar in kind (documents or viewgraphs produced by developers instead of analysis activities) |
 
 ## Sources
 

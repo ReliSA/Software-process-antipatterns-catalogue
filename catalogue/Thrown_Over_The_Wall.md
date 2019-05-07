@@ -23,8 +23,10 @@ n/a
 
 |Anti-pattern  | Relation |
 |--|--|
-| [Stovepipes or Silos](Stovepipe_Or_Silos.md) | common org context |
+| [Band Aid](Band_Aid.md) | TBD |
 | [Collective Ownership](Collective_Ownership.md) | opposite |
+| [Emperor's New Clothes](Emperors_New_Clothes.md) | potential result |
+| [Stovepipes or Silos](Stovepipe_Or_Silos.md) | common org context |
 
 ## Notes
 

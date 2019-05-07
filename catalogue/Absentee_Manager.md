@@ -18,4 +18,4 @@ A manager who engages in avoidance behavior or is invisible for long time period
 
 ## Sources
 
-[[[LAP'05]](../References.md)
+[[LAP'05]](../References.md)

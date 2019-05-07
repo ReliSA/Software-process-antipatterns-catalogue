@@ -10,6 +10,8 @@ Person who contributes more trouble than benefits.
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|
-| [Lone Wolf](Lone-Wolf.md) | NNPP person might be a Lone Wolf |
+| [Brook's Law](Brooks_Law.md) | TBD |
+| [Lone-Wolf](Lone-Wolf.md) | NNPP person might be a Lone Wolf |
+| [Warm Bodies](Warm_Bodies.md) | NNPP can be a source of Warm Bodies |
 ## Sources
 TODO

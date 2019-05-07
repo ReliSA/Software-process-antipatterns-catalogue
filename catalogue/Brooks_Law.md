@@ -15,5 +15,6 @@ Project becomes late (overdue) due to following the idea that adding more resour
 |Anti-pattern  | Relation |
 |--|--|
 | [Nine Pregnant Women](Nine_Pregnant_Women.md) | more general derivative |
+| [Warm Bodies](Warm_Bodies.md) | Brook's Law can be a source of Warm Bodies |
 ## Sources
 [[SIL'15]](../References.md), [[RAP'12]](../References.md), [[WIK'13]](../References.md), [[LAP'05]](../References.md), [[BRO'00]](../References.md)

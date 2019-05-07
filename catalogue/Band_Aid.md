@@ -23,8 +23,8 @@ any
 
 |Anti-pattern  | Relation |
 |--|--|
-|Emperor’s New Clothes| TBD |
-|[Thrown Over The Wall](Thrown_Over_The_Wall.md)| a Band Aid can be Thrown Over The Wall |
+| [Emperor's New Clothes](Emperors_New_Clothes.md) | TBD |
+| [Thrown Over The Wall](Thrown_Over_The_Wall.md) | a Band Aid can be Thrown Over The Wall |
 
 ## Sources
 

@@ -11,5 +11,8 @@ A person disregarding other contributors, decisions made, plans and communicatio
 ## Specific To
 
 ## Related Anti-patterns
+|Anti-pattern  | Relation |
+|--|--|
+| [Net Negative Producing Programmer](Net_Negative_Producing_Programmer.md) | Lone Wolf might be a NNPP |
 ## Sources
 [[TAM'17]](../References.md)
