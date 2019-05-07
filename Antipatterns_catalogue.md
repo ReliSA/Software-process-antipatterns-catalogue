@@ -138,7 +138,7 @@ Extension Conflict
 ## F
 [False Economy](catalogue/False_Economy.md)
 
-False Surrogate Endpoint
+[False Surrogate Endpoint](catalogue/False_Surrogate_Endpoint.md)
 
 Fear Of Success
 
