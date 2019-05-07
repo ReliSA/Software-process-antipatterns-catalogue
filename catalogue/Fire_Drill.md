@@ -1,7 +1,6 @@
 [Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Fire Drill
 # Fire Drill
 **Also Known As:**
-Analysis Paralysis
 ## Summary
 Requirements and Analysis phases prolonged and consuming disproportionate amount of resources (because management want to do them "right"), then frantic "everything needs to be done yesterday" period to finish on time (when management finds out they wasted most of project's schedule and resources on analysis).
 ## Symptoms
@@ -17,6 +16,7 @@ Requirements and Analysis phases prolonged and consuming disproportionate amount
 ## Related Anti-patterns
 |Anti-pattern  | Relation |
 |--|--|
+| [Analysis Paralysis](Analysis_Paralysis.md) | potential cause |
 | [Collective Procrastination](Collective_Procrastination.md) | more generic case |
 ## Sources
 [[SIL'15]](../References.md), [[SOU'18]](../References.md), [[BRO'98]](../References.md)
