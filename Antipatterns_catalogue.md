@@ -88,7 +88,7 @@ Cosmetic Surgery
 
 Creation Dependence
 
-Cryptocracy
+[Cryptocracy](catalogue/Cryptocracy.md)
 
 Customer Caused Disruption
 
