@@ -126,7 +126,7 @@ Email Flaming
 
 Email Is Dangerous
 
-Emperor’s New Clothes
+[Emperor’s New Clothes](catalogue/Emperors_New_Clothes.md)
 
 Empire Building
 
