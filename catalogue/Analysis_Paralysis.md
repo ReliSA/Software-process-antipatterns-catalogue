@@ -25,7 +25,7 @@ Especially waterfall projects
 
 | Anti-pattern  | Relation |
 |--|--|
-| BigDesignUpFront |General form|
+| Big Design Up Front | general form |
 
 ## Sources
 

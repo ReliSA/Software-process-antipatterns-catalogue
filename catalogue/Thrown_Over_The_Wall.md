@@ -3,7 +3,7 @@
 
 # Thrown Over The Wall
 
-**Also Known As:** Throw It over the Wall
+**Also Known As:** Throw It Over The Wall
 
 
 ## Summary
