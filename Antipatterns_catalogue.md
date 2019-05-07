@@ -112,7 +112,7 @@ Discordant Reward Mechanisms
 
 DLL Hell
 
-Doppelganger
+[Doppelganger](catalogue/Doppelganger.md)
 
 Dragon Slaying
 
