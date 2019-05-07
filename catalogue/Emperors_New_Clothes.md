@@ -20,7 +20,7 @@ Negative feedback not seen as constructive leads to team members beeing afraid t
 | Intelectual Violence | partial cause (if used in review meetings) |
 | Implementation Issue | partial cause |
 | The Grand Old Duke Of York | partial cause (roles do not match abilities) |
-| Thrown Over The Wall | partial cause (guidelines treated as formal process and followed blindly) |
+| [Thrown Over The Wall](Thrown_Over_The_Wall.md) | partial cause (guidelines treated as formal process and followed blindly) |
 
 ## Sources
 [[CUN'10]](../References.md), [[RAP'12]](../References.md), [[LAP'05]](../References.md)
