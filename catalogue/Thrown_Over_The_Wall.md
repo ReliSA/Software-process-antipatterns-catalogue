@@ -30,7 +30,7 @@ n/a
 
 ## Notes
 
-The semantics of the pattern differs slightly between sources.  In [[CUN'13]] the key problem is that each role in development process creates its artefacts independently and passes them on to other roles without discussion and coordination.  [[BRO'98]] is more concerned with the internal documentation (guidelines etc.) being used formally, without actually understanding their proper purpose and intent.  
+The semantics of the pattern differs slightly between sources.  In [CUN'13] the key problem described is that each role in development process creates its artefacts independently and passes them on to other roles without discussion and coordination.  [BRO'98] is more concerned with the internal documentation (guidelines etc.) being used formally, without actually understanding their proper purpose and intent.  
 
 Though different in focus, the two descriptions share the "lack of communication about an artifact's purpose and content, leading to their mis-interpretation and improper use" as the underlying issue.  This is at the core of the description we use here.
 
