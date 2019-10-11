@@ -1,13 +1,11 @@
-[Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Antipattern Name !!!MODIFY_THIS!!!
+[Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Antipattern Name
 
 
 # The Antipattern Name
 
-**Also Known As:** alternative names (if exist) separated by comma, or "n/a"
-
 ## Also Known As
 
-Other names of this pattern
+Other names of this pattern, separated by comma, or "n/a".
 
 ## Summary
 
