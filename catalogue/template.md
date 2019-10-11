@@ -37,11 +37,11 @@ The solution, resolving the forces within the context, which does not have detri
 
 ## Variations (optional) 
 
-The exceptions and special cases of the anti-pattern.
+The exceptions and special cases of the anti-pattern.  Remove section if not used.
 
 ## Example(s) (optional) 
 
-How the anti-pattern has occurred in real world, may include diagrams and illustrations;
+How the anti-pattern has occurred in real world, may include diagrams and illustrations.  Remove section if not used.
 
 ## Related Anti-patterns
 
@@ -51,8 +51,8 @@ How the anti-pattern has occurred in real world, may include diagrams and illust
 
 ## Notes (optional) 
 
-Any (meta-level) remarks and information relevant to the anti-pattern or its description, which do not belong to the previous sections (e.g., how descriptions in different have been consolidated or what project data is available for detection).
+Any (meta-level) remarks and information relevant to the anti-pattern or its description, which do not belong to the previous sections (e.g., how descriptions in different have been consolidated or what project data is available for detection).   Remove section if not used.
 
 ## Sources
 
-Shortcuts for references in References.md (with link for each to that file) and/or the word "experience" separated by comma; e.g. [[LAP'05]](../References.md)
+Shortcuts for references in References.md (with link for each to that file) and/or the word "experience" separated by comma; e.g. [[LAP'05]](../References.md).  If the pattern comes from experience, details like projects and organizations where it has been observed should be provided to facilitate verification.
