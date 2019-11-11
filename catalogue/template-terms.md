@@ -6,10 +6,10 @@ Maps between ALM terms and the anti-pattern terms.  Based on SPADe meta-model.
 * Person
 * Role
 * Work Item
-** Artifact
+  * Artifact
 * Work Unit
 * Configuration
-** Release
+  * Release
 * Phase
 * Activity
 * Iteration
