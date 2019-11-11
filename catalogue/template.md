@@ -27,6 +27,8 @@ Identifiable phenomena signifying the presence of the anti-pattern, describing t
  - second symptom
  - ...
 
+Note: Ideally, the symptoms and consequences are expressed as close to the [terms used in ALM tools](template-terms.md) as possible
+
 ## Causes
 
 The underlying issues that lead to the anti-pattern, explaining the “why” for the preceding two sections.
