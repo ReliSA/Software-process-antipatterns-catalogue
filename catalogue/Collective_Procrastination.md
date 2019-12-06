@@ -15,7 +15,7 @@ The team needs to handle several commitments in parallel, so it focuses on most 
 
 ![burndown chart showing Collective Procrastination anti-pattern](Collective_Procrastination_-_burndown_example.png)
 
-The anti-pattern occurs on 10-13th April.
+The stalled progress is until 10th April, the rock edge of the burndown occurs on 10-13th April.
 
 ## Specific To
 
