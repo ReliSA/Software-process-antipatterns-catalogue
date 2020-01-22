@@ -50,3 +50,5 @@
 [HEB'12] Hebig, R., Gabrysiak, G., & Giese, H. (2012, June). Towards patterns for MDE-related processes to detect and handle changeability risks. In *Proceedings of the International Conference on Software and System Process* (pp. 38-47). IEEE Press.
 
 [COP'04] Coplien, J. O., & Harrison, N. B. (2004). Organizational patterns of agile software development. Prentice-Hall, Inc..
+
+[HAR'16] Harvey, K. (2016, July) Feature Creep: What Causes It & How To Avoid It [online] \https://www.chargify.com/blog/feature-creep/
