@@ -1,11 +1,11 @@
-Road To Nowhere
+# Road To Nowhere
 
 ## Summary
 The project is not sufficiently planned.
 
 ## Symptoms
  - organisation does not have stated goals
- - no or not enough planning activities
+ - no or not enough planning activities or artifacts
 
 ## Related Anti-patterns
 | Anti-pattern  | Relation |
