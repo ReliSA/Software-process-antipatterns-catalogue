@@ -1,6 +1,6 @@
 [Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Half Done Is Enough
 # Half Done Is Enough
-**Also Known As:** (n/a)
+**Also Known As:** Untested but Finished
 ## Summary
 Project activities overly focused on "visible" progress by management decision, i.e. effort is predominantly spent on adding functionality, with testing/QA and maintenance diminished or ignored. Major enhancements or changes are required to an existing deployed system due to accrued high level of technical debt.
 ## Symptoms
