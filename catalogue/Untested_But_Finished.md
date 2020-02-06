@@ -8,6 +8,8 @@ The development is hardly managed in time. This is probalby caused by lack of pr
  - low ratio of testing artifacts
  - deployment with lack of testing (optional)
  - grow of implementation tasks
+ - lots of deployments or coding artifact added in the same time, followed by bug reports
+ 
 
 ## Related Anti-patterns
 | Anti-pattern  | Relation |
