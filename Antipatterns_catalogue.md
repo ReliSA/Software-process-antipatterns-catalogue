@@ -20,7 +20,8 @@ Anybody Syndrome
 
 [Architects Don't Code](catalogue/Architects_Dont_Code.md)
 
-Architects Play Golf
+[Architects Play Golf](catalogue/Architects_Play_Golf.md)
+
 ## B
 Bad Management By Metrics
 
@@ -56,9 +57,10 @@ Broken Iron Triangle
 
 Buff And Shine A Rusty Car
 
-Business As Usual
+[Business As Usual](catalogue/Business_As_Usual.md)
 
 Bystander Apathy
+
 ## C
 Cage Match Negotiator
 
@@ -68,7 +70,7 @@ Car Park Syndrome
 
 [Cargo Cult](catalogue/Cargo_Cult.md)
 
-Cart Before The Horse
+[Cart Before The Horse](catalogue/Cart_Before_The_Horse.md)
 
 Cash Cow
 
@@ -95,6 +97,7 @@ Creation Dependence
 Customer Caused Disruption
 
 Customer Product Owner
+
 ## D
 Deadwood
 
@@ -108,7 +111,7 @@ Dependency Hell
 
 Design By Committee
 
-Detailitis Plan -- _see [Death By Planning](catalogue/Death_By_Planning.md)_
+[Detailitis Plan](catalogue/Detailitis_Plan.md)
 
 Discordant Reward Mechanisms
 
@@ -121,6 +124,7 @@ Dragon Slaying
 Dry Waterhole
 
 Dueling Corncobs
+
 ## E
 Egalitarian Compensation
 
@@ -137,6 +141,7 @@ Escalation Of Commitment
 Every Fool Their Own Tool
 
 Extension Conflict
+
 ## F
 [False Economy](catalogue/False_Economy.md)
 
@@ -144,7 +149,7 @@ Extension Conflict
 
 Fear Of Success
 
-Feature Creep
+[Feature Creep](catalogue/Feature_Creep.md)
 
 [Fire Drill](catalogue/Fire_Drill.md)
 
@@ -153,12 +158,13 @@ Feature Creep
 Fungible Project Manager
 
 [Fungible Teams](catalogue/Fungible_Teams.md)
+
 ## G
 Geographically Distributed Development
 
 Give Me Estimates Now
 
-Glass Case Plan
+[Glass Case Plan](catalogue/Glass_Case_Plan.md)
 
 Glass Wall
 
@@ -169,6 +175,7 @@ Golden Hammer
 Groupthink
 
 Guilding The Lily
+
 ## H
 [Half Done Is Enough](catalogue/Half_Done_Is_Enough.md)
 
@@ -183,6 +190,7 @@ Hero Culture
 Hours In Progress Monitoring
 
 Hypocritical Preacher
+
 ## I
 Idiot Proof Process
 
@@ -209,10 +217,13 @@ Invisible Progress
 [Irrational Management](catalogue/Irrational_Management.md)
 
 It's Not Rocket Science
+
 ## J
 JAR Hell
+
 ## K
 Kill The Messenger
+
 ## L
 Leader Not Manager
 
@@ -225,6 +236,7 @@ List Dictator
 Long Or Non-Existent Feedback Loops
 
 Loose Cannon
+
 ## M
 Management By Numbers
 
@@ -253,6 +265,7 @@ Mushroom Management
 Myopic Delivery
 
 Mythical Man Month
+
 ## N
 [Net Negative Producing Programmer](catalogue/Net_Negative_Producing_Programmer.md)
 
@@ -265,6 +278,7 @@ No Sprint Retrospective
 Non-Creative Intelligence
 
 Not Invented Here
+
 ## O
 Online Backstabber
 
@@ -275,6 +289,7 @@ Organisational Silo
 Ostrich
 
 Overengineering
+
 ## P
 Pairing Prison
 
@@ -288,7 +303,7 @@ Plate Spinning
 
 Plug Compatible Interchangeable Engineers
 
-PMs Who Write Specs
+[PMs Who Write Specs](catalogue/PMs_Who_Write_Specs.md)
 
 Premature Optimization
 
@@ -307,6 +322,7 @@ Programming By Permutation
 Project Mismanagement
 
 Proletariat Hero
+
 ## R
 Radio-Silence
 
@@ -314,7 +330,8 @@ Requirement Creep
 
 Rising Upstart
 
-Road To Nowhere
+[Road To Nowhere](catalogue/Road_To_Nowhere.md)
+
 ## S
 Scapegoat
 
@@ -342,7 +359,7 @@ Software Merger
 
 Spammer
 
-Specify Nothing
+[Specify Nothing](catalogue/Specify_Nothing.md)
 
 Spineless Executive
 
@@ -351,6 +368,7 @@ Standing On The Shoulders Of Midgets
 [Stovepipe Or Silos](catalogue/Stovepipe_Or_Silos.md)
 
 Subsequent Adjustment
+
 ## T
 Team Keeps Hacking Away
 
@@ -395,6 +413,7 @@ True Believer
 Turf Wars
 
 Typecasting
+
 ## U
 Ultimate Weapon
 
@@ -404,9 +423,10 @@ Unknown Poster
 
 Unordered Product Backlog
 
-Untested But Finished
+[Untested But Finished](catalogue/Untested_But_Finished.md)
 
 Users Are Idiots
+
 ## V
 Varying Sprint Length
 
@@ -417,6 +437,7 @@ Vietnam War
 [Viewgraph Engineering](catalogue/Viewgraph_Engineering.md)
 
 Visibility Gets You Shot
+
 ## W
 [Warm Bodies](catalogue/Warm_Bodies.md)
 
@@ -429,6 +450,7 @@ Weekend Hackathons
 Wild Goose Chase
 
 Work Estimates Given To Teams
+
 ## Y
 Yes Man
 
