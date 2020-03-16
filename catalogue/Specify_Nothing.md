@@ -11,7 +11,7 @@ The specification is not done intentionally. It is believed that programmers wor
 ## Related Anti-patterns
 | Anti-pattern  | Relation |
 |--|--|
-| [Architecture Nothing](Architecture_Nothing.md) | similar in kind (missing one of the important artifacts) |
+| [Road to Nowhere](Road_To_Nowhere.md) | similar in kind (missing one of the important artifacts) |
 
 ## Sources
 * [[CUN'10]](../References.md) [SpecifyNothing](http://wiki.c2.com/?SpecifyNothing)
