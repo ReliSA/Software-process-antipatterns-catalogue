@@ -1,15 +1,16 @@
 # Feature Creep
 
 ## Summary
-As the project progressess, big amount of todo features emerges. It leads to big complexity of the product.
+As the project progresses, a large amount of new feature requests emerges. Their implementation subsequently leads to an increase of complexity of the product.
 
 ## Symptoms
- - new features throughout the project progressess
- - late changes to requirement artifacts
+ - new features comitted to code throughout the project, even in later phases
+ - late changes to requirement artifacts, or
+ - a higher ratio of "feature" or "enhancement"-type tickets added in later phases
 
 ## Related Anti-patterns
 | Anti-pattern  | Relation |
 |--|--|
 
 ## Sources
-[HAR'16]
+[[HAR'16]](../References.md)
