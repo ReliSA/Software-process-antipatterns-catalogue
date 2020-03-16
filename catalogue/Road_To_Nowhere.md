@@ -10,6 +10,7 @@ The project is not sufficiently planned and thus the development proceeds in ad-
 ## Related Anti-patterns
 | Anti-pattern  | Relation |
 |--|--|
+| [Specify Nothing](Specify_Nothing.md) | similar in kind (missing an important PM artifact) |
 | [Detailitis Plan](Detailitis_Plan.md) | opposite |
 
 ## Sources
