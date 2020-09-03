@@ -174,7 +174,7 @@ Golden Hammer
 
 Groupthink
 
-Guilding The Lily
+[Guilding The Lily](catalogue/Guilding_The_Lily.md)
 
 ## H
 [Half Done Is Enough](catalogue/Half_Done_Is_Enough.md)
