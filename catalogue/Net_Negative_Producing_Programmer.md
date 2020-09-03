@@ -34,5 +34,7 @@ Person who contributes more trouble than benefits.
 | [Lone-Wolf](Lone-Wolf.md) | NNPP person might be a Lone Wolf |
 | [Warm Bodies](Warm_Bodies.md) | NNPP can be a source of Warm Bodies |
 
+## Notes (optional) 
+
 ## Sources
 TODO
