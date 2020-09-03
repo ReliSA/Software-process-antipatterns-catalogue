@@ -33,6 +33,8 @@ Project activities overly focused on "visible" progress by management decision, 
 |--|--|
 | [False Economy](False_Economy.md) | opposite case (?) |
 
+## Notes (optional)
+
 ## Sources
 
 [[CUN'10]](../References.md)
