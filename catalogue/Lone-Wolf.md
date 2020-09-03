@@ -35,5 +35,7 @@ A person disregarding other contributors, decisions made, plans and communicatio
 |--|--|
 | [Net Negative Producing Programmer](Net_Negative_Producing_Programmer.md) | Lone Wolf might be a NNPP |
 
+## Notes (optional)
+
 ## Sources
 [[TAM'17]](../References.md)
