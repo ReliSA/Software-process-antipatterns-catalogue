@@ -25,8 +25,6 @@ n/a
 
 ## Example(s) (optional) 
 
-How the anti-pattern has occurred in real world, may include diagrams and illustrations.  Remove section if not used.
-
 ## Related Anti-patterns
 
 |Anti-pattern  | Relation |
