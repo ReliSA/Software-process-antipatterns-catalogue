@@ -12,9 +12,11 @@ public class Constants {
     public static final List<String> TEMPLATE_FILES = new ArrayList<>(Arrays.asList("template", "template-terms"));
 
     public static final int FIELD_OFFSET_X = 10;
-    public static final int FIELD_OFFSET_Y = 20;
+    public static final int FIELD_OFFSET_Y = 40;
+    public static final int INIT_Y_LOCATION = 20;
 
     public static final int TEXTFIELD_OFFSET_Y = 15;
     public static final int TABLE_OFFSET_Y = 10;
-    public static final int TEMP_TABLE_HEIGHT = 40;
+    public static final int TEXTAREA_HEIGHT = 100;
+    public static final int TABLE_HEIGHT = 200;
 }

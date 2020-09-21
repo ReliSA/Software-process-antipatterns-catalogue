@@ -1,4 +1,4 @@
-package cz.zcu.kiv.spac.data;
+package cz.zcu.kiv.spac.data.antipattern;
 
 public class Antipattern {
 

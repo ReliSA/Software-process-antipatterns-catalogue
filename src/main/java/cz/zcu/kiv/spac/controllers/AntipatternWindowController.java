@@ -1,8 +1,11 @@
 package cz.zcu.kiv.spac.controllers;
 
-import cz.zcu.kiv.spac.data.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
+import cz.zcu.kiv.spac.enums.FieldType;
 import cz.zcu.kiv.spac.template.TableField;
+import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.template.TemplateField;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,8 +13,12 @@ import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
@@ -31,10 +38,10 @@ public class AntipatternWindowController {
 
 
     private Antipattern antipattern;
-    private List<TemplateField> fieldList;
+    private Template template;
 
     // Logger.
-    private static Logger log = Logger.getLogger(MainWindowController.class);
+    private static Logger log = Logger.getLogger(AntipatternWindowController.class);
 
     public AntipatternWindowController() {
 
@@ -43,23 +50,46 @@ public class AntipatternWindowController {
     @FXML
     public void initialize() {
 
-        /*
-        for (TemplateField field : fieldList) {
-
-            System.out.println(field.getName() + ": " + field.getText());
-        }
-         */
-
-        if (antipattern != null) {
-
-            // TODO: fill fields with values from
-        }
+        // Not needed.
     }
 
     @FXML
     private void saveAP(ActionEvent actionEvent) {
 
         // TODO: save changes into antipattern.
+        // TODO: validate required fields.
+
+        ObservableList<Node> nodes = tabFormPane.getChildren();
+
+        List<String> fieldNameList = template.getFieldNameList();
+
+        for (Node node : nodes) {
+
+            if (fieldNameList.contains(node.getId())) {
+
+                FieldType type = template.getFieldType(node.getId());
+                System.out.print(node.getId());
+
+                switch (type) {
+
+                    case TEXTFIELD:
+
+                        System.out.print(": " + ((TextField) node).getText());
+                        break;
+
+                    case TEXTAREA:
+
+                        System.out.print(": " + ((TextArea) node).getText());
+                        break;
+
+                    case TABLE:
+
+                        break;
+                }
+
+                System.out.println();
+            }
+        }
 
         if (false) {
 
@@ -77,14 +107,21 @@ public class AntipatternWindowController {
 
     public void loadAntipatternInfo() {
 
-        // TODO: Load fields from template.
+        // TODO: Set values from loaded antipattern.
         ObservableList<Node> childrens = tabFormPane.getChildren();
         childrens.clear();
 
-        int layoutY = Constants.FIELD_OFFSET_Y;
-        for (TemplateField templateField : fieldList) {
+        int layoutY = Constants.INIT_Y_LOCATION;
+        for (TemplateField templateField : template.getFieldList()) {
 
-            Text templateFieldLabel = new Text(templateField.getText() + ": ");
+            // TODO: set bold text + font ?
+            Text templateFieldLabel = new Text(templateField.getText());
+
+            if (!templateField.isRequired()) {
+
+                templateFieldLabel.setText(templateFieldLabel.getText() + " (optional)");
+            }
+
             templateFieldLabel.setLayoutX(Constants.FIELD_OFFSET_X);
             templateFieldLabel.setLayoutY(layoutY);
 
@@ -95,10 +132,11 @@ public class AntipatternWindowController {
                 case TEXTFIELD:
 
                     field = new TextField();
+                    TextField textField = (TextField) field;
 
-                    Bounds bounds = templateFieldLabel.getBoundsInLocal();
-                    field.setLayoutX(bounds.getMaxX() + Constants.FIELD_OFFSET_X);
-                    field.setLayoutY(layoutY - Constants.TEXTFIELD_OFFSET_Y);
+                    setRegionBounds(textField, templateFieldLabel);
+
+                    layoutY += Constants.TEXTFIELD_OFFSET_Y;
 
                     childrens.add(field);
 
@@ -111,10 +149,10 @@ public class AntipatternWindowController {
 
                     setRegionBounds(textAreaField, templateFieldLabel);
 
-                    // TODO: TEMPORARY.
-                    //layoutY += Constants.TEMP_TABLE_HEIGHT;
+                    textAreaField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
+                    layoutY += Constants.TEXTAREA_HEIGHT;
 
-                    //childrens.add(field);
+                    childrens.add(field);
 
                     break;
 
@@ -132,13 +170,31 @@ public class AntipatternWindowController {
                         TableColumn tableColumn = new TableColumn(column);
                         tableColumn.setPrefWidth(tableViewField.getMinWidth() / tableField.getColumns().size());
                         tableColumn.setResizable(false);
+                        tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
                         tableViewField.getColumns().add(tableColumn);
 
                     }
 
-                    // TODO: TEMPORARY.
-                    layoutY += Constants.TEMP_TABLE_HEIGHT;
+                    tableViewField.setEditable(true);
+
+                    // TODO: complete adding new row. Maybe add button for adding row below table ?
+                    // TODO: add button to every row for deleting ? Or add button below table next to add button for multiselect delete ?
+                    tableViewField.setOnMouseClicked((MouseEvent e) -> {
+
+                        AntipatternRelation newPattern = new AntipatternRelation("", "");
+
+                        Node pickedNode = e.getPickResult().getIntersectedNode();
+
+
+                        if (e.getButton() == MouseButton.PRIMARY) {
+
+                            tableViewField.getItems().add(newPattern);
+                        }
+                    });
+
+                    tableViewField.setMaxHeight(Constants.TABLE_HEIGHT);
+                    layoutY += Constants.TABLE_HEIGHT;
 
                     childrens.add(field);
 
@@ -148,24 +204,24 @@ public class AntipatternWindowController {
                     continue;
             }
 
-            // TODO: Scrollable tab pane.
+            field.setId(templateField.getName());
 
             childrens.add(templateFieldLabel);
 
-
-            layoutY += 40;
+            layoutY += Constants.FIELD_OFFSET_Y;
         }
-
     }
 
     private void setRegionBounds(Region field, Text templateFieldLabel) {
 
         field.setLayoutX(templateFieldLabel.getLayoutX());
         field.setLayoutY(templateFieldLabel.getLayoutY() + Constants.TABLE_OFFSET_Y);
-        field.setMinWidth(tabFormPane.getPrefWidth() - (2 * templateFieldLabel.getLayoutX()));
+        setFieldMinWidth(field, templateFieldLabel);
+    }
 
-        // TODO: TEMPORARY.
-        field.setMaxHeight(Constants.TEMP_TABLE_HEIGHT);
+    private void setFieldMinWidth(Region field, Text templateFieldLabel) {
+
+        field.setMinWidth(tabFormPane.getPrefWidth() - (3 * templateFieldLabel.getLayoutX()) - field.getLayoutX());
     }
 
     public void setAntipattern(Antipattern antipattern) {
@@ -173,9 +229,9 @@ public class AntipatternWindowController {
         this.antipattern = antipattern;
     }
 
-    public void setFieldList(List<TemplateField> fieldList) {
+    public void setTemplate(Template template) {
 
-        this.fieldList = fieldList;
+        this.template = template;
     }
 
 }

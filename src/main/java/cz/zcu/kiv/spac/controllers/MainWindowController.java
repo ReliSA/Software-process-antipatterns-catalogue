@@ -1,8 +1,9 @@
 package cz.zcu.kiv.spac.controllers;
 
-import cz.zcu.kiv.spac.data.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.template.TableField;
+import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.utils.Utils;
 import cz.zcu.kiv.spac.enums.FieldType;
 import cz.zcu.kiv.spac.template.TemplateField;
@@ -44,7 +45,7 @@ public class MainWindowController {
 
 
     // App variables.
-    private List<TemplateField> fieldList;
+    private Template template;
     private Map<String, Antipattern> antipatterns;
 
 
@@ -143,6 +144,7 @@ public class MainWindowController {
     @FXML
     private void menuExitAction() {
 
+        // TODO: maybe close stage and end application in main method ?
         System.exit(0);
     }
 
@@ -154,7 +156,7 @@ public class MainWindowController {
 
     private void loadConfiguration() {
 
-        fieldList = new ArrayList<>();
+        List<TemplateField> fieldList = new ArrayList<>();
 
         log.info("Loading configuration file: " + Constants.CONFIGURATION_NAME);
 
@@ -202,6 +204,8 @@ public class MainWindowController {
                 fieldList.add(templateField);
             }
 
+            template = new Template(fieldList);
+
         } catch (Exception e) {
 
             log.error("Configuration is not valid!");
@@ -227,7 +231,7 @@ public class MainWindowController {
 
             AntipatternWindowController antipatternWindowController = loader.<AntipatternWindowController>getController();
             antipatternWindowController.setAntipattern(antipattern);
-            antipatternWindowController.setFieldList(fieldList);
+            antipatternWindowController.setTemplate(template);
             antipatternWindowController.loadAntipatternInfo();
 
             stage.setTitle(Constants.APP_NAME);
