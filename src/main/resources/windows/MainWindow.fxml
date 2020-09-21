@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox prefHeight="676.0" prefWidth="955.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#menuNewAPAction" text="New AP" />
+            <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Git" />
+      </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="399.0" prefWidth="659.0" VBox.vgrow="ALWAYS">
+         <children>
+            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="559.0" prefWidth="283.0" />
+            <Label layoutX="96.0" layoutY="8.0" text="Antipatterns">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextFlow fx:id="txtFlowAntipatternPreview" layoutX="314.0" layoutY="78.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="628.0" style="-fx-background-color: white; -fx-border-color: lightgray;" />
+            <Label layoutX="533.0" layoutY="8.0" text="Antipattern preview">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtFieldAPSearch" layoutX="89.0" layoutY="46.0" onKeyTyped="#filterAntipatterns" prefHeight="25.0" prefWidth="208.0" promptText="Antipattern name" />
+            <Label layoutX="14.0" layoutY="49.0" text="Search AP:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

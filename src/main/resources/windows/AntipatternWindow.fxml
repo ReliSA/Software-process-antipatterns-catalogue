@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="700.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.AntipatternWindowController">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="699.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
+         <children>
+            <TabPane layoutY="-1.0" prefHeight="633.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab closable="false" text="Form">
+                  <content>
+                    <AnchorPane fx:id="tabFormPane" prefHeight="592.0" prefWidth="640.0" style="-fx-background-color: #e6e6e6;" />
+                  </content>
+                </Tab>
+                <Tab closable="false" text="Preview">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="575.0" prefWidth="640.0" style="-fx-background-color: #e6e6e6;" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <Button fx:id="btnSave" layoutX="547.0" layoutY="650.0" mnemonicParsing="false" onAction="#saveAP" prefHeight="35.0" prefWidth="79.0" text="Save" />
+            <Button fx:id="btnBack" layoutX="14.0" layoutY="650.0" mnemonicParsing="false" onAction="#closeAntipatternWindow" prefHeight="35.0" prefWidth="79.0" text="Back" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>
