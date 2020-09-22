@@ -8,10 +8,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.web.WebView?>
 
-<VBox prefHeight="676.0" prefWidth="955.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
+<VBox prefHeight="782.0" prefWidth="1082.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -24,16 +25,16 @@
         <Menu mnemonicParsing="false" text="Git" />
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="399.0" prefWidth="659.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="651.0" prefWidth="1063.0" VBox.vgrow="ALWAYS">
          <children>
-            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="559.0" prefWidth="283.0" />
+            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="669.0" prefWidth="283.0" />
             <Label layoutX="96.0" layoutY="8.0" text="Antipatterns">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <TextFlow fx:id="txtFlowAntipatternPreview" layoutX="314.0" layoutY="78.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="628.0" style="-fx-background-color: white; -fx-border-color: lightgray;" />
-            <Label layoutX="533.0" layoutY="8.0" text="Antipattern preview">
+            <WebView fx:id="wviewAntipatternPreview" layoutX="314.0" layoutY="78.0" prefHeight="669.0" prefWidth="753.0" />
+            <Label layoutX="596.0" layoutY="8.0" text="Antipattern preview">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
@@ -44,6 +45,10 @@
                   <Font size="14.0" />
                </font>
             </Label>
+            <Line endX="652.0" layoutX="415.0" layoutY="78.0" startX="-100.29290771484375" startY="-0.70709228515625" strokeWidth="0.1" />
+            <Line endX="1067.0" endY="747.0" startX="314.0" startY="747.0" strokeWidth="0.1" />
+            <Line endX="-111.5" endY="658.5" layoutX="425.0" layoutY="88.0" startX="-111.0" startY="-10.0" strokeWidth="0.2" />
+            <Line endX="632.5" endY="648.5" layoutX="435.0" layoutY="98.0" startX="632.70703125" startY="-19.29290771484375" strokeWidth="0.2" />
          </children>
     </AnchorPane>
   </children>

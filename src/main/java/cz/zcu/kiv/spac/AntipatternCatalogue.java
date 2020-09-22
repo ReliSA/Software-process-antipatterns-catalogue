@@ -1,6 +1,5 @@
 package cz.zcu.kiv.spac;
 
-import cz.zcu.kiv.spac.controllers.MainWindowController;
 import cz.zcu.kiv.spac.data.Constants;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,13 +24,13 @@ public class AntipatternCatalogue extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
         log.info("Starting Antipattern Catalogue.");
 
         try {
 
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/windows/MainWindow.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_MAIN_WINDOW)));
             stage.setTitle(Constants.APP_NAME);
             stage.setScene(new Scene(root));
             stage.setResizable(false);
@@ -40,7 +39,7 @@ public class AntipatternCatalogue extends Application {
         } catch (Exception e) {
 
             log.error("Invalid MainWindowController scene.");
-            return;
+            System.exit(1);
         }
     }
 

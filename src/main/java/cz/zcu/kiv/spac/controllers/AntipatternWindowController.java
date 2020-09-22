@@ -1,7 +1,7 @@
 package cz.zcu.kiv.spac.controllers;
 
-import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.enums.FieldType;
 import cz.zcu.kiv.spac.template.TableField;
@@ -10,7 +10,6 @@ import cz.zcu.kiv.spac.template.TemplateField;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -18,7 +17,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
@@ -105,7 +103,7 @@ public class AntipatternWindowController {
         stage.close();
     }
 
-    public void loadAntipatternInfo() {
+    void loadAntipatternInfo() {
 
         // TODO: Set values from loaded antipattern.
         ObservableList<Node> childrens = tabFormPane.getChildren();
@@ -114,8 +112,8 @@ public class AntipatternWindowController {
         int layoutY = Constants.INIT_Y_LOCATION;
         for (TemplateField templateField : template.getFieldList()) {
 
-            // TODO: set bold text + font ?
             Text templateFieldLabel = new Text(templateField.getText());
+            templateFieldLabel.setFont(Constants.NEW_AP_LABEL_FONT);
 
             if (!templateField.isRequired()) {
 
@@ -148,6 +146,8 @@ public class AntipatternWindowController {
                     TextArea textAreaField = (TextArea) field;
 
                     setRegionBounds(textAreaField, templateFieldLabel);
+
+                    // TODO: multicolumn textarea
 
                     textAreaField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
                     layoutY += Constants.TEXTAREA_HEIGHT;
@@ -216,11 +216,6 @@ public class AntipatternWindowController {
 
         field.setLayoutX(templateFieldLabel.getLayoutX());
         field.setLayoutY(templateFieldLabel.getLayoutY() + Constants.TABLE_OFFSET_Y);
-        setFieldMinWidth(field, templateFieldLabel);
-    }
-
-    private void setFieldMinWidth(Region field, Text templateFieldLabel) {
-
         field.setMinWidth(tabFormPane.getPrefWidth() - (3 * templateFieldLabel.getLayoutX()) - field.getLayoutX());
     }
 
