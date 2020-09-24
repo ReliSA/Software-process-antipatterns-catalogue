@@ -4,11 +4,13 @@ import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.template.TemplateField;
+import cz.zcu.kiv.spac.utils.Utils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -22,10 +24,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -67,10 +71,48 @@ public class AntipatternWindowController {
     @FXML
     private void saveAP(ActionEvent actionEvent) {
 
-        getAPContent(false);
-
         Stage stage = (Stage) btnSave.getScene().getWindow();
-        stage.close();
+
+        if (!getAPContent(false)) {
+
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+
+        //Set extension filter for text files
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialDirectory(new File(Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER));
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+
+            // create a alert
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            alert.setTitle(Constants.APP_NAME);
+
+            if (FileWriter.write(file, antipattern.getMarkdownContent())) {
+
+                // TODO: Refresh list of antipatterns.
+
+                alert.setAlertType(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("File created successfully.");
+                alert.setContentText("Antipattern '" + antipattern.getName() + "' was created successfully.");
+                alert.show();
+
+                stage.close();
+
+            } else {
+
+                alert.setAlertType(Alert.AlertType.ERROR);
+                alert.setHeaderText("Error while creating file.");
+                alert.setContentText("Antipattern '" + antipattern.getName() + "' was not created successfully.");
+                alert.show();
+            }
+        }
     }
 
     @FXML
@@ -206,7 +248,7 @@ public class AntipatternWindowController {
         }
     }
 
-    private void getAPContent(boolean previewed) {
+    private boolean getAPContent(boolean previewed) {
 
         // TODO: save changes into antipattern.
         // TODO: validate required fields.
@@ -253,9 +295,15 @@ public class AntipatternWindowController {
                 // TODO: test if table has at least 1 row with values
                 if (!previewed && field.isRequired() && headingText.equals("") && !headingName.equals("related")) {
 
-                    // TODO: Show window with error, that this field does not have text and is required.
-                    System.out.println("Field '" + field.getName() + "' is blank!");
-                    return;
+                    log.warn("Field '" + field.getName() + "' is blank!");
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(Constants.APP_NAME);
+                    alert.setHeaderText("Blank field!");
+                    alert.setContentText("Field '" + field.getName() + "' is blank!");
+                    alert.show();
+
+                    return false;
 
                 } else {
 
@@ -270,6 +318,7 @@ public class AntipatternWindowController {
         String markdownContent = MarkdownFormatter.createMarkdownFile(antipattern.getAntipatternHeadings(), template.getFieldList());
 
         antipattern.setMarkdownContent(markdownContent);
+        return true;
     }
 
     private void setRegionBounds(Region field, Text templateFieldLabel) {

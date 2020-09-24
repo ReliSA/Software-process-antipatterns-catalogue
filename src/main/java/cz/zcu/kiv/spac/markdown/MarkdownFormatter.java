@@ -76,8 +76,8 @@ public class MarkdownFormatter {
 
                 sb.append("## ");
                 sb.append(field.getText());
-                sb.append("\n");
-                sb.append("\n");
+                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER);
 
                 sb.append(headings.get(field.getName()));
 
@@ -87,9 +87,9 @@ public class MarkdownFormatter {
 
                 // Add antipatern name to path.
                 sb.append(antipatternName);
-                sb.append("\n");
-                sb.append("\n");
-                sb.append("\n");
+                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER);
 
                 nameWrited = true;
 
@@ -99,8 +99,8 @@ public class MarkdownFormatter {
 
             if (i < fieldList.size() - 1) {
 
-                sb.append("\n");
-                sb.append("\n");
+                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER);
             }
 
             i++;
