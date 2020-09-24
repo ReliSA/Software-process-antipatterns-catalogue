@@ -27,4 +27,7 @@ public class Constants {
     public static final String RESOURCE_ANTIPATTERN_WINDOW = "/windows/AntipatternWindow.fxml";
     public static final String RESOURCE_MAIN_WINDOW = "/windows/MainWindow.fxml";
     public static final String RESOURCE_PREVIEW_CSS = "/css/antipatternPreview.css";
+
+    public static final String CATALOGUE_NAME = "../Antipatterns_catalogue.md";
+    public static final String README_NAME = "../README.md";
 }

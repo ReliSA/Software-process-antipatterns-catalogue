@@ -31,6 +31,18 @@ public class Template {
         return fieldNameList;
     }
 
+    public List<String> getFieldTextList() {
+
+        List<String> fieldNameList = new ArrayList<>();
+
+        for (TemplateField field : fieldList) {
+
+            fieldNameList.add(field.getText());
+        }
+
+        return fieldNameList;
+    }
+
     public FieldType getFieldType(String fieldName) {
 
         for (TemplateField field : fieldList) {
@@ -41,6 +53,18 @@ public class Template {
             }
         }
 
+        return null;
+    }
+
+    public TemplateField getField(String fieldName) {
+
+        for (TemplateField field : fieldList) {
+
+            if (field.getName().equals(fieldName)) {
+
+                return field;
+            }
+        }
         return null;
     }
 }

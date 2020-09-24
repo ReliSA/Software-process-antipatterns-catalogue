@@ -3,6 +3,7 @@ package cz.zcu.kiv.spac.controllers;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.file.FileLoader;
+import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.fxml.FXML;
@@ -36,6 +37,7 @@ public class MainWindowController {
 
 
     // App variables.
+    private MarkdownParser markdownParser;
     private Template template;
     private Map<String, Antipattern> antipatterns;
 
@@ -51,7 +53,10 @@ public class MainWindowController {
     public void initialize() {
 
         template = FileLoader.loadConfiguration(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
-        antipatterns = FileLoader.loadAntipatterns(Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER);
+
+        markdownParser = new MarkdownParser(template);
+
+        antipatterns = FileLoader.loadAntipatterns(markdownParser, Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER);
 
         for (String aPatternName : antipatterns.keySet()) {
 
@@ -107,7 +112,7 @@ public class MainWindowController {
 
             if (mouseEvent.getClickCount() == 1) {
 
-                wviewAntipatternPreview.getEngine().loadContent(selectedAntipattern.generateHTMLContent());
+                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(selectedAntipattern.getMarkdownContent()));
 
             } else if (mouseEvent.getClickCount() == 2) {
 
@@ -145,6 +150,7 @@ public class MainWindowController {
             AntipatternWindowController antipatternWindowController = loader.getController();
             antipatternWindowController.setAntipattern(antipattern);
             antipatternWindowController.setTemplate(template);
+            antipatternWindowController.setMarkdownParser(markdownParser);
             antipatternWindowController.loadAntipatternInfo();
 
             String stageTitle = Constants.APP_NAME;

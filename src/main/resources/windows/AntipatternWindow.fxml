@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
 
 <VBox prefHeight="761.0" prefWidth="753.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.AntipatternWindowController">
   <children>
@@ -13,7 +14,7 @@
          <children>
             <TabPane layoutY="-1.0" prefHeight="696.0" prefWidth="753.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab closable="false" text="Form">
+                <Tab fx:id="tabForm" closable="false" text="Form">
                   <content>
                     <AnchorPane prefHeight="623.0" prefWidth="753.0" style="-fx-background-color: #e6e6e6;">
                            <children>
@@ -25,9 +26,12 @@
                            </children></AnchorPane>
                   </content>
                 </Tab>
-                <Tab closable="false" text="Preview">
+                <Tab fx:id="tabPreview" closable="false" onSelectionChanged="#showAPPreview" text="Preview">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="575.0" prefWidth="640.0" style="-fx-background-color: #e6e6e6;" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="575.0" prefWidth="640.0" style="-fx-background-color: #e6e6e6;">
+                           <children>
+                              <WebView fx:id="wviewAntipatternPreview" prefHeight="669.0" prefWidth="753.0" />
+                           </children></AnchorPane>
                   </content>
                 </Tab>
               </tabs>

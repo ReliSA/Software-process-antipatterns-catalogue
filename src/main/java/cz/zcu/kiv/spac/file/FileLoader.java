@@ -3,6 +3,8 @@ package cz.zcu.kiv.spac.file;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
+import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.template.TemplateField;
@@ -87,7 +89,7 @@ public class FileLoader {
         return template;
     }
 
-    public static Map<String, Antipattern> loadAntipatterns(String antipatternFolder) {
+    public static Map<String, Antipattern> loadAntipatterns(MarkdownParser markdownParser, String antipatternFolder) {
 
         log.info("Initializing antipattern list.");
 
@@ -109,6 +111,11 @@ public class FileLoader {
                         try {
 
                             String markdownContent = Files.readString(file.toPath());
+                            markdownContent = MarkdownFormatter.formatMarkdownTable(markdownContent);
+
+                            // TODO: do parse.
+                            //markdownParser.parse(markdownContent);
+
                             antipatterns.put(aPatternName, new Antipattern(aPatternName, markdownContent));
 
                         } catch (IOException ignored) {

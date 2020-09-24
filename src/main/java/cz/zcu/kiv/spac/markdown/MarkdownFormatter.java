@@ -1,5 +1,10 @@
 package cz.zcu.kiv.spac.markdown;
 
+import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.template.TemplateField;
+
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,5 +57,55 @@ public class MarkdownFormatter {
         }
 
         return newString.toString();
+    }
+
+    public static String createMarkdownFile(Map<String, String> headings, List<TemplateField> fieldList) {
+
+        // TODO: Tasklist + table not implemented yet.
+        StringBuilder sb = new StringBuilder();
+
+        // Add path to antipattern name.
+        sb.append("[Home](" + Constants.README_NAME + ") > [Catalogue](" + Constants.CATALOGUE_NAME + ") > ");
+
+        boolean nameWrited = false;
+
+        int i = 0;
+        for (TemplateField field : fieldList) {
+
+            if (nameWrited) {
+
+                sb.append("## ");
+                sb.append(field.getText());
+                sb.append("\n");
+                sb.append("\n");
+
+                sb.append(headings.get(field.getName()));
+
+            } else {
+
+                String antipatternName = headings.get(field.getName());
+
+                // Add antipatern name to path.
+                sb.append(antipatternName);
+                sb.append("\n");
+                sb.append("\n");
+                sb.append("\n");
+
+                nameWrited = true;
+
+                sb.append("# ");
+                sb.append(antipatternName);
+            }
+
+            if (i < fieldList.size() - 1) {
+
+                sb.append("\n");
+                sb.append("\n");
+            }
+
+            i++;
+        }
+
+        return sb.toString();
     }
 }

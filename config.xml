@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <antipattern>
 	<fields>
-		<field name="antipattern_name" 	text="The antipattern name" 		field="textfield" 	required="yes"/>
-		<field name="known_as" 			text="Also known as" 				field="textfield" 	required="yes"/>
+		<field name="antipattern_name" 	text="The Antipattern Name" 		field="textfield" 	required="yes"/>
+		<field name="known_as" 			text="Also Known As" 				field="textfield" 	required="yes"/>
 		<field name="summary" 			text="Summary" 						field="textarea" 	required="yes"/>
 		<field name="context" 			text="Context" 						field="textarea" 	required="yes"/>
-		<field name="unbalanced_forces" text="Unbalanced forces" 			field="textarea" 	required="yes"/>
-		<field name="symptoms" 			text="Symptoms and consequences" 	field="textarea" 	required="yes"/>
+		<field name="unbalanced_forces" text="Unbalanced Forces" 			field="textarea" 	required="yes"/>
+		<field name="symptoms" 			text="Symptoms and Consequences" 	field="textarea" 	required="yes"/>
 		<field name="causes" 			text="Causes" 						field="textarea" 	required="yes"/>
 		<field name="solution" 			text="(Refactored) Solution" 		field="textarea" 	required="yes"/>
 		<field name="variations"		text="Variations" 					field="textarea" 	required="no"/>
