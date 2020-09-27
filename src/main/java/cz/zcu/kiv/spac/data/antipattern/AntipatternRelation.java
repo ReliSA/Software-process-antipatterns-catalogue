@@ -1,13 +1,21 @@
 package cz.zcu.kiv.spac.data.antipattern;
 
+/**
+ * Class representing antipattern relation, which is used in 'Related Anti-patterns' table.
+ */
 public class AntipatternRelation {
 
-    private String antipatternName;
+    private String antipattern;
     private String relation;
 
-    public AntipatternRelation(String antipatternName, String relation) {
+    /**
+     * Constructor.
+     * @param antipattern - Antipattern name.
+     * @param relation - Relation to antipattern.
+     */
+    public AntipatternRelation(String antipattern, String relation) {
 
-        this.antipatternName = antipatternName;
+        this.antipattern = antipattern;
         this.relation = relation;
     }
 
@@ -16,8 +24,18 @@ public class AntipatternRelation {
         return relation;
     }
 
-    public String getAntipatternName() {
+    public String getAntipattern() {
 
-        return antipatternName;
+        return antipattern;
+    }
+
+    public void setRelation(String relation) {
+
+        this.relation = relation;
+    }
+
+    public void setAntipattern(String antipattern) {
+
+        this.antipattern = antipattern;
     }
 }

@@ -7,11 +7,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Class contains static methods for writing content to files.
+ */
 public class FileWriter {
 
     // Logger.
     private static Logger log = Logger.getLogger(FileWriter.class);
 
+    /**
+     * Write content to file.
+     * @param file - File.
+     * @param content - Content.
+     * @return
+     */
     public static boolean write(File file, String content) {
 
         try {

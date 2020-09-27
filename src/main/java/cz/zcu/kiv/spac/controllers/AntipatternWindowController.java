@@ -3,7 +3,6 @@ package cz.zcu.kiv.spac.controllers;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
-import cz.zcu.kiv.spac.enums.FieldType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
@@ -17,22 +16,23 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Controller for antipattern window.
+ */
 public class AntipatternWindowController {
 
     @FXML
@@ -53,68 +53,117 @@ public class AntipatternWindowController {
 
     private MarkdownParser markdownParser;
     private Antipattern antipattern;
+    private Antipattern tempAntipattern;
     private Template template;
+
+    private boolean antipatternUpdated = false;
+    private boolean antipatternCreated = false;
 
     // Logger.
     private static Logger log = Logger.getLogger(AntipatternWindowController.class);
 
+    /**
+     * Constructor.
+     */
     public AntipatternWindowController() {
 
     }
 
+    /**
+     * Initialize method for antipattern window.
+     */
     @FXML
     public void initialize() {
 
         // Not needed.
     }
 
+    /**
+     * Save antipattern values.
+     * @param actionEvent - Save button click action event.
+     */
     @FXML
     private void saveAP(ActionEvent actionEvent) {
 
         Stage stage = (Stage) btnSave.getScene().getWindow();
 
+        // If any required field is not filled, then cancel saving.
         if (!getAPContent(false)) {
 
             return;
         }
 
-        FileChooser fileChooser = new FileChooser();
+        // Create an alert.
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle(Constants.APP_NAME);
 
-        //Set extension filter for text files
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md");
-        fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.setInitialDirectory(new File(Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER));
+        // If antipattern is null, then it means that we want to create new antipattern.
+        if (antipattern == null) {
 
-        //Show save file dialog
-        File file = fileChooser.showSaveDialog(stage);
+            FileChooser fileChooser = new FileChooser();
 
-        if (file != null) {
+            // Set extension filter for markdown files.
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md");
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialDirectory(new File(Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER));
 
-            // create a alert
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setTitle(Constants.APP_NAME);
+            // Show save file dialog.
+            File file = fileChooser.showSaveDialog(stage);
 
-            if (FileWriter.write(file, antipattern.getMarkdownContent())) {
+            if (file != null) {
 
-                // TODO: Refresh list of antipatterns.
+                // Save antipattern content to new file.
+                if (saveAntipatternToFile(file)) {
+
+                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText("Antipattern created successfully.");
+                    alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was created successfully.");
+                    alert.show();
+
+                    tempAntipattern.setPath(file.getPath());
+                    antipatternCreated = true;
+
+                    stage.close();
+
+                } else {
+
+                    alert.setAlertType(Alert.AlertType.ERROR);
+                    alert.setHeaderText("Error while creating Antipattern.");
+                    alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was not created successfully.");
+                    alert.show();
+                }
+            }
+
+        } else {
+
+            // Save antipattern content to already existing antipattern file.
+            if (saveAntipatternToFile(new File(antipattern.getPath()))) {
 
                 alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("File created successfully.");
-                alert.setContentText("Antipattern '" + antipattern.getName() + "' was created successfully.");
+                alert.setHeaderText("Antipattern updated successfully.");
+                alert.setContentText("Antipattern '" + antipattern.getName() + "' was updated successfully.");
                 alert.show();
+
+                antipatternUpdated = true;
 
                 stage.close();
 
             } else {
 
                 alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error while creating file.");
-                alert.setContentText("Antipattern '" + antipattern.getName() + "' was not created successfully.");
+                alert.setHeaderText("Error while updating Antipattern.");
+                alert.setContentText("Antipattern '" + antipattern.getName() + "' was not updated successfully.");
                 alert.show();
+
+                return;
             }
         }
     }
 
+    /**
+     * Close antipattern window.
+     * @param actionEvent Button back click action event.
+     */
     @FXML
     public void closeAntipatternWindow(ActionEvent actionEvent) {
 
@@ -122,18 +171,42 @@ public class AntipatternWindowController {
         stage.close();
     }
 
+    /**
+     * Show preview of new / updated antipattern.
+     * @param event - Event.
+     */
     @FXML
     private void showAPPreview(Event event) {
 
         Tab selectedTab = (Tab) event.getTarget();
         if (selectedTab.getId().equals(tabPreview.getId()) && selectedTab.isSelected()) {
 
-            getAPContent(true);
-            wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(antipattern.getMarkdownContent()));
-            wviewAntipatternPreview.getEngine().setUserStyleSheetLocation(getClass().getResource(Constants.RESOURCE_PREVIEW_CSS).toString());
+            // If every required field is filled, then show preview as html page.
+            if (getAPContent(true)) {
+
+                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(tempAntipattern.getMarkdownContent()));
+                wviewAntipatternPreview.getEngine().setUserStyleSheetLocation(getClass().getResource(Constants.RESOURCE_PREVIEW_CSS).toString());
+
+            } else {
+
+                log.warn("Something went wrong with parsing markdown content in preview.");
+            }
         }
     }
 
+    /**
+     * Save antipattern to file.
+     * @param file - Antipattern file.
+     * @return True if saving antipattern content to file was successful, otherwise false.
+     */
+    private boolean saveAntipatternToFile(File file) {
+
+        return FileWriter.write(file, tempAntipattern.getMarkdownContent());
+    }
+
+    /**
+     * Create form and if any antipattern is updated, then fill fields with values.
+     */
     void loadAntipatternInfo() {
 
         // TODO: Set values from loaded antipattern.
@@ -141,97 +214,125 @@ public class AntipatternWindowController {
 
         }
 
+        // Get tab elements.
         ObservableList<Node> childrens = tabFormPane.getChildren();
+
+        // Clear every element on tab.
         childrens.clear();
 
+        // Get init Y location for first element.
         int layoutY = Constants.INIT_Y_LOCATION;
+
+        // Iterate through every field in template.
         for (TemplateField templateField : template.getFieldList()) {
 
+            // Create label for input field.
             Text templateFieldLabel = new Text(templateField.getText());
             templateFieldLabel.setFont(Constants.NEW_AP_LABEL_FONT);
 
+            // If field is not required, add additional info to label.
             if (!templateField.isRequired()) {
 
                 templateFieldLabel.setText(templateFieldLabel.getText() + " (optional)");
             }
 
+            // Set label position.
             templateFieldLabel.setLayoutX(Constants.FIELD_OFFSET_X);
             templateFieldLabel.setLayoutY(layoutY);
 
             Node field;
 
+            // Create specific field by its type.
             switch (templateField.getType()) {
 
                 case TEXTFIELD:
 
+                    // Create textfield.
                     field = new TextField();
                     TextField textField = (TextField) field;
 
+                    // Set bounds for field.
                     setRegionBounds(textField, templateFieldLabel);
 
+                    // Add offset to Y layout for next element.
                     layoutY += Constants.TEXTFIELD_OFFSET_Y;
 
+                    // Add field to tab.
                     childrens.add(field);
 
                     break;
 
                 case TEXTAREA:
 
+                    /*
+                    // TODO: HTMLEditor as Rich TextArea ?
+                    // https://stackoverflow.com/questions/10075841/how-to-hide-the-controls-of-htmleditor
+                    field = new HTMLEditor();
+                    HTMLEditor htmlEditorField = (HTMLEditor) field;
+
+                    setRegionBounds(htmlEditorField, templateFieldLabel);
+
+                    htmlEditorField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
+                    layoutY += Constants.TEXTAREA_HEIGHT;
+                     */
+
+                    // Create textarea.
                     field = new TextArea();
                     TextArea textAreaField = (TextArea) field;
 
                     // Set line break.
                     textAreaField.setWrapText(true);
 
+                    // Set bounds for field.
                     setRegionBounds(textAreaField, templateFieldLabel);
 
+                    // Set maximum height for textarea.
                     textAreaField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
+                    // Add offset to Y layout for next element.
                     layoutY += Constants.TEXTAREA_HEIGHT;
 
+                    // Add textarea to tab.
                     childrens.add(field);
 
                     break;
 
                 case TABLE:
 
-                    TableField tableField = (TableField) templateField;
-
-                    field = new TableView<>();
+                    // Create table.
+                    field = new TableView<AntipatternRelation>();
                     TableView tableViewField = (TableView) field;
 
+                    // Set bounds for field.
                     setRegionBounds(tableViewField, templateFieldLabel);
 
-                    for (String column : tableField.getColumns()) {
+                    // Add columns to table specified in template.
+                    tableViewField.getColumns().addAll(prepareTableColumns((TableField) templateField, tableViewField.getMinWidth()));
 
-                        TableColumn tableColumn = new TableColumn(column);
-                        tableColumn.setPrefWidth(tableViewField.getMinWidth() / tableField.getColumns().size());
-                        tableColumn.setResizable(false);
-                        tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-
-                        tableViewField.getColumns().add(tableColumn);
-
-                    }
-
+                    // Editable table.
                     tableViewField.setEditable(true);
 
-                    // TODO: complete adding new row. Maybe add button for adding row below table ?
-                    // TODO: add button to every row for deleting ? Or add button below table next to add button for multiselect delete ?
-                    tableViewField.setOnMouseClicked((MouseEvent e) -> {
-
-                        AntipatternRelation newPattern = new AntipatternRelation("", "");
-
-                        Node pickedNode = e.getPickResult().getIntersectedNode();
-
-
-                        if (e.getButton() == MouseButton.PRIMARY) {
-
-                            tableViewField.getItems().add(newPattern);
-                        }
-                    });
-
+                    // Set maximum height.
                     tableViewField.setMaxHeight(Constants.TABLE_HEIGHT);
+
+                    // Add offset to Y layout for next element.
                     layoutY += Constants.TABLE_HEIGHT;
 
+                    // Add a button for creating new rows in table.
+                    Button addRowButton = createButton("Add row", tableViewField.getLayoutX(), layoutY);
+
+                    // Click event for button.
+                    addRowButton.setOnAction((event) -> {
+
+                        tableViewField.getItems().add(new AntipatternRelation("Antipattern name", "Relation"));
+                    });
+
+                    // Add button to tab.
+                    childrens.add(addRowButton);
+
+                    // Add offset to Y layout for next element.
+                    layoutY += addRowButton.getPrefHeight() + Constants.BUTTON_OFFSET;
+
+                    // Add table to tab.
                     childrens.add(field);
 
                     break;
@@ -240,40 +341,120 @@ public class AntipatternWindowController {
                     continue;
             }
 
+            // Set field id for parsing.
             field.setId(templateField.getName());
 
+            // Add label to tab.
             childrens.add(templateFieldLabel);
 
+            // Add offset to Y layout for next element.
             layoutY += Constants.FIELD_OFFSET_Y;
         }
     }
 
+    /**
+     * Create table columns specified in template.
+     * @param tableField - Table field.
+     * @param tableViewWidth - Width of table view.
+     * @return List of table columns.
+     */
+    private List<TableColumn> prepareTableColumns(TableField tableField, Double tableViewWidth) {
+
+        List<TableColumn> columns = new ArrayList<>();
+
+        // Iterate through every column in template field.
+        for (String column : tableField.getColumns()) {
+
+            // Get factory value for column.
+            String valueFactory = prepareColumnValueFactory(column);
+
+            // Create new table column.
+            TableColumn<AntipatternRelation, String> tableColumn = new TableColumn<AntipatternRelation, String>(column);
+
+            // Set table column width.
+            tableColumn.setPrefWidth(tableViewWidth / tableField.getColumns().size());
+
+            // Not resizable.
+            tableColumn.setResizable(false);
+
+            // TODO: new Cell factory and Cell Value factory.
+            tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            tableColumn.setCellValueFactory(new PropertyValueFactory<AntipatternRelation, String>(valueFactory));
+
+            columns.add(tableColumn);
+        }
+
+        return columns;
+    }
+
+    /**
+     * Replace specified characters in columnName to get factory column name.
+     * @param columnName - Raw column name.
+     * @return Factory column name.
+     */
+    private String prepareColumnValueFactory(String columnName) {
+
+        String valueFactory = columnName.replace("-", "");
+        valueFactory = valueFactory.replace(" ", "");
+        valueFactory = valueFactory.replace("_", "");
+
+        return valueFactory.toLowerCase();
+    }
+
+    /**
+     * Create button.
+     * @param text - Button text.
+     * @param layoutX - Button X position.
+     * @param layoutY - Button Y position.
+     * @return New Button.
+     */
+    private Button createButton(String text, Double layoutX, double layoutY) {
+
+        Button button = new Button(text);
+        button.setPrefWidth(btnBack.getPrefWidth());
+        button.setPrefHeight(btnBack.getPrefHeight());
+        button.setLayoutX(layoutX);
+        button.setLayoutY(layoutY + Constants.BUTTON_OFFSET);
+
+        return button;
+    }
+
+    /**
+     * Get text from fields and create antipattern headings.
+     * @param previewed - True if content is only for preview, false if it is for saving.
+     * @return True of every required field is filled.
+     */
     private boolean getAPContent(boolean previewed) {
 
         // TODO: save changes into antipattern.
-        // TODO: validate required fields.
 
         if (antipattern == null) {
 
             // TODO: somehow manage to get antipattern name.
-            antipattern = new Antipattern("", "");
+            tempAntipattern = new Antipattern("", "", "");
         }
 
+        // Get all tab elements.
         ObservableList<Node> nodes = tabFormPane.getChildren();
 
+        // Get names of all fields in tab.
         List<String> fieldNameList = template.getFieldNameList();
 
+        boolean firstHeadingAdded = false;
+
+        // Iterate through every field on tab.
         for (Node node : nodes) {
 
+            // If field name is represented in template.
             if (fieldNameList.contains(node.getId())) {
 
+                // Get template field.
                 TemplateField field = template.getField(node.getId());
 
                 String headingName = node.getId();
                 String headingText = "";
 
-                System.out.println(node.getId());
-
+                // Get text from field.
                 switch (field.getType()) {
 
                     case TEXTFIELD:
@@ -291,8 +472,8 @@ public class AntipatternWindowController {
                         break;
                 }
 
-
                 // TODO: test if table has at least 1 row with values
+                // Check if every required field is filled if previewd is true.
                 if (!previewed && field.isRequired() && headingText.equals("") && !headingName.equals("related")) {
 
                     log.warn("Field '" + field.getName() + "' is blank!");
@@ -308,29 +489,53 @@ public class AntipatternWindowController {
                 } else {
 
                     // TODO: save antipattern name to headings ?
-                    antipattern.addAntipatternHeading(headingName, headingText);
+                    // Add new heading to antipattern.
+                    tempAntipattern.addAntipatternHeading(headingName, headingText);
+
+                    if (!firstHeadingAdded) {
+
+                        firstHeadingAdded = true;
+                        tempAntipattern.setName(headingText);
+                    }
                 }
             }
         }
-        System.out.println();
 
         // TODO: temporary.
-        String markdownContent = MarkdownFormatter.createMarkdownFile(antipattern.getAntipatternHeadings(), template.getFieldList());
+        // Create markdown content from headings.
+        String markdownContent = MarkdownFormatter.createMarkdownTemplateFile(tempAntipattern.getAntipatternHeadings(), template.getFieldList());
 
-        antipattern.setMarkdownContent(markdownContent);
+        // Set created markdown content to antipattern.
+        tempAntipattern.setMarkdownContent(markdownContent);
         return true;
     }
 
+    /**
+     * Set bounds for field.
+     * @param field - Field.
+     * @param templateFieldLabel - Label for field.
+     */
     private void setRegionBounds(Region field, Text templateFieldLabel) {
 
         field.setLayoutX(templateFieldLabel.getLayoutX());
         field.setLayoutY(templateFieldLabel.getLayoutY() + Constants.TABLE_OFFSET_Y);
+
+        // Calculate field width.
+        // (3 * templateFieldLabel.getLayoutX()) - x3 is for better offset from right.
         field.setMinWidth(tabFormPane.getPrefWidth() - (3 * templateFieldLabel.getLayoutX()) - field.getLayoutX());
+        field.setMaxWidth(tabFormPane.getPrefWidth() - (3 * templateFieldLabel.getLayoutX()) - field.getLayoutX());
     }
 
     public void setAntipattern(Antipattern antipattern) {
 
         this.antipattern = antipattern;
+
+        if (antipattern != null) {
+
+            // Set new temporary antipattern (only available when antipatternWindow is showed).
+            tempAntipattern = new Antipattern(antipattern.getName(), antipattern.getMarkdownContent(), antipattern.getPath());
+            tempAntipattern.setAntipatternHeadings(antipattern.getAntipatternHeadings());
+        }
     }
 
     public void setTemplate(Template template) {
@@ -338,8 +543,23 @@ public class AntipatternWindowController {
         this.template = template;
     }
 
-    public void setMarkdownParser(MarkdownParser markdownParser) {
+    void setMarkdownParser(MarkdownParser markdownParser) {
 
         this.markdownParser = markdownParser;
+    }
+
+    boolean isAntipatternUpdated() {
+
+        return antipatternUpdated;
+    }
+
+    public Antipattern getTempAntipattern() {
+
+        return this.tempAntipattern;
+    }
+
+    public boolean isAntipatternCreated() {
+
+        return antipatternCreated;
     }
 }

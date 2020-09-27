@@ -12,10 +12,13 @@ import org.apache.log4j.Logger;
 
 import java.util.Objects;
 
-public class AntipatternCatalogue extends Application {
+/**
+ * Main application class.
+ */
+public class AntipatternsCatalogue extends Application {
 
     // Logger.
-    private static Logger log = Logger.getLogger(AntipatternCatalogue.class);
+    private static Logger log = Logger.getLogger(AntipatternsCatalogue.class);
 
     public static void main(String[] args) {
 
@@ -30,6 +33,7 @@ public class AntipatternCatalogue extends Application {
 
         try {
 
+            // Load main window template.
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_MAIN_WINDOW)));
             stage.setTitle(Constants.APP_NAME);
             stage.setScene(new Scene(root));
@@ -43,6 +47,9 @@ public class AntipatternCatalogue extends Application {
         }
     }
 
+    /**
+     * Configure logger for application.
+     */
     private static void configureLogger() {
 
         BasicConfigurator.resetConfiguration();

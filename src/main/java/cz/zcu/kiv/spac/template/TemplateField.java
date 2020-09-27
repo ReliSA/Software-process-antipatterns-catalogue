@@ -2,6 +2,9 @@ package cz.zcu.kiv.spac.template;
 
 import cz.zcu.kiv.spac.enums.FieldType;
 
+/**
+ * Class representing template field.
+ */
 public class TemplateField {
 
     private String name;
@@ -9,6 +12,13 @@ public class TemplateField {
     private FieldType type;
     private boolean required;
 
+    /**
+     * Constructor.
+     * @param name - Field name.
+     * @param text - Field text.
+     * @param type - Field type.
+     * @param required - True if field is required, false if not.
+     */
     public TemplateField(String name, String text, FieldType type, boolean required) {
 
         this.name = name;

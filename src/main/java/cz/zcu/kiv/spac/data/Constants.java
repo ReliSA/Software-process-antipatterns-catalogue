@@ -7,11 +7,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * CLass containing constants for application.
+ */
 public class Constants {
 
-    public static final String APP_NAME = "Antipattern Catalogue";
+    public static final String APP_NAME = "Antipatterns Catalogue";
+
+    public static final String FILES_EXTENSION = ".md";
+
     public static final String CATALOGUE_FOLDER = "catalogue";
     public static final String CONFIGURATION_NAME = "config.xml";
+    public static final String CATALOGUE_FILE = "Antipatterns_catalogue" + FILES_EXTENSION;
+    public static final String TEMPLATE_FILE = "template" + FILES_EXTENSION;
+
+
     public static final List<String> TEMPLATE_FILES = new ArrayList<>(Arrays.asList("template", "template-terms"));
 
     public static final int FIELD_OFFSET_X = 10;
@@ -21,6 +31,7 @@ public class Constants {
     public static final int TABLE_OFFSET_Y = 10;
     public static final int TEXTAREA_HEIGHT = 100;
     public static final int TABLE_HEIGHT = 200;
+    public static final int BUTTON_OFFSET = 20;
 
     public static final Font NEW_AP_LABEL_FONT = Font.font("Arial", FontWeight.BOLD, 16);
 
