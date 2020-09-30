@@ -16,14 +16,6 @@ public class Constants {
 
     public static final String FILES_EXTENSION = ".md";
 
-    public static final String CATALOGUE_FOLDER = "catalogue";
-    public static final String CONFIGURATION_NAME = "config.xml";
-    public static final String CATALOGUE_FILE = "Antipatterns_catalogue" + FILES_EXTENSION;
-    public static final String TEMPLATE_FILE = "template" + FILES_EXTENSION;
-
-
-    public static final List<String> TEMPLATE_FILES = new ArrayList<>(Arrays.asList("template", "template-terms"));
-
     public static final int FIELD_OFFSET_X = 10;
     public static final int FIELD_OFFSET_Y = 40;
     public static final int INIT_Y_LOCATION = 20;
@@ -37,10 +29,16 @@ public class Constants {
 
     public static final String RESOURCE_ANTIPATTERN_WINDOW = "/windows/AntipatternWindow.fxml";
     public static final String RESOURCE_MAIN_WINDOW = "/windows/MainWindow.fxml";
-    public static final String RESOURCE_PREVIEW_CSS = "/css/antipatternPreview.css";
+    public static final String RESOURCE_PREVIEW_CSS = "/css/AntipatternPreview.css";
+    public static final String RESOURCE_ANTIPATTERN_RELATION_CSS = "/css/elements/AntipatternRelationTable.css";
 
     public static final String CATALOGUE_NAME = "../Antipatterns_catalogue.md";
     public static final String README_NAME = "../README.md";
+    public static final String CATALOGUE_FOLDER = "catalogue";
+    public static final String CONFIGURATION_NAME = "config.xml";
+    public static final String CATALOGUE_FILE = "Antipatterns_catalogue" + FILES_EXTENSION;
+    public static final String TEMPLATE_FILE = "template" + FILES_EXTENSION;
+    public static final List<String> TEMPLATE_FILES = new ArrayList<>(Arrays.asList("template", "template-terms"));
 
     public static final String LINE_BREAKER = "\r\n";
 }

@@ -97,7 +97,6 @@ public class MainWindowController {
             System.exit(1);
         }
 
-        // TODO: load antipatterns via catalogue.
         // Load all antipatterns from catalogue folder.
         antipatterns = FileLoader.loadAntipatterns(markdownParser, Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER);
 
@@ -261,18 +260,23 @@ public class MainWindowController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // If new antipattern was created / existing antipattern was updated, then refresh antipattern list.
-            if (antipatternWindowController.isAntipatternUpdated()) {
-
-                antipatterns = null;
-                antipatterns = FileLoader.loadAntipatterns(markdownParser, Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER);
-                fillAntipatternList();
-            }
-
+            // If new antipattern was created in form, then save this antipattern to new file and update catalogue file.
             if (antipatternWindowController.isAntipatternCreated()) {
 
                 Antipattern createdAntipattern = antipatternWindowController.getTempAntipattern();
                 addNewAntipatternToCatalogue(createdAntipattern);
+
+                antipatterns = null;
+                antipatterns = FileLoader.loadAntipatterns(markdownParser, Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER);
+
+                fillAntipatternList();
+            }
+
+            // If existing antipattern was updated, then replace old antipattern with newer.
+            if (antipatternWindowController.isAntipatternUpdated()) {
+
+                Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
+                antipatterns.put(updatedAntipattern.getName(), updatedAntipattern);
             }
 
         } catch (Exception e) {
@@ -305,7 +309,7 @@ public class MainWindowController {
             catalogue.sortCatalogueInstance(firstLetter);
 
             // Create new catalogue content.
-            String catalogueMarkdownContent = MarkdownFormatter.createMarkdownCatalogueFile(catalogue);
+            String catalogueMarkdownContent = MarkdownFormatter.createCatalogueMarkdownContent(catalogue);
 
             // Replace old catalogue content with new catalogue content.
             FileWriter.write(new File(Constants.CATALOGUE_FILE), catalogueMarkdownContent);

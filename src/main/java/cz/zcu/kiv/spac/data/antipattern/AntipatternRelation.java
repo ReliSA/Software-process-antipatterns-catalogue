@@ -10,6 +10,13 @@ public class AntipatternRelation {
 
     /**
      * Constructor.
+     */
+    public AntipatternRelation() {
+
+    }
+
+    /**
+     * Constructor.
      * @param antipattern - Antipattern name.
      * @param relation - Relation to antipattern.
      */

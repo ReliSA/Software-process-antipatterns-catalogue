@@ -1,8 +1,15 @@
 package cz.zcu.kiv.spac.markdown;
 
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.template.TableColumnField;
+import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
 
@@ -83,9 +90,9 @@ public class MarkdownFormatter {
      * @param fieldList - Template field list.
      * @return Markdown content for antipattern.
      */
-    public static String createMarkdownTemplateFile(Map<String, String> headings, List<TemplateField> fieldList) {
+    public static String createAntipatternMarkdownContent(Map<String, AntipatternHeading> headings, List<TemplateField> fieldList) {
 
-        // TODO: Tasklist + table not implemented yet.
+        // TODO: Tasklist not implemented yet.
         StringBuilder sb = new StringBuilder();
 
         // Add path to antipattern name.
@@ -98,30 +105,58 @@ public class MarkdownFormatter {
         // Iterate through every template field to extract value for every field.
         for (TemplateField field : fieldList) {
 
-            // First, we need to write name, which is everytime on first position.
-            if (nameWrited) {
+            AntipatternHeading antipatternHeading = headings.get(field.getName());
 
-                sb.append("## ");
-                sb.append(field.getText());
-                sb.append(Constants.LINE_BREAKER);
-                sb.append(Constants.LINE_BREAKER);
+            // First, we need to write name, which is every time on first position.
+            if (!nameWrited) {
 
-                sb.append(headings.get(field.getName()));
-
-            } else {
-
-                String antipatternName = headings.get(field.getName());
+                AntipatternTextHeading textHeading = (AntipatternTextHeading) antipatternHeading;
 
                 // Add antipatern name to path.
-                sb.append(antipatternName);
+                sb.append(textHeading.getValue());
                 sb.append(Constants.LINE_BREAKER);
                 sb.append(Constants.LINE_BREAKER);
                 sb.append(Constants.LINE_BREAKER);
 
                 nameWrited = true;
 
+                // Antipattern name.
                 sb.append("# ");
-                sb.append(antipatternName);
+                sb.append(textHeading.getValue());
+
+            } else {
+
+                sb.append("## ");
+                sb.append(field.getText());
+
+                if (!field.isRequired()) {
+                    sb.append(" (Optional)");
+                }
+
+                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER);
+
+                // Check textarea and textfield.
+                if (antipatternHeading.getType() == FieldType.TEXTAREA || antipatternHeading.getType() == FieldType.TEXTFIELD) {
+
+                    AntipatternTextHeading textHeading = (AntipatternTextHeading) antipatternHeading;
+                    sb.append(textHeading.getValue());
+
+                } else if (antipatternHeading.getType() == FieldType.TABLE) {
+
+                    AntipatternTableHeading tableHeading = (AntipatternTableHeading) antipatternHeading;
+                    TableField tableField = (TableField) field;
+
+                    sb.append(createMarkdownTableHeader(tableField));
+
+                    // TODO: Create link for source.
+                    // TODO: Link two antipatterns / sources if exists in bibtex.
+                    for(AntipatternRelation relation : tableHeading.getRelations()) {
+
+                        sb.append("|").append(relation.getAntipattern()).append("|").append(relation.getRelation());
+                        sb.append(Constants.LINE_BREAKER);
+                    }
+                }
             }
 
             if (i < fieldList.size() - 1) {
@@ -137,24 +172,54 @@ public class MarkdownFormatter {
     }
 
     /**
+     * Create markdown table header.
+     * @param tableField - Table field.
+     * @return
+     */
+    private static String createMarkdownTableHeader(TableField tableField) {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("|");
+
+        // Append column names.
+        for (TableColumnField tableColumnField : tableField.getColumns()) {
+
+            sb.append(tableColumnField.getText()).append("|");
+        }
+
+        sb.append(Constants.LINE_BREAKER);
+        sb.append("|");
+
+        // Append column separators.
+        for (int j = 0; j < tableField.getColumns().size(); j++) {
+
+            sb.append("---|");
+        }
+
+        sb.append(Constants.LINE_BREAKER);
+
+        return sb.toString();
+    }
+
+    /**
      * Create markdown catalogue content.
      * @param catalogue - Catalogue.
      * @return Markdown content for catalogue.
      */
-    public static String createMarkdownCatalogueFile(Catalogue catalogue) {
+    public static String createCatalogueMarkdownContent(Catalogue catalogue) {
 
         StringBuilder sb = new StringBuilder();
 
         Map<String, List<CatalogueRecord>> catalogueRecordMap = catalogue.getCatalogueRecords();
 
-        sb.append("[Home](" + Utils.getFilenameFromStringPath(Constants.README_NAME) + ") > Catalogue");
+        sb.append("[Home](").append(Utils.getFilenameFromStringPath(Constants.README_NAME)).append(") > Catalogue");
         sb.append(Constants.LINE_BREAKER);
 
         sb.append("# " + Constants.APP_NAME);
         sb.append(Constants.LINE_BREAKER);
         sb.append(Constants.LINE_BREAKER);
 
-        // TODO: generate template from configuration ?
         sb.append("[Template](" + Constants.CATALOGUE_FOLDER + "/" + Constants.TEMPLATE_FILE + ") for new anti-pattern contents.");
         sb.append(Constants.LINE_BREAKER);
         sb.append(Constants.LINE_BREAKER);

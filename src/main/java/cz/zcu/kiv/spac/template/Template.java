@@ -59,24 +59,6 @@ public class Template {
     }
 
     /**
-     * Get field type of field.
-     * @param fieldName - Name of field.
-     * @return Field type.
-     */
-    public FieldType getFieldType(String fieldName) {
-
-        for (TemplateField field : fieldList) {
-
-            if (field.getName().equals(fieldName)) {
-
-                return field.getType();
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Get field by field name.
      * @param fieldName - Field name.
      * @return Field.

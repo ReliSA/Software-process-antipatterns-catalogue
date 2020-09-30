@@ -5,6 +5,7 @@ import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.enums.FieldType;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
+import cz.zcu.kiv.spac.template.TableColumnField;
 import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.template.TemplateField;
@@ -15,7 +16,6 @@ import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -76,8 +76,9 @@ public class FileLoader {
 
                     for (int j = 0; j < columns.getLength(); j++) {
                         String columnName = columns.item(j).getAttributes().getNamedItem("text").getTextContent();
+                        String columnDefaultValue = columns.item(j).getAttributes().getNamedItem("default_value").getTextContent();
 
-                        ((TableField) templateField).addColumn(columnName);
+                        ((TableField) templateField).addColumn(new TableColumnField(columnName, columnDefaultValue));
                     }
 
                 } else {

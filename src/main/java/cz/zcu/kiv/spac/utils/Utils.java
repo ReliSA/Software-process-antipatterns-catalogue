@@ -17,6 +17,11 @@ public class Utils {
         return Paths.get(".").normalize().toAbsolutePath().toString();
     }
 
+    /**
+     * Get file name from path in string format.
+     * @param path - Path in string.
+     * @return File name.
+     */
     public static String getFilenameFromStringPath(String path) {
 
         Path p = Paths.get(path);

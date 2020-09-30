@@ -3,9 +3,14 @@ package cz.zcu.kiv.spac.controllers;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
+import cz.zcu.kiv.spac.enums.FieldType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
+import cz.zcu.kiv.spac.template.TableColumnField;
 import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.template.TemplateField;
@@ -24,9 +29,11 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +82,8 @@ public class AntipatternWindowController {
     @FXML
     public void initialize() {
 
-        // Not needed.
+        // Import css files.
+        tabFormPane.getStylesheets().add(Constants.RESOURCE_ANTIPATTERN_RELATION_CSS);
     }
 
     /**
@@ -288,6 +296,7 @@ public class AntipatternWindowController {
 
                     // Set maximum height for textarea.
                     textAreaField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
+
                     // Add offset to Y layout for next element.
                     layoutY += Constants.TEXTAREA_HEIGHT;
 
@@ -299,7 +308,7 @@ public class AntipatternWindowController {
                 case TABLE:
 
                     // Create table.
-                    field = new TableView<AntipatternRelation>();
+                    field = new TableView<>();
                     TableView tableViewField = (TableView) field;
 
                     // Set bounds for field.
@@ -310,6 +319,9 @@ public class AntipatternWindowController {
 
                     // Editable table.
                     tableViewField.setEditable(true);
+
+                    // Add css class.
+                    tableViewField.getStyleClass().add("table-view");
 
                     // Set maximum height.
                     tableViewField.setMaxHeight(Constants.TABLE_HEIGHT);
@@ -323,7 +335,26 @@ public class AntipatternWindowController {
                     // Click event for button.
                     addRowButton.setOnAction((event) -> {
 
-                        tableViewField.getItems().add(new AntipatternRelation("Antipattern name", "Relation"));
+                        AntipatternRelation antipatternRelation = new AntipatternRelation();
+
+                        // Iterate through every column in template field.
+                        for (TableColumnField column : ((TableField) templateField).getColumns()) {
+
+                            // Get factory value for column.
+                            String valueFactory = prepareColumnValueFactory(column.getText());
+
+                            try {
+
+                                // Set default value for antipattern column field.
+                                BeanUtils.setProperty(antipatternRelation, valueFactory, column.getDefaultValue());
+
+                            } catch (InvocationTargetException | IllegalAccessException e) {
+
+                                log.warn("Cannot save default value '" + column.getDefaultValue() + "' to column '" + column + "'");
+                            }
+                        }
+
+                        tableViewField.getItems().add(antipatternRelation);
                     });
 
                     // Add button to tab.
@@ -363,23 +394,44 @@ public class AntipatternWindowController {
         List<TableColumn> columns = new ArrayList<>();
 
         // Iterate through every column in template field.
-        for (String column : tableField.getColumns()) {
+        for (TableColumnField column : tableField.getColumns()) {
 
             // Get factory value for column.
-            String valueFactory = prepareColumnValueFactory(column);
+            String valueFactory = prepareColumnValueFactory(column.getText());
 
             // Create new table column.
-            TableColumn<AntipatternRelation, String> tableColumn = new TableColumn<AntipatternRelation, String>(column);
+            TableColumn<AntipatternRelation, String> tableColumn = new TableColumn<>(column.getText());
 
             // Set table column width.
-            tableColumn.setPrefWidth(tableViewWidth / tableField.getColumns().size());
+            tableColumn.setPrefWidth((tableViewWidth / tableField.getColumns().size()));
+
+            // Set cell as textfield.
+            tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            // Set cell value as antipattern relation.
+            tableColumn.setCellValueFactory(new PropertyValueFactory<>(valueFactory));
+
+            // Set value of antipattern relation property (like antipattern name, relation with antipattern).
+            tableColumn.setOnEditCommit(event -> {
+
+                // Get updated antipattern.
+                AntipatternRelation row = event.getRowValue();
+
+                try {
+
+                    // Set new value for updated antipattern property.
+                    BeanUtils.setProperty(row, valueFactory, event.getNewValue());
+
+                } catch (InvocationTargetException | IllegalAccessException e) {
+
+                    log.warn("Cannot save value '" + event.getNewValue() + "' to column '" + column + "'");
+                }
+            });
 
             // Not resizable.
             tableColumn.setResizable(false);
 
-            // TODO: new Cell factory and Cell Value factory.
-            tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            tableColumn.setCellValueFactory(new PropertyValueFactory<AntipatternRelation, String>(valueFactory));
+            // Columns not reorderable.
+            tableColumn.setReorderable(false);
 
             columns.add(tableColumn);
         }
@@ -426,11 +478,8 @@ public class AntipatternWindowController {
      */
     private boolean getAPContent(boolean previewed) {
 
-        // TODO: save changes into antipattern.
-
         if (antipattern == null) {
 
-            // TODO: somehow manage to get antipattern name.
             tempAntipattern = new Antipattern("", "", "");
         }
 
@@ -452,58 +501,103 @@ public class AntipatternWindowController {
                 TemplateField field = template.getField(node.getId());
 
                 String headingName = node.getId();
-                String headingText = "";
+
+                 AntipatternHeading heading = null;
 
                 // Get text from field.
                 switch (field.getType()) {
 
                     case TEXTFIELD:
 
-                        headingText = ((TextField) node).getText();
+                        heading = new AntipatternTextHeading(((TextField) node).getText());
+                        heading.setType(FieldType.TEXTFIELD);
                         break;
 
                     case TEXTAREA:
 
-                        headingText = ((TextArea) node).getText();
+                        heading = new AntipatternTextHeading(((TextArea) node).getText());
+                        heading.setType(FieldType.TEXTAREA);
                         break;
 
                     case TABLE:
 
+                        TableView table = (TableView) node;
+
+                        ObservableList<AntipatternRelation> relations = table.getItems();
+
+                        heading = new AntipatternTableHeading(relations);
+                        heading.setType(FieldType.TABLE);
                         break;
+
+                    default:
+
+                        log.error("Undefined field type for field: " + headingName);
                 }
 
-                // TODO: test if table has at least 1 row with values
-                // Check if every required field is filled if previewd is true.
-                if (!previewed && field.isRequired() && headingText.equals("") && !headingName.equals("related")) {
+                // Check textarea and textfield.
+                if (heading.getType() == FieldType.TEXTAREA || heading.getType() == FieldType.TEXTFIELD) {
 
-                    log.warn("Field '" + field.getName() + "' is blank!");
+                    AntipatternTextHeading textHeading = (AntipatternTextHeading) heading;
 
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle(Constants.APP_NAME);
-                    alert.setHeaderText("Blank field!");
-                    alert.setContentText("Field '" + field.getName() + "' is blank!");
-                    alert.show();
+                    // If value of textarea / textfield is blank space, return error alert.
+                    // Otherwise, add heading to temporary antipattern.
+                    if (!previewed && field.isRequired() && textHeading.getValue().equals("")) {
 
-                    return false;
+                        log.warn("Field '" + field.getName() + "' is blank!");
 
-                } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle(Constants.APP_NAME);
+                        alert.setHeaderText("Blank field!");
+                        alert.setContentText("Field '" + field.getName() + "' is blank!");
+                        alert.show();
 
-                    // TODO: save antipattern name to headings ?
-                    // Add new heading to antipattern.
-                    tempAntipattern.addAntipatternHeading(headingName, headingText);
+                        return false;
 
-                    if (!firstHeadingAdded) {
+                    } else {
 
-                        firstHeadingAdded = true;
-                        tempAntipattern.setName(headingText);
+                        // Add new heading to antipattern.
+                        tempAntipattern.addAntipatternHeading(headingName, heading);
+
+                        if (!firstHeadingAdded) {
+
+                            // First heading is always antipattern name.
+                            firstHeadingAdded = true;
+                            tempAntipattern.setName(textHeading.getValue());
+                        }
+                    }
+
+                } else if (heading.getType() == FieldType.TABLE){
+
+                    assert heading instanceof AntipatternTableHeading;
+
+                    // Check Table.
+                    AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
+                    TableView table = (TableView) node;
+
+                    // If table does not contain any antipattern relation, then show alert.
+                    if (!previewed && field.isRequired() && table.getItems() == null || table.getItems().size() == 0) {
+
+                        log.warn("Field '" + field.getName() + "' does not contains any record!");
+
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle(Constants.APP_NAME);
+                        alert.setHeaderText("No records in table!");
+                        alert.setContentText("Field '" + field.getName() + "' does not contains any record!");
+                        alert.show();
+
+                        return false;
+
+                    } else {
+
+                        // Add new heading to antipattern.
+                        tempAntipattern.addAntipatternHeading(headingName, heading);
                     }
                 }
             }
         }
 
-        // TODO: temporary.
         // Create markdown content from headings.
-        String markdownContent = MarkdownFormatter.createMarkdownTemplateFile(tempAntipattern.getAntipatternHeadings(), template.getFieldList());
+        String markdownContent = MarkdownFormatter.createAntipatternMarkdownContent(tempAntipattern.getAntipatternHeadings(), template.getFieldList());
 
         // Set created markdown content to antipattern.
         tempAntipattern.setMarkdownContent(markdownContent);

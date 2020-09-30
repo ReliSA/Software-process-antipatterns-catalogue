@@ -1,5 +1,7 @@
 package cz.zcu.kiv.spac.data.antipattern;
 
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,7 +15,7 @@ public class Antipattern {
     private String markdownContent;
     private String path;
 
-    private Map<String, String> antipatternHeadings;
+    private Map<String, AntipatternHeading> antipatternHeadings;
 
     /**
      * Constructor.
@@ -44,17 +46,17 @@ public class Antipattern {
         return name;
     }
 
-    public Map<String, String> getAntipatternHeadings() {
+    public Map<String, AntipatternHeading> getAntipatternHeadings() {
 
         return antipatternHeadings;
     }
 
-    public void addAntipatternHeading(String key, String value) {
+    public void addAntipatternHeading(String key, AntipatternHeading heading) {
 
-        this.antipatternHeadings.put(key, value);
+        this.antipatternHeadings.put(key, heading);
     }
 
-    public void setAntipatternHeadings(Map<String, String> antipatternHeadings) {
+    public void setAntipatternHeadings(Map<String, AntipatternHeading> antipatternHeadings) {
 
         this.antipatternHeadings = new HashMap<>(antipatternHeadings);
     }

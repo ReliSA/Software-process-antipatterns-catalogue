@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class TableField extends TemplateField {
 
-    private List<String> columns;
+    private List<TableColumnField> columns;
 
     /**
      * Constructor.
@@ -25,12 +25,12 @@ public class TableField extends TemplateField {
         columns = new ArrayList<>();
     }
 
-    public void addColumn(String column) {
+    public void addColumn(TableColumnField column) {
 
         this.columns.add(column);
     }
 
-    public List<String> getColumns() {
+    public List<TableColumnField> getColumns() {
 
         return this.columns;
     }

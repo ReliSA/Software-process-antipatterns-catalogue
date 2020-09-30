@@ -1,6 +1,5 @@
 package cz.zcu.kiv.spac.file;
 
-import cz.zcu.kiv.spac.controllers.AntipatternWindowController;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -19,7 +18,7 @@ public class FileWriter {
      * Write content to file.
      * @param file - File.
      * @param content - Content.
-     * @return
+     * @return True if writing into file was successful, false if not.
      */
     public static boolean write(File file, String content) {
 
