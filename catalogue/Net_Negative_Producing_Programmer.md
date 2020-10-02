@@ -37,4 +37,5 @@ Person who contributes more trouble than benefits.
 ## Notes (optional) 
 
 ## Sources
-TODO
+
+* [CUN'10](../References.md) -- see the [description on C2 wiki](https://wiki.c2.com/?NetNegativeProducingProgrammer)
