@@ -10,21 +10,21 @@ import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.utils.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +44,8 @@ public class MainWindowController {
     @FXML
     private WebView wviewAntipatternPreview;
 
+    @FXML
+    private CheckBox chckBoxFilterNonCreated;
 
     // App variables.
     private MarkdownParser markdownParser;
@@ -98,7 +100,7 @@ public class MainWindowController {
         }
 
         // Load all antipatterns from catalogue folder.
-        antipatterns = FileLoader.loadAntipatterns(markdownParser, Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER);
+        antipatterns = FileLoader.loadAntipatterns(markdownParser, catalogue);
 
         // Add every antipattern to antipattern list element.
         fillAntipatternList();
@@ -106,6 +108,8 @@ public class MainWindowController {
         // Set css styles for preview.
         wviewAntipatternPreview.getEngine().setUserStyleSheetLocation(getClass().getResource(Constants.RESOURCE_PREVIEW_CSS).toString());
 
+        // Set tooltip for checkbox for filtering noncreated antipatterns.
+        chckBoxFilterNonCreated.setTooltip(new Tooltip("If selected, then all antipatterns, which are not created (does not have file in catalogue folder), will be filtered."));
     }
 
     /**
@@ -123,14 +127,15 @@ public class MainWindowController {
 
             for (String aPatternName : antipatterns.keySet()) {
 
-                if (aPatternName.toLowerCase().contains(searchText.toLowerCase())) {
+                Antipattern antipattern = antipatterns.get(aPatternName);
+                String name = antipattern.getName();
+
+                if (name.toLowerCase().contains(searchText.toLowerCase())) {
 
                     // Add antipattern to list.
-                    listAntipatterns.getItems().add(FilenameUtils.removeExtension(aPatternName));
+                    listAntipatterns.getItems().add(prepareAntipatternName(antipattern));
                 }
             }
-
-            log.info("Searched phrase \"" +  searchText + "\", found " + listAntipatterns.getItems().size() + " antipatterns");
         }
     }
 
@@ -153,7 +158,10 @@ public class MainWindowController {
             return;
         }
 
-        Antipattern selectedAntipattern = antipatterns.get(item);
+        item = item.replace(Constants.ANTIPATTERN_NOT_CREATED_SYMBOL, "");
+
+        String formattedName = Utils.formatAntipatternName(item);
+        Antipattern selectedAntipattern = antipatterns.get(formattedName);
 
         // If no antipattern was selected.
         if (selectedAntipattern == null) {
@@ -168,7 +176,7 @@ public class MainWindowController {
             if (mouseEvent.getClickCount() == 1) {
 
                 // Show preview.
-                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(selectedAntipattern.getMarkdownContent()));
+                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(selectedAntipattern.getContent().toString()));
 
             } else if (mouseEvent.getClickCount() == 2) {
 
@@ -197,6 +205,16 @@ public class MainWindowController {
     }
 
     /**
+     * Checkbox action for filtering antipatterns which are not created yet.
+     * @param actionEvent - Action event.
+     */
+    @FXML
+    private void chckBoxFilterNonCreatedClicked(ActionEvent actionEvent) {
+
+        fillAntipatternList();
+    }
+
+    /**
      * Open antipattern window for creating new antipattern.
      */
     private void openAntipatternWindow() {
@@ -212,7 +230,14 @@ public class MainWindowController {
         listAntipatterns.getItems().clear();
         for (String aPatternName : antipatterns.keySet()) {
 
-            listAntipatterns.getItems().add(aPatternName);
+            Antipattern antipattern = antipatterns.get(aPatternName);
+
+            if (chckBoxFilterNonCreated.isSelected() && !antipattern.isCreated()) {
+
+                continue;
+            }
+
+            listAntipatterns.getItems().add(prepareAntipatternName(antipattern));
         }
     }
 
@@ -223,6 +248,31 @@ public class MainWindowController {
     private void openAntipatternWindow(Antipattern antipattern) {
 
         try {
+
+            String stageTitle = Constants.APP_NAME;
+
+            // If antipattern is null, then it means that we want to create new antipattern.
+            if (antipattern == null) {
+
+                stageTitle += " - New Antipattern";
+
+            } else {
+
+                if (antipattern.isLinking()) {
+
+                    // Create an alert.
+                    Alert alert = new Alert(Alert.AlertType.NONE);
+                    alert.setTitle(Constants.APP_NAME);
+                    alert.setAlertType(Alert.AlertType.ERROR);
+                    alert.setHeaderText("Error while opening antipattern window");
+                    alert.setContentText("Antipattern '" + antipattern.getName() + "' cannot be updated, because it contains link to another antipattern.");
+                    alert.show();
+
+                    return;
+                }
+
+                stageTitle += " - Edit Antipattern (" + antipattern.getName() + ")";
+            }
 
             // Create new stage.
             Stage stage = new Stage();
@@ -241,18 +291,6 @@ public class MainWindowController {
             // Create Form tab and init values in fields.
             antipatternWindowController.loadAntipatternInfo();
 
-            String stageTitle = Constants.APP_NAME;
-
-            // If antipattern is null, then it means that we want to create new antipattern.
-            if (antipattern == null) {
-
-                stageTitle += " - New Antipattern";
-
-            } else {
-
-                stageTitle += " - Edit Antipattern (" + antipattern.getName() + ")";
-            }
-
             // Set stage.
             stage.setTitle(stageTitle);
             stage.setScene(new Scene(root));
@@ -267,7 +305,7 @@ public class MainWindowController {
                 addNewAntipatternToCatalogue(createdAntipattern);
 
                 antipatterns = null;
-                antipatterns = FileLoader.loadAntipatterns(markdownParser, Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER);
+                antipatterns = FileLoader.loadAntipatterns(markdownParser, catalogue);
 
                 fillAntipatternList();
             }
@@ -276,7 +314,7 @@ public class MainWindowController {
             if (antipatternWindowController.isAntipatternUpdated()) {
 
                 Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
-                antipatterns.put(updatedAntipattern.getName(), updatedAntipattern);
+                antipatterns.put(updatedAntipattern.getFormattedName(), updatedAntipattern);
             }
 
         } catch (Exception e) {
@@ -299,6 +337,12 @@ public class MainWindowController {
             // Get list of catalogue records by first letter of name.
             List<CatalogueRecord> catalogueRecords = catalogue.getCatalogueInstance(firstLetter);
 
+            // If catalogue does not contains specific instance, then create new arraylist.
+            if (catalogueRecords == null) {
+
+                catalogueRecords = new ArrayList<>();
+            }
+
             // Add created antipattern to list.
             catalogueRecords.add(new CatalogueRecord(newAntipattern.getName(), Constants.CATALOGUE_FOLDER + "/" + Utils.getFilenameFromStringPath(newAntipattern.getPath())));
 
@@ -309,7 +353,7 @@ public class MainWindowController {
             catalogue.sortCatalogueInstance(firstLetter);
 
             // Create new catalogue content.
-            String catalogueMarkdownContent = MarkdownFormatter.createCatalogueMarkdownContent(catalogue);
+            String catalogueMarkdownContent = MarkdownFormatter.createCatalogueMarkdownContent(catalogue, antipatterns);
 
             // Replace old catalogue content with new catalogue content.
             FileWriter.write(new File(Constants.CATALOGUE_FILE), catalogueMarkdownContent);
@@ -320,5 +364,22 @@ public class MainWindowController {
 
             log.warn("New antipattern '" + newAntipattern.getName() + "' was not added into template because of error.");
         }
+    }
+
+    /**
+     * Add symbol to antipattern name if that antipattern is not created yet.
+     * @param antipattern - Antipattern.
+     * @return Updated antipattern name, if antipattern was not created yet.
+     */
+    private String prepareAntipatternName(Antipattern antipattern) {
+
+        String item = antipattern.getName();
+
+        if (!antipattern.isCreated()) {
+
+            item += Constants.ANTIPATTERN_NOT_CREATED_SYMBOL;
+        }
+
+        return item;
     }
 }

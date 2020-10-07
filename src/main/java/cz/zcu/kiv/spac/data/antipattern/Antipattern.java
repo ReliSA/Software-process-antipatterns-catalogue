@@ -1,6 +1,7 @@
 package cz.zcu.kiv.spac.data.antipattern;
 
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.utils.Utils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,33 +13,54 @@ import java.util.Map;
 public class Antipattern {
 
     private String name;
-    private String markdownContent;
+    private String formattedName;
+    private AntipatternContent content;
     private String path;
+
+    private boolean created;
+    private boolean linking;
 
     private Map<String, AntipatternHeading> antipatternHeadings;
 
     /**
      * Constructor.
      * @param name - Antipattern name.
-     * @param markdownContent - Antipattern content in markdown.
+     * @param content - Antipattern content in markdown.
      * @param path - Path to antipattern file.
      */
-    public Antipattern(String name, String markdownContent, String path) {
+    public Antipattern(String name, AntipatternContent content, String path) {
 
         this.name = name;
-        this.markdownContent = markdownContent;
+        this.formattedName = Utils.formatAntipatternName(name);
+        this.content = content;
         this.path = path;
         this.antipatternHeadings = new LinkedHashMap<>();
+
+        if (path.equals("")) {
+
+            created = false;
+
+        } else {
+
+            created = true;
+        }
+
+        linking = false;
     }
 
-    public String getMarkdownContent() {
+    public AntipatternContent getContent() {
 
-        return markdownContent;
+        return content;
     }
 
-    public void setMarkdownContent(String markdownContent) {
+    public void setContent(AntipatternContent content) {
 
-        this.markdownContent = markdownContent;
+        this.content = content;
+    }
+
+    public void setContent(String content) {
+
+        this.content.setContent(content);
     }
 
     public String getName() {
@@ -74,5 +96,26 @@ public class Antipattern {
     public void setName(String name) {
 
         this.name = name;
+        this.formattedName = Utils.formatAntipatternName(name);
+    }
+
+    public boolean isCreated() {
+
+        return created;
+    }
+
+    public boolean isLinking() {
+
+        return linking;
+    }
+
+    public void setLinking(boolean linking) {
+
+        this.linking = linking;
+    }
+
+    public String getFormattedName() {
+
+        return formattedName;
     }
 }

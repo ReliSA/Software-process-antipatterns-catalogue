@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>AntipatternCatalogue</groupId>
-    <artifactId>java/cz/zcu/kiv/spac</artifactId>
+    <groupId>java.cz.zcu.kiv.spac</groupId>
+    <artifactId>AntipatternCatalogue</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
     <name>AntipatternCatalogue</name>
@@ -19,6 +19,20 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>11</release>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>java.cz.zcu.kiv.spac.AntipatternsCatalogue</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
 

@@ -38,7 +38,11 @@ public class Catalogue {
 
     public List<CatalogueRecord> getCatalogueInstance(String key) {
 
-        return this.catalogueRecords.get(key);
+        if (this.catalogueRecords.containsKey(key)) {
+            return this.catalogueRecords.get(key);
+        }
+
+        return null;
     }
 
     /**

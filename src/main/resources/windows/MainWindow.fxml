@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -25,7 +26,7 @@
         <Menu mnemonicParsing="false" text="Git" />
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="651.0" prefWidth="1063.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="780.0" prefWidth="1082.0" VBox.vgrow="ALWAYS">
          <children>
             <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="669.0" prefWidth="283.0" />
             <Label layoutX="96.0" layoutY="8.0" text="Antipatterns">
@@ -39,7 +40,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="txtFieldAPSearch" layoutX="89.0" layoutY="46.0" onKeyTyped="#filterAntipatterns" prefHeight="25.0" prefWidth="208.0" promptText="Antipattern name" />
+            <TextField fx:id="txtFieldAPSearch" layoutX="89.0" layoutY="46.0" onKeyTyped="#filterAntipatterns" prefHeight="25.0" prefWidth="183.0" promptText="Antipattern name" />
             <Label layoutX="14.0" layoutY="49.0" text="Search AP:">
                <font>
                   <Font size="14.0" />
@@ -49,6 +50,7 @@
             <Line endX="1067.0" endY="747.0" startX="314.0" startY="747.0" strokeWidth="0.1" />
             <Line endX="-111.5" endY="658.5" layoutX="425.0" layoutY="88.0" startX="-111.0" startY="-10.0" strokeWidth="0.2" />
             <Line endX="632.5" endY="648.5" layoutX="435.0" layoutY="98.0" startX="632.70703125" startY="-19.29290771484375" strokeWidth="0.2" />
+            <CheckBox fx:id="chckBoxFilterNonCreated" layoutX="281.0" layoutY="48.0" mnemonicParsing="false" onAction="#chckBoxFilterNonCreatedClicked" prefHeight="20.0" prefWidth="16.0" />
          </children>
     </AnchorPane>
   </children>

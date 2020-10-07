@@ -179,9 +179,19 @@ public class MarkdownParser {
                         antipatternName = textNode.getChars().toString();
                         path = "";
 
+                        // Part, where is parsed record like "Antipattern name - see [Other antipattern](path/to/other antipattern).
                         if (nodeCatalogueRecordLast != null && nodeCatalogueRecordLast.getClass() == Emphasis.class) {
 
-                            antipatternName += nodeCatalogueRecordLast.getChars().toString();
+                            for (Node emphasisChildNode : nodeCatalogueRecordLast.getChildren()) {
+
+                                if (emphasisChildNode.getClass() == Link.class) {
+
+                                    Link emphasisLink = (Link) emphasisChildNode;
+                                    path = emphasisLink.getUrl().toString();
+                                }
+                            }
+
+                            antipatternName = antipatternName.replace(" - ", "");
                         }
 
                     } else {

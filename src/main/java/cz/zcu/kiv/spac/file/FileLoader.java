@@ -1,7 +1,9 @@
 package cz.zcu.kiv.spac.file;
 
-import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
+import cz.zcu.kiv.spac.data.catalogue.Catalogue;
+import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.FieldType;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
@@ -9,7 +11,7 @@ import cz.zcu.kiv.spac.template.TableColumnField;
 import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.template.TemplateField;
-import org.apache.commons.io.FilenameUtils;
+import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.*;
 
@@ -105,54 +107,92 @@ public class FileLoader {
     }
 
     /**
-     * Load all antipatterns from folder.
+     * Load all antipatterns from catalogue file.
      * @param markdownParser - Markdown parser.
-     * @param antipatternFolder - Folder with antipattern files.
+     * @param catalogue - Antipattern catalogue.
      * @return Map of antipatterns.
      */
-    public static Map<String, Antipattern> loadAntipatterns(MarkdownParser markdownParser, String antipatternFolder) {
+    public static Map<String, Antipattern> loadAntipatterns(MarkdownParser markdownParser, Catalogue catalogue) {
 
         log.info("Initializing antipattern list.");
 
         Map<String, Antipattern> antipatterns = new LinkedHashMap<>();
 
-        // Get all files from folder.
-        File folder = new File(antipatternFolder);
-        File[] listOfFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(Constants.FILES_EXTENSION));
+        // Get all catalogue instances.
+        Map<String, List<CatalogueRecord>> catalogueRecords = catalogue.getCatalogueRecords();
 
-        if (listOfFiles != null) {
+        Map<String, String> linkedAntipatterns = new HashMap<>();
 
-            // Iterate through every file.
-            for (File file : listOfFiles) {
+        // Iterate through every catalogue instance.
+        for (String catalogueInstance : catalogueRecords.keySet()) {
 
-                // If file exists.
-                if (file.isFile()) {
+            // Get all antipatterns in instance.
+            List<CatalogueRecord> catalogueAntipatterns = catalogueRecords.get(catalogueInstance);
 
-                    // Get antipattern name.
-                    String aPatternName = FilenameUtils.removeExtension(file.getName());
+            // Iterate through every antipattern.
+            for (CatalogueRecord catalogueAntipattern : catalogueAntipatterns) {
 
-                    // If antipattern name is not in disabled name list.
-                    if (!Constants.TEMPLATE_FILES.contains(aPatternName)) {
+                // If antipattern does not have path, then
+                if (catalogueAntipattern.getPath().equals("")) {
 
-                        // Read markdown content and format it (if contains table).
-                        String markdownContent = loadFileContent(file.getPath());
+                    AntipatternContent content = new AntipatternContent(MarkdownFormatter.getNonExistingAntipatternContent(catalogueAntipattern.getAntipatternName()));
+                    Antipattern nonCreatedAntipattern = new Antipattern(catalogueAntipattern.getAntipatternName(), content, "");
+                    antipatterns.put(nonCreatedAntipattern.getFormattedName(), nonCreatedAntipattern);
 
-                        if (markdownContent == null) {
+                } else {
 
-                            continue;
+                    // Get antipattern file.
+                    File antipatternFile = new File(Utils.getRootDir() + "/" + catalogueAntipattern.getPath());
+
+                    // If antipattern file exists.
+                    if (antipatternFile.exists()) {
+
+                        // Get antipattern name from filename.
+                        String filenameFromStringPath = Utils.getFilenameFromStringPath(catalogueAntipattern.getPath());
+                        String filenameToAntipatternName = Utils.formatAntipatternName(filenameFromStringPath);
+
+                        AntipatternContent content = null;
+
+                        // If antipattern name from filename and antipattern name from catalogue isn't equal, it means that current
+                        // antipattern linking another antipattern.
+                        if (!Utils.isAntipatternNamesEquals(filenameToAntipatternName, catalogueAntipattern.getAntipatternName())) {
+
+                            String formattedName = Utils.formatAntipatternName(catalogueAntipattern.getAntipatternName());
+                            linkedAntipatterns.put(formattedName, filenameToAntipatternName);
+
+                        } else {
+
+                            String markdownContent = loadFileContent(catalogueAntipattern.getPath());
+                            content = new AntipatternContent(MarkdownFormatter.formatMarkdownTable(markdownContent));
                         }
-
-                        markdownContent = MarkdownFormatter.formatMarkdownTable(markdownContent);
 
                         // TODO: do parse.
                         //markdownParser.parse(markdownContent);
 
-                        // Add new antipattern to map.
-                        antipatterns.put(aPatternName, new Antipattern(aPatternName, markdownContent, file.getPath()));
+                        Antipattern antipattern = new Antipattern(catalogueAntipattern.getAntipatternName(), content, catalogueAntipattern.getPath());
+                        antipatterns.put(antipattern.getFormattedName(), antipattern);
 
+                    } else {
+
+                        log.warn("Antipattern file was not found in path: " + catalogueAntipattern.getPath());
                     }
                 }
             }
+        }
+
+        // Link antipattern contents to specific antipatterns.
+        for (String antipatternName : linkedAntipatterns.keySet()) {
+
+            String linkedAntipatternName = linkedAntipatterns.get(antipatternName);
+
+            // Get linked and linking antipattern.
+            Antipattern linkedAntipattern = antipatterns.get(linkedAntipatternName);
+            Antipattern linkingAntipattern = antipatterns.get(antipatternName);
+
+            // Set content.
+            linkingAntipattern.setContent(linkedAntipattern.getContent());
+
+            linkingAntipattern.setLinking(true);
         }
 
         log.info("Antipattern list initialized, loaded " + antipatterns.size() + " antipatterns");

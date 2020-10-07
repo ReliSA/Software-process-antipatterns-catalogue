@@ -2,6 +2,7 @@ package cz.zcu.kiv.spac.controllers;
 
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
@@ -108,38 +109,44 @@ public class AntipatternWindowController {
         // If antipattern is null, then it means that we want to create new antipattern.
         if (antipattern == null) {
 
-            FileChooser fileChooser = new FileChooser();
+            // Create antipattern file.
+            String filename = tempAntipattern.getFormattedName().replace(" ", "_");
+            File file = new File(Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER + "/" + filename + ".md");
 
-            // Set extension filter for markdown files.
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md");
-            fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File(Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER));
+            try {
 
-            // Show save file dialog.
-            File file = fileChooser.showSaveDialog(stage);
+                if (!file.createNewFile()) {
 
-            if (file != null) {
-
-                // Save antipattern content to new file.
-                if (saveAntipatternToFile(file)) {
-
-                    alert.setAlertType(Alert.AlertType.INFORMATION);
-                    alert.setHeaderText("Antipattern created successfully.");
-                    alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was created successfully.");
-                    alert.show();
-
-                    tempAntipattern.setPath(file.getPath());
-                    antipatternCreated = true;
-
-                    stage.close();
-
-                } else {
-
-                    alert.setAlertType(Alert.AlertType.ERROR);
-                    alert.setHeaderText("Error while creating Antipattern.");
-                    alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was not created successfully.");
-                    alert.show();
+                    log.error("File " + file.getAbsolutePath() + "cannot be created!");
                 }
+
+                if (file.exists()) {
+
+                    // Save antipattern content to new file.
+                    if (saveAntipatternToFile(file)) {
+
+                        alert.setAlertType(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText("Antipattern created successfully.");
+                        alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was created successfully.");
+                        alert.show();
+
+                        tempAntipattern.setPath(file.getPath());
+                        antipatternCreated = true;
+
+                        stage.close();
+
+                    } else {
+
+                        alert.setAlertType(Alert.AlertType.ERROR);
+                        alert.setHeaderText("Error while creating Antipattern.");
+                        alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was not created successfully.");
+                        alert.show();
+                    }
+                }
+
+            } catch (Exception e) {
+
+                log.error("File " + file.getAbsolutePath() + "cannot be created!");
             }
 
         } else {
@@ -192,7 +199,7 @@ public class AntipatternWindowController {
             // If every required field is filled, then show preview as html page.
             if (getAPContent(true)) {
 
-                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(tempAntipattern.getMarkdownContent()));
+                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(tempAntipattern.getContent().toString()));
                 wviewAntipatternPreview.getEngine().setUserStyleSheetLocation(getClass().getResource(Constants.RESOURCE_PREVIEW_CSS).toString());
 
             } else {
@@ -209,7 +216,7 @@ public class AntipatternWindowController {
      */
     private boolean saveAntipatternToFile(File file) {
 
-        return FileWriter.write(file, tempAntipattern.getMarkdownContent());
+        return FileWriter.write(file, tempAntipattern.getContent().toString());
     }
 
     /**
@@ -480,7 +487,7 @@ public class AntipatternWindowController {
 
         if (antipattern == null) {
 
-            tempAntipattern = new Antipattern("", "", "");
+            tempAntipattern = new Antipattern("", new AntipatternContent(""), "");
         }
 
         // Get all tab elements.
@@ -543,12 +550,12 @@ public class AntipatternWindowController {
                     // Otherwise, add heading to temporary antipattern.
                     if (!previewed && field.isRequired() && textHeading.getValue().equals("")) {
 
-                        log.warn("Field '" + field.getName() + "' is blank!");
+                        log.warn("Field '" + field.getText() + "' is blank!");
 
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle(Constants.APP_NAME);
                         alert.setHeaderText("Blank field!");
-                        alert.setContentText("Field '" + field.getName() + "' is blank!");
+                        alert.setContentText("Field '" + field.getText() + "' is blank!");
                         alert.show();
 
                         return false;
@@ -571,18 +578,17 @@ public class AntipatternWindowController {
                     assert heading instanceof AntipatternTableHeading;
 
                     // Check Table.
-                    AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
                     TableView table = (TableView) node;
 
                     // If table does not contain any antipattern relation, then show alert.
-                    if (!previewed && field.isRequired() && table.getItems() == null || table.getItems().size() == 0) {
+                    if (!previewed && field.isRequired() && (table.getItems() == null || table.getItems().size() == 0)) {
 
-                        log.warn("Field '" + field.getName() + "' does not contains any record!");
+                        log.warn("Field '" + field.getText() + "' does not contains any record!");
 
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle(Constants.APP_NAME);
                         alert.setHeaderText("No records in table!");
-                        alert.setContentText("Field '" + field.getName() + "' does not contains any record!");
+                        alert.setContentText("Field '" + field.getText() + "' does not contains any record!");
                         alert.show();
 
                         return false;
@@ -600,7 +606,7 @@ public class AntipatternWindowController {
         String markdownContent = MarkdownFormatter.createAntipatternMarkdownContent(tempAntipattern.getAntipatternHeadings(), template.getFieldList());
 
         // Set created markdown content to antipattern.
-        tempAntipattern.setMarkdownContent(markdownContent);
+        tempAntipattern.setContent(markdownContent);
         return true;
     }
 
@@ -627,7 +633,7 @@ public class AntipatternWindowController {
         if (antipattern != null) {
 
             // Set new temporary antipattern (only available when antipatternWindow is showed).
-            tempAntipattern = new Antipattern(antipattern.getName(), antipattern.getMarkdownContent(), antipattern.getPath());
+            tempAntipattern = new Antipattern(antipattern.getName(), antipattern.getContent(), antipattern.getPath());
             tempAntipattern.setAntipatternHeadings(antipattern.getAntipatternHeadings());
         }
     }

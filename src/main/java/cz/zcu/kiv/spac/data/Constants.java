@@ -41,4 +41,6 @@ public class Constants {
     public static final List<String> TEMPLATE_FILES = new ArrayList<>(Arrays.asList("template", "template-terms"));
 
     public static final String LINE_BREAKER = "\r\n";
+
+    public static final String ANTIPATTERN_NOT_CREATED_SYMBOL = "*";
 }

@@ -1,6 +1,7 @@
 package cz.zcu.kiv.spac.markdown;
 
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
@@ -12,6 +13,7 @@ import cz.zcu.kiv.spac.template.TableColumnField;
 import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -147,7 +149,7 @@ public class MarkdownFormatter {
                     AntipatternTableHeading tableHeading = (AntipatternTableHeading) antipatternHeading;
                     TableField tableField = (TableField) field;
 
-                    sb.append(createMarkdownTableHeader(tableField));
+                    sb.append(createTableHeaderMarkdownContent(tableField));
 
                     // TODO: Create link for source.
                     // TODO: Link two antipatterns / sources if exists in bibtex.
@@ -174,9 +176,9 @@ public class MarkdownFormatter {
     /**
      * Create markdown table header.
      * @param tableField - Table field.
-     * @return
+     * @return Table header in markdown.
      */
-    private static String createMarkdownTableHeader(TableField tableField) {
+    private static String createTableHeaderMarkdownContent(TableField tableField) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -205,9 +207,10 @@ public class MarkdownFormatter {
     /**
      * Create markdown catalogue content.
      * @param catalogue - Catalogue.
+     * @param antipatterns - Antipatterns
      * @return Markdown content for catalogue.
      */
-    public static String createCatalogueMarkdownContent(Catalogue catalogue) {
+    public static String createCatalogueMarkdownContent(Catalogue catalogue, Map<String, Antipattern> antipatterns) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -240,7 +243,22 @@ public class MarkdownFormatter {
 
                 } else {
 
-                    sb.append("[").append(record.getAntipatternName()).append("](").append(record.getPath()).append(")");
+                    String formattedName = Utils.formatAntipatternName(record.getAntipatternName());
+                    Antipattern antipattern = antipatterns.get(formattedName);
+
+                    if (antipattern != null && antipattern.isLinking()) {
+
+                        String linkedAntipatternName = Utils.getFilenameFromStringPath(antipattern.getPath());
+                        linkedAntipatternName = FilenameUtils.removeExtension(linkedAntipatternName);
+                        linkedAntipatternName = Utils.formatAntipatternName(linkedAntipatternName);
+
+                        Antipattern linkedAntipattern = antipatterns.get(linkedAntipatternName);
+                        sb.append(record.getAntipatternName()).append(" - _see [").append(linkedAntipattern.getName()).append("](").append(antipattern.getPath()).append(")_");
+
+                    } else {
+
+                        sb.append("[").append(record.getAntipatternName()).append("](").append(record.getPath()).append(")");
+                    }
                 }
 
                 sb.append(Constants.LINE_BREAKER);
@@ -248,6 +266,25 @@ public class MarkdownFormatter {
             }
 
         }
+
+        return sb.toString();
+    }
+
+    /**
+     * Get markdown content for nonexisting antipattern.
+     * @param antipatternName - Name of nonexisting antipattern.
+     * @return Markdown content.
+     */
+    public static String getNonExistingAntipatternContent(String antipatternName) {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("# " + antipatternName);
+
+        sb.append(Constants.LINE_BREAKER);
+        sb.append(Constants.LINE_BREAKER);
+
+        sb.append("This antipattern was not yet created, only mentioned in antipattern catalogue.");
 
         return sb.toString();
     }

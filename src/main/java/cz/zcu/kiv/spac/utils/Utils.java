@@ -1,5 +1,7 @@
 package cz.zcu.kiv.spac.utils;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -26,5 +28,22 @@ public class Utils {
 
         Path p = Paths.get(path);
         return p.getFileName().toString();
+    }
+
+    public static String formatAntipatternName(String filename) {
+
+        String antipatternName = FilenameUtils.removeExtension(filename);
+        antipatternName = antipatternName.replace("_", " ");
+        antipatternName = antipatternName.replace("'", "").replace("’", "");
+
+        return antipatternName;
+    }
+
+    public static boolean isAntipatternNamesEquals(String antipatternName1, String antipatternName2) {
+
+        antipatternName1 = antipatternName1.replace("'", "").replace("’", "");
+        antipatternName2 = antipatternName2.replace("'", "").replace("’", "");;
+
+        return antipatternName1.equals(antipatternName2);
     }
 }
