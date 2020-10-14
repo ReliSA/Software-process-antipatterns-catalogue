@@ -23,6 +23,13 @@ Requirements and Analysis phases prolonged and consuming disproportionate amount
  - final product with poor code quality, many open bug reports, poor or patchy documentation 
  - stark contrast between interlevel communication in project hierarchy (management - developers) during the first period (close to silence) and after realizating the problem (panic and loud noise)
 
+## Symptoms in source code and Consequences
+ - rock-edge burndown of esp. implementation tasks mean there are no or just very few adaptive maintenance activities before the burning down starts
+ - the long period at project start translates to few modifications made to the source code, resulting in fewer commits (lower overall relative frequency)
+ - likewise, documentational artifacts have a lower _source code density_, as less functionality is delivered; this density should increase as soon as adaptive activities are registered
+ - the short period at project end is characterized by a higher frequency of higher-density implementation tasks, with little to no perfective or corrective work
+ - at the end of the project, code quality is comparatively lower, while complexity is probably higher, due to pressure excerted on developers in the burst phase
+
 ## Causes
 
 ## (Refactored) Solution
