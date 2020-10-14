@@ -12,5 +12,8 @@ A project that participants feel will fail or requiring unsustainable overwork. 
 ## Specific To
 
 ## Related Anti-patterns
+
+* Leads effectively to Half Done is Enough
+
 ## Sources
 [[WIK'13]](../References.md), [[BRO'98]](../References.md) 
