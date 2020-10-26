@@ -1,10 +1,11 @@
 package cz.zcu.kiv.spac.file;
 
+import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
-import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.enums.TemplateFieldType;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.template.TableColumnField;
@@ -64,13 +65,13 @@ public class FileLoader {
 
                 String name = attributes.getNamedItem("name").getTextContent();
                 String text = attributes.getNamedItem("text").getTextContent();
-                FieldType field = FieldType.valueOf(attributes.getNamedItem("field").getTextContent().toUpperCase());
+                TemplateFieldType field = TemplateFieldType.valueOf(attributes.getNamedItem("field").getTextContent().toUpperCase());
                 boolean required = attributes.getNamedItem("required").getTextContent().equals("yes");
 
                 TemplateField templateField;
 
                 // If current field is table, parse its columns and add it to list.
-                if (field == FieldType.TABLE) {
+                if (field == TemplateFieldType.TABLE) {
 
                     templateField = new TableField(name, text, field, required);
 
@@ -137,6 +138,7 @@ public class FileLoader {
 
                     AntipatternContent content = new AntipatternContent(MarkdownFormatter.getNonExistingAntipatternContent(catalogueAntipattern.getAntipatternName()));
                     Antipattern nonCreatedAntipattern = new Antipattern(catalogueAntipattern.getAntipatternName(), content, "");
+
                     antipatterns.put(nonCreatedAntipattern.getFormattedName(), nonCreatedAntipattern);
 
                 } else {
@@ -163,13 +165,18 @@ public class FileLoader {
                         } else {
 
                             String markdownContent = loadFileContent(catalogueAntipattern.getPath());
+                            markdownContent = markdownContent.replace("\r\r", Constants.LINE_BREAKER);
+
                             content = new AntipatternContent(MarkdownFormatter.formatMarkdownTable(markdownContent));
                         }
 
-                        // TODO: do parse.
-                        //markdownParser.parse(markdownContent);
-
                         Antipattern antipattern = new Antipattern(catalogueAntipattern.getAntipatternName(), content, catalogueAntipattern.getPath());
+
+                        if (content != null) {
+
+                            antipattern.setAntipatternHeadings(markdownParser.parseHeadings(content.toString()));
+                        }
+
                         antipatterns.put(antipattern.getFormattedName(), antipattern);
 
                     } else {

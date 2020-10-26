@@ -8,7 +8,8 @@ import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
-import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
+import cz.zcu.kiv.spac.enums.TemplateFieldType;
 import cz.zcu.kiv.spac.template.TableColumnField;
 import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.TemplateField;
@@ -43,7 +44,7 @@ public class MarkdownFormatter {
         StringBuilder newString = new StringBuilder();
 
         // Iterate through every line in markdown.
-        for (String contentLine : markdownContent.split("\n")) {
+        for (String contentLine : markdownContent.split(Constants.LINE_BREAKER)) {
             Matcher matcher = pattern.matcher(contentLine);
 
             // If lines contains markdown table column specification, then format it.
@@ -76,11 +77,12 @@ public class MarkdownFormatter {
                 }
 
                 newString.append(newParts);
-                newString.append("\n");
+                newString.append(Constants.LINE_BREAKER);
                 continue;
             }
 
             newString.append(contentLine);
+            newString.append(Constants.LINE_BREAKER);
         }
 
         return newString.toString();
@@ -132,26 +134,26 @@ public class MarkdownFormatter {
                 sb.append(field.getText());
 
                 if (!field.isRequired()) {
-                    sb.append(" (Optional)");
+                    sb.append(Constants.TEMPLATE_FIELD_OPTIONAL_STRING);
                 }
 
                 sb.append(Constants.LINE_BREAKER);
                 sb.append(Constants.LINE_BREAKER);
 
                 // Check textarea and textfield.
-                if (antipatternHeading.getType() == FieldType.TEXTAREA || antipatternHeading.getType() == FieldType.TEXTFIELD) {
+                if (antipatternHeading.getType() == AntipatternHeadingType.TEXT) {
 
                     AntipatternTextHeading textHeading = (AntipatternTextHeading) antipatternHeading;
                     sb.append(textHeading.getValue());
 
-                } else if (antipatternHeading.getType() == FieldType.TABLE) {
+                } else if (antipatternHeading.getType() == AntipatternHeadingType.TABLE) {
 
                     AntipatternTableHeading tableHeading = (AntipatternTableHeading) antipatternHeading;
                     TableField tableField = (TableField) field;
 
                     sb.append(createTableHeaderMarkdownContent(tableField));
 
-                    // TODO: Create link for source.
+                    // TODO: Create link for source if exists.
                     // TODO: Link two antipatterns / sources if exists in bibtex.
                     for(AntipatternRelation relation : tableHeading.getRelations()) {
 

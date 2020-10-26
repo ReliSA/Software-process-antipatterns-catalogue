@@ -1,9 +1,14 @@
 package cz.zcu.kiv.spac.template;
 
-import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class representing template.
@@ -73,5 +78,94 @@ public class Template {
             }
         }
         return null;
+    }
+
+    /**
+     * Compare antipatterns headings to template fields and return list of differences.
+     * @param antipattern - Compared antipattern.
+     * @return List of differences.
+     */
+    public List<String> getHeadingDifferences(Antipattern antipattern) {
+
+        List<String> headingDifferences = new ArrayList<>();
+
+        // Get antipattern headings texts.
+        List<String> antipatternHeadingsTexts = antipattern.getAntipatternHeadingsTexts();
+
+        // Check if there are any headings in antipattern.
+        boolean headingsPresented = false;
+
+        if (antipatternHeadingsTexts != null && antipatternHeadingsTexts.size() > 0) {
+
+            headingsPresented = true;
+        }
+
+        // Iterate through every template field.
+        for (TemplateField templateField : fieldList) {
+
+            String text = "Missing heading '" + templateField.getText() + "' !";
+
+            // Check only if template field is required.
+            if (templateField.isRequired()) {
+
+                // If antipattern contains any headings.
+                if (headingsPresented) {
+
+                    // If list of antipattern heading texts dont containt template field, then add difference.
+                    if (!antipatternHeadingsTexts.contains(templateField.getText())) {
+
+                        headingDifferences.add(text);
+
+                    } else {
+
+                        AntipatternHeading heading = antipattern.getAntipatternHeading(templateField.getText(), true);
+
+                        switch (heading.getType()) {
+
+                            case TABLE:
+                                AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
+
+                                if (tableHeading.getRelations() == null || tableHeading.getRelations().size() == 0) {
+
+                                    headingDifferences.add("Heading '" + templateField.getText() + "' does not contains any record in table !");
+                                }
+
+                                break;
+                            case TEXT:
+
+                                AntipatternTextHeading textHeading = (AntipatternTextHeading) heading;
+
+                                if (textHeading.getValue() == null || textHeading.getValue().length() == 0) {
+
+                                    headingDifferences.add("Heading '" + templateField.getText() + "' does not contains any text !");
+                                }
+                                break;
+                        }
+
+                        // If contains, then remove it from list.
+                        antipatternHeadingsTexts.remove(templateField.getText());
+                    }
+
+                    continue;
+                }
+
+                // If headings are not presented, just add heading text to list.
+                headingDifferences.add(text);
+
+            } else {
+
+                // Make sure that even small "optional" is included in field name.
+                antipatternHeadingsTexts.remove(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING);
+                antipatternHeadingsTexts.remove(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING.toLowerCase());
+            }
+        }
+
+        // If there are any extended headings in antipattern, then add them too.
+        for (String remainingHeading : antipatternHeadingsTexts) {
+
+            headingDifferences.add("Heading '" + remainingHeading + "' is not presented in template !");
+        }
+
+        return headingDifferences;
     }
 }

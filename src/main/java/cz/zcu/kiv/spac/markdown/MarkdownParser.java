@@ -10,14 +10,16 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.template.Template;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class for parsing markdowns.
@@ -39,53 +41,62 @@ public class MarkdownParser {
     }
 
     /**
-     * Parse antipattern content.
-     * @param markdownContent - Antipattern markdown content.
+     * Parse antipattern headings from markdown content.
+     * @param markdownContent - Markdown content.
+     * @return Map of antipattern headings.
      */
-    public void parseAntipattern(String markdownContent) {
+    public Map<String, AntipatternHeading> parseHeadings(String markdownContent) {
 
-        List<String> templateFieldTextList = template.getFieldTextList();
+        Map<String, AntipatternHeading> headings = new LinkedHashMap<>();
 
-        // TODO: Parse markdown content and extract all fields.
         MutableDataHolder options = getDataOptions();
         Parser parser = Parser.builder(options).build();
+        Node document = parser.parse(markdownContent);
 
-        if (markdownContent.contains("Viewgraph Engineering") && !markdownContent.contains("AnalysisParalysis") && !markdownContent.contains("Architects Don't Code")) {
-            Node document = parser.parse(markdownContent);
+        boolean firstHeadingAdded = false;
+        boolean parsingHeading = false;
+        StringBuilder headingContent = new StringBuilder();
+        AntipatternHeading heading = null;
 
-            test(document, 0);
+        for (Node node : document.getChildren()) {
 
-            for (Node node : document.getChildren()) {
+            if (node.getClass() == Heading.class) {
 
-                //System.out.println(node.getNodeName());
+                parsingHeading = true;
 
-                for (Node node2 : node.getChildren()) {
+                String headingName = node.getFirstChild().getChars().toString();
 
-                    //System.out.println("\t" + node2.getNodeName() + " " + node2.hasChildren());
-                    //System.out.println("\t\t" + node2.getChars().toString());
+                if (!firstHeadingAdded) {
 
-                    if (templateFieldTextList.contains(node2.getChars().toString())) {
-                        //System.out.println(node2.getChars().toString());
-                    }
+                    firstHeadingAdded = true;
+                    heading = new AntipatternTextHeading(headingName);
+                    heading.setType(AntipatternHeadingType.TEXT);
+
+                    // Get "The Antipattern Name" field text and set it as heading text for antipattern name.
+                    String antipatternFieldText = template.getFieldTextList().get(0);
+                    heading.setHeadingText(antipatternFieldText);
+                    headingName = antipatternFieldText;
+
+                } else {
+
+                    heading = new AntipatternTextHeading(headingContent.toString());
+                    heading.setHeadingText(headingName);
+                    headingContent = new StringBuilder();
+
+                    // TODO: somehow try to check table and set type.
+                    heading.setType(AntipatternHeadingType.TEXT);
                 }
+
+                headings.put(headingName, heading);
+
+            } else if (node.getClass() == Paragraph.class && parsingHeading) {
+
+                AntipatternTextHeading textHeading = (AntipatternTextHeading) heading;
+                textHeading.appendValue(node.getChars().toString());
             }
         }
-    }
 
-    private void test(Node node, int i) {
-
-        if (node.hasChildren()) {
-
-            for (Node node1 : node.getChildren()) {
-
-                for (int j = 0; j < i; j++) {
-                    System.out.print("\t");
-                }
-                System.out.println(node1.getNodeName() + " - " + node1.getChars().toString());
-
-                test(node1, i + 1);
-            }
-        }
+        return headings;
     }
 
     /**

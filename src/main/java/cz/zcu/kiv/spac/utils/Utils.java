@@ -30,6 +30,11 @@ public class Utils {
         return p.getFileName().toString();
     }
 
+    /**
+     * Format antipattern filename into antipattern name for comparing.
+     * @param filename - Antipattern name as filename.
+     * @return Formatted antipattern name.
+     */
     public static String formatAntipatternName(String filename) {
 
         String antipatternName = FilenameUtils.removeExtension(filename);
@@ -39,11 +44,17 @@ public class Utils {
         return antipatternName;
     }
 
+    /**
+     * Compare two antipatterns by their names.
+     * @param antipatternName1 - First antipattern name.
+     * @param antipatternName2 - Second antipattern name.
+     * @return True if both names are same, false if not.
+     */
     public static boolean isAntipatternNamesEquals(String antipatternName1, String antipatternName2) {
 
         antipatternName1 = antipatternName1.replace("'", "").replace("’", "");
-        antipatternName2 = antipatternName2.replace("'", "").replace("’", "");;
+        antipatternName2 = antipatternName2.replace("'", "").replace("’", "");
 
-        return antipatternName1.equals(antipatternName2);
+        return antipatternName1.equalsIgnoreCase(antipatternName2);
     }
 }

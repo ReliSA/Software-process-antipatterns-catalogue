@@ -7,7 +7,8 @@ import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
-import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
+import cz.zcu.kiv.spac.enums.TemplateFieldType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
@@ -28,13 +29,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,9 +225,12 @@ public class AntipatternWindowController {
      */
     void loadAntipatternInfo() {
 
-        // TODO: Set values from loaded antipattern.
+        boolean disableAntipatternName = false;
+        boolean antipatternNameFieldPassed = false;
+
         if (antipattern != null) {
 
+            disableAntipatternName = true;
         }
 
         // Get tab elements.
@@ -248,7 +252,7 @@ public class AntipatternWindowController {
             // If field is not required, add additional info to label.
             if (!templateField.isRequired()) {
 
-                templateFieldLabel.setText(templateFieldLabel.getText() + " (optional)");
+                templateFieldLabel.setText(templateFieldLabel.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING);
             }
 
             // Set label position.
@@ -256,6 +260,13 @@ public class AntipatternWindowController {
             templateFieldLabel.setLayoutY(layoutY);
 
             Node field;
+
+            AntipatternHeading heading = null;
+
+            if (antipattern != null) {
+
+                antipattern.getAntipatternHeading(templateField.getText(), templateField.isRequired());
+            }
 
             // Create specific field by its type.
             switch (templateField.getType()) {
@@ -266,11 +277,33 @@ public class AntipatternWindowController {
                     field = new TextField();
                     TextField textField = (TextField) field;
 
+                    // Get value from antipattern heading.
+                    if (heading != null) {
+
+                        textField.setText(((AntipatternTextHeading) heading).getValue());
+                    }
+
                     // Set bounds for field.
                     setRegionBounds(textField, templateFieldLabel);
 
                     // Add offset to Y layout for next element.
                     layoutY += Constants.TEXTFIELD_OFFSET_Y;
+
+                    // If form is for updating, then disable antipattern name field.
+                    if (!antipatternNameFieldPassed) {
+
+                        antipatternNameFieldPassed = true;
+
+                        if (disableAntipatternName) {
+
+                             if (antipattern != null && !antipattern.isCreated()) {
+
+                                textField.setText(antipattern.getName());
+                            }
+
+                            textField.setDisable(true);
+                        }
+                    }
 
                     // Add field to tab.
                     childrens.add(field);
@@ -294,6 +327,12 @@ public class AntipatternWindowController {
                     // Create textarea.
                     field = new TextArea();
                     TextArea textAreaField = (TextArea) field;
+
+                    // Get value from antipattern heading.
+                    if (heading != null) {
+
+                        textAreaField.setText(((AntipatternTextHeading) heading).getValue());
+                    }
 
                     // Set line break.
                     textAreaField.setWrapText(true);
@@ -342,6 +381,7 @@ public class AntipatternWindowController {
                     // Click event for button.
                     addRowButton.setOnAction((event) -> {
 
+                        // TODO: Not good, because if someone add another column for table, then it will fail.
                         AntipatternRelation antipatternRelation = new AntipatternRelation();
 
                         // Iterate through every column in template field.
@@ -376,6 +416,7 @@ public class AntipatternWindowController {
                     break;
 
                 default:
+
                     continue;
             }
 
@@ -397,6 +438,8 @@ public class AntipatternWindowController {
      * @return List of table columns.
      */
     private List<TableColumn> prepareTableColumns(TableField tableField, Double tableViewWidth) {
+
+        // TODO: add delete button to every row | right click and delete selected row - or something else, BUT NEEDED.
 
         List<TableColumn> columns = new ArrayList<>();
 
@@ -517,13 +560,13 @@ public class AntipatternWindowController {
                     case TEXTFIELD:
 
                         heading = new AntipatternTextHeading(((TextField) node).getText());
-                        heading.setType(FieldType.TEXTFIELD);
+                        heading.setType(AntipatternHeadingType.TEXT);
                         break;
 
                     case TEXTAREA:
 
                         heading = new AntipatternTextHeading(((TextArea) node).getText());
-                        heading.setType(FieldType.TEXTAREA);
+                        heading.setType(AntipatternHeadingType.TEXT);
                         break;
 
                     case TABLE:
@@ -533,7 +576,7 @@ public class AntipatternWindowController {
                         ObservableList<AntipatternRelation> relations = table.getItems();
 
                         heading = new AntipatternTableHeading(relations);
-                        heading.setType(FieldType.TABLE);
+                        heading.setType(AntipatternHeadingType.TABLE);
                         break;
 
                     default:
@@ -541,8 +584,10 @@ public class AntipatternWindowController {
                         log.error("Undefined field type for field: " + headingName);
                 }
 
+                heading.setHeadingText(headingName);
+
                 // Check textarea and textfield.
-                if (heading.getType() == FieldType.TEXTAREA || heading.getType() == FieldType.TEXTFIELD) {
+                if (heading.getType() == AntipatternHeadingType.TEXT) {
 
                     AntipatternTextHeading textHeading = (AntipatternTextHeading) heading;
 
@@ -573,7 +618,7 @@ public class AntipatternWindowController {
                         }
                     }
 
-                } else if (heading.getType() == FieldType.TABLE){
+                } else if (heading.getType() == AntipatternHeadingType.TABLE){
 
                     assert heading instanceof AntipatternTableHeading;
 
@@ -633,7 +678,9 @@ public class AntipatternWindowController {
         if (antipattern != null) {
 
             // Set new temporary antipattern (only available when antipatternWindow is showed).
-            tempAntipattern = new Antipattern(antipattern.getName(), antipattern.getContent(), antipattern.getPath());
+
+            AntipatternContent tempContent = new AntipatternContent(antipattern.getContent().toString());
+            tempAntipattern = new Antipattern(antipattern.getName(), tempContent, antipattern.getPath());
             tempAntipattern.setAntipatternHeadings(antipattern.getAntipatternHeadings());
         }
     }

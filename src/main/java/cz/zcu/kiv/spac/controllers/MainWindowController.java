@@ -180,8 +180,18 @@ public class MainWindowController {
 
             } else if (mouseEvent.getClickCount() == 2) {
 
-                // Open editing window.
-                openAntipatternWindow(selectedAntipattern);
+                // Check if selected antipattern contains all needed headings.
+                List<String> missingHeadings = template.getHeadingDifferences(selectedAntipattern);
+
+                // If there is any missing heading, open antipattern raw window, otherwise open classic antipattern window for update.
+                if (missingHeadings.size() > 0 && selectedAntipattern.isCreated()) {
+
+                    openAntipatternRawWindow(selectedAntipattern, missingHeadings);
+
+                } else {
+
+                    openAntipatternWindow(selectedAntipattern);
+                }
             }
         }
     }
@@ -252,7 +262,7 @@ public class MainWindowController {
             String stageTitle = Constants.APP_NAME;
 
             // If antipattern is null, then it means that we want to create new antipattern.
-            if (antipattern == null) {
+            if (antipattern == null || (antipattern != null && !antipattern.isCreated())) {
 
                 stageTitle += " - New Antipattern";
 
@@ -260,14 +270,7 @@ public class MainWindowController {
 
                 if (antipattern.isLinking()) {
 
-                    // Create an alert.
-                    Alert alert = new Alert(Alert.AlertType.NONE);
-                    alert.setTitle(Constants.APP_NAME);
-                    alert.setAlertType(Alert.AlertType.ERROR);
-                    alert.setHeaderText("Error while opening antipattern window");
-                    alert.setContentText("Antipattern '" + antipattern.getName() + "' cannot be updated, because it contains link to another antipattern.");
-                    alert.show();
-
+                    displayAntipatternLinkedError(antipattern.getName());
                     return;
                 }
 
@@ -314,12 +317,85 @@ public class MainWindowController {
             if (antipatternWindowController.isAntipatternUpdated()) {
 
                 Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
-                antipatterns.put(updatedAntipattern.getFormattedName(), updatedAntipattern);
+                antipattern.setContent(updatedAntipattern.getContent().toString());
             }
 
         } catch (Exception e) {
 
             log.error("Invalid AntipatternWindowController scene.");
+        }
+    }
+
+    /**
+     * Display alert with message for antipattern update / new window.
+     * @param antipatternName - Antipattern name.
+     */
+    private void displayAntipatternLinkedError(String antipatternName) {
+
+            // Create an alert.
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            alert.setTitle(Constants.APP_NAME);
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error while opening antipattern window");
+            alert.setContentText("Antipattern '" + antipatternName + "' cannot be updated, because it contains link to another antipattern.");
+            alert.show();
+    }
+
+    /**
+     * Open antipattern raw window.
+     * @param antipattern - Selected antipattern.
+     * @param missingHeadings - Missing headings in antipattern.
+     */
+    private void openAntipatternRawWindow(Antipattern antipattern, List<String> missingHeadings) {
+
+        try {
+
+            if (antipattern != null && antipattern.isLinking()) {
+
+                displayAntipatternLinkedError(antipattern.getName());
+                return;
+            }
+
+            String stageTitle = Constants.APP_NAME + " - Raw editing (" + antipattern.getName() + ")";
+
+            // Create new stage.
+            Stage stage = new Stage();
+
+            // Load antipattern raw window template.
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_ANTIPATTERN_RAW_WINDOW)));
+            Parent root = loader.load();
+
+            // Create new antipattern window controller and set values.
+            AntipatternRawWindowController antipatternRawWindowController;
+            antipatternRawWindowController = loader.getController();
+            antipatternRawWindowController.setTemplate(template);
+            antipatternRawWindowController.setAntipattern(antipattern);
+            antipatternRawWindowController.setDifferences(missingHeadings);
+            antipatternRawWindowController.setParser(markdownParser);
+
+            // Set stage.
+            stage.setTitle(stageTitle);
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            // If antipattern was updated, then it means it contains all required headings.
+            if (antipatternRawWindowController.isUpdated()) {
+
+                Antipattern tempAntipattern = antipatternRawWindowController.getTempAntipattern();
+                antipattern.setAntipatternHeadings(tempAntipattern.getAntipatternHeadings());
+                antipattern.setContent(tempAntipattern.getContent().toString());
+                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getContent().toString()));
+
+                // Save content changes to file.
+                FileWriter.write(new File(Utils.getRootDir() + "/" + antipattern.getPath()), antipattern.getContent().toString());
+            }
+
+
+        } catch (Exception e) {
+
+            log.error("Invalid AntipatternRawWindowController scene.");
         }
     }
 

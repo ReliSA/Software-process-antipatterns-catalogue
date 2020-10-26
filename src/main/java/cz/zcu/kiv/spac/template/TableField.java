@@ -1,6 +1,6 @@
 package cz.zcu.kiv.spac.template;
 
-import cz.zcu.kiv.spac.enums.FieldType;
+import cz.zcu.kiv.spac.enums.TemplateFieldType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class TableField extends TemplateField {
      * @param type - Field type.
      * @param required - True if field is required, false if not.
      */
-    public TableField(String name, String text, FieldType type, boolean required) {
+    public TableField(String name, String text, TemplateFieldType type, boolean required) {
 
         super(name, text, type, required);
         columns = new ArrayList<>();

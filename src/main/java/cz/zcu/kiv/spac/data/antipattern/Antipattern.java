@@ -1,11 +1,10 @@
 package cz.zcu.kiv.spac.data.antipattern;
 
+import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.utils.Utils;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class representing antipattern.
@@ -71,6 +70,38 @@ public class Antipattern {
     public Map<String, AntipatternHeading> getAntipatternHeadings() {
 
         return antipatternHeadings;
+    }
+
+    public AntipatternHeading getAntipatternHeading(String headingName, boolean isRequired) {
+
+        if (!isRequired) {
+
+            headingName += Constants.TEMPLATE_FIELD_OPTIONAL_STRING;
+        }
+
+        if (antipatternHeadings.containsKey(headingName)) {
+
+            return antipatternHeadings.get(headingName);
+        }
+
+        return null;
+    }
+
+    public List<String> getAntipatternHeadingsTexts() {
+
+        if (antipatternHeadings == null) {
+
+            return null;
+        }
+
+        List<String> antipatternHeadingsTexts = new ArrayList<>();
+
+        for (AntipatternHeading antipatternHeading : antipatternHeadings.values()) {
+
+            antipatternHeadingsTexts.add(antipatternHeading.getHeadingText());
+        }
+
+        return antipatternHeadingsTexts;
     }
 
     public void addAntipatternHeading(String key, AntipatternHeading heading) {
