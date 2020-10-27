@@ -52,8 +52,8 @@ public class Utils {
      */
     public static boolean isAntipatternNamesEquals(String antipatternName1, String antipatternName2) {
 
-        antipatternName1 = antipatternName1.replace("'", "").replace("’", "");
-        antipatternName2 = antipatternName2.replace("'", "").replace("’", "");
+        antipatternName1 = antipatternName1.replace("'", "").replace("’", "").replace("_", " ");;
+        antipatternName2 = antipatternName2.replace("'", "").replace("’", "").replace("_", " ");;
 
         return antipatternName1.equalsIgnoreCase(antipatternName2);
     }

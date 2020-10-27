@@ -24,6 +24,7 @@ public class Constants {
     public static final int TEXTAREA_HEIGHT = 100;
     public static final int TABLE_HEIGHT = 200;
     public static final int BUTTON_OFFSET = 20;
+    public static final int TABLE_BUTTON_OFFSET = 10;
 
     public static final Font NEW_AP_LABEL_FONT = Font.font("Arial", FontWeight.BOLD, 16);
 

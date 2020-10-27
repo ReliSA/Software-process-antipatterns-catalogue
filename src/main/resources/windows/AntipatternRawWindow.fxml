@@ -12,8 +12,8 @@
   <children>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="739.0" prefWidth="1084.0" VBox.vgrow="ALWAYS">
          <children>
-            <TextArea fx:id="txtAreaRawAntipatternContent" layoutX="14.0" layoutY="58.0" prefHeight="618.0" prefWidth="753.0" />
-            <ListView fx:id="listDifferences" layoutX="782.0" layoutY="58.0" prefHeight="618.0" prefWidth="283.0" />
+            <TextArea fx:id="txtAreaRawAntipatternContent" layoutX="14.0" layoutY="58.0" prefHeight="618.0" prefWidth="699.0" />
+            <ListView fx:id="listDifferences" layoutX="722.0" layoutY="58.0" prefHeight="618.0" prefWidth="343.0" />
             <Label layoutX="224.0" layoutY="14.0" text="Raw Antipattern Content">
                <font>
                   <Font name="System Bold" size="20.0" />

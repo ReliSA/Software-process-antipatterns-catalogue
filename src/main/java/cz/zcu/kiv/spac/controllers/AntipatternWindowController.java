@@ -8,7 +8,6 @@ import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
-import cz.zcu.kiv.spac.enums.TemplateFieldType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
@@ -35,7 +34,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,7 +263,7 @@ public class AntipatternWindowController {
 
             if (antipattern != null) {
 
-                antipattern.getAntipatternHeading(templateField.getText(), templateField.isRequired());
+                heading = antipattern.getAntipatternHeading(templateField.getText(), templateField.isRequired());
             }
 
             // Create specific field by its type.
@@ -357,6 +355,9 @@ public class AntipatternWindowController {
                     field = new TableView<>();
                     TableView tableViewField = (TableView) field;
 
+                    // Allow multiple select in table.
+                    tableViewField.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
                     // Set bounds for field.
                     setRegionBounds(tableViewField, templateFieldLabel);
 
@@ -378,7 +379,7 @@ public class AntipatternWindowController {
                     // Add a button for creating new rows in table.
                     Button addRowButton = createButton("Add row", tableViewField.getLayoutX(), layoutY);
 
-                    // Click event for button.
+                    // Click event for add button.
                     addRowButton.setOnAction((event) -> {
 
                         // TODO: Not good, because if someone add another column for table, then it will fail.
@@ -404,11 +405,38 @@ public class AntipatternWindowController {
                         tableViewField.getItems().add(antipatternRelation);
                     });
 
-                    // Add button to tab.
+                    // Add add button to tab.
                     childrens.add(addRowButton);
+
+                    // Create delete button.
+                    Button deleteRowsButton = createButton("Delete rows", addRowButton.getLayoutX() + addRowButton.getPrefWidth() + Constants.TABLE_BUTTON_OFFSET, layoutY);
+
+                    // Click event for delete button.
+                    deleteRowsButton.setOnAction((event) -> {
+
+                        // Get selected indexes in table.
+                        ObservableList<Integer> selectedItems = tableViewField.getSelectionModel().getSelectedIndices();
+
+                        // Remove all selected items by his index in table.
+                        for (Integer selectedRowIndex : selectedItems) {
+
+                            tableViewField.getItems().remove(tableViewField.getItems().get(selectedRowIndex));
+                        }
+                    });
+
+                    // Add delete button to tab.
+                    childrens.add(deleteRowsButton);
 
                     // Add offset to Y layout for next element.
                     layoutY += addRowButton.getPrefHeight() + Constants.BUTTON_OFFSET;
+
+                    // Set all relations.
+                    if (heading != null) {
+
+                        AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
+
+                        tableViewField.getItems().addAll(tableHeading.getRelations());
+                    }
 
                     // Add table to tab.
                     childrens.add(field);
@@ -438,8 +466,6 @@ public class AntipatternWindowController {
      * @return List of table columns.
      */
     private List<TableColumn> prepareTableColumns(TableField tableField, Double tableViewWidth) {
-
-        // TODO: add delete button to every row | right click and delete selected row - or something else, BUT NEEDED.
 
         List<TableColumn> columns = new ArrayList<>();
 

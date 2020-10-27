@@ -318,6 +318,7 @@ public class MainWindowController {
 
                 Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
                 antipattern.setContent(updatedAntipattern.getContent().toString());
+                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
             }
 
         } catch (Exception e) {
@@ -386,7 +387,7 @@ public class MainWindowController {
                 Antipattern tempAntipattern = antipatternRawWindowController.getTempAntipattern();
                 antipattern.setAntipatternHeadings(tempAntipattern.getAntipatternHeadings());
                 antipattern.setContent(tempAntipattern.getContent().toString());
-                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getContent().toString()));
+                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
 
                 // Save content changes to file.
                 FileWriter.write(new File(Utils.getRootDir() + "/" + antipattern.getPath()), antipattern.getContent().toString());

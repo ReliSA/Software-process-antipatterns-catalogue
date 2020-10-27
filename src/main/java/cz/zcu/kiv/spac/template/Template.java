@@ -123,6 +123,7 @@ public class Template {
                         switch (heading.getType()) {
 
                             case TABLE:
+
                                 AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
 
                                 if (tableHeading.getRelations() == null || tableHeading.getRelations().size() == 0) {
@@ -131,6 +132,7 @@ public class Template {
                                 }
 
                                 break;
+
                             case TEXT:
 
                                 AntipatternTextHeading textHeading = (AntipatternTextHeading) heading;

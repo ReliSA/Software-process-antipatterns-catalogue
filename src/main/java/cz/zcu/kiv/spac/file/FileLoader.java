@@ -174,7 +174,7 @@ public class FileLoader {
 
                         if (content != null) {
 
-                            antipattern.setAntipatternHeadings(markdownParser.parseHeadings(content.toString()));
+                            antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), content.toString()));
                         }
 
                         antipatterns.put(antipattern.getFormattedName(), antipattern);

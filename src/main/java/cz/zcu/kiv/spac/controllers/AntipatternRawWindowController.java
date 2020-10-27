@@ -85,7 +85,7 @@ public class AntipatternRawWindowController {
     private void saveRawAntipattern(ActionEvent actionEvent) {
 
         tempAntipattern.setContent(txtAreaRawAntipatternContent.getText());
-        tempAntipattern.setAntipatternHeadings(parser.parseHeadings(txtAreaRawAntipatternContent.getText()));
+        tempAntipattern.setAntipatternHeadings(parser.parseHeadings(tempAntipattern.getName(), txtAreaRawAntipatternContent.getText()));
 
         List<String> differences = template.getHeadingDifferences(tempAntipattern);
 
