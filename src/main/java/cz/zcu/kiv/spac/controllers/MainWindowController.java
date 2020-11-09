@@ -7,6 +7,7 @@ import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.AntipatternFilterChoices;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.file.FileWriter;
+import cz.zcu.kiv.spac.git.GitConfiguration;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.template.Template;
@@ -23,6 +24,8 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,13 +57,21 @@ public class MainWindowController {
     @FXML
     private Button btnNewAP;
 
+    @FXML
+    private Label lblGitLogged;
+
+    @FXML
+    private MenuItem menuLog;
+
     // App variables.
     private MarkdownParser markdownParser;
     private Template template;
+    private GitConfiguration gitConfiguration;
     private Map<String, Antipattern> antipatterns;
     private Catalogue catalogue;
     private AntipatternFilterChoices selectedAPFilterChoice;
     private Antipattern selectedAntipattern;
+    private GitHub gitHub;
 
     // Logger.
     private static Logger log = Logger.getLogger(MainWindowController.class);
@@ -76,14 +87,16 @@ public class MainWindowController {
     public void initialize() {
 
         // Load configuration.
-        template = FileLoader.loadTemplate(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
+        Object[] configurationFields = FileLoader.loadConfiguration(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
 
-        // If configuration was not loaded correctly.
-        if (template == null) {
+        if (configurationFields == null) {
 
-            log.error("Template file '" + Constants.CATALOGUE_FILE + "' does not exists or it has bad markdown format!");
+            log.error("Configuration file '" + Constants.CATALOGUE_FILE + "' does not exists or it has bad xml format!");
             System.exit(1);
         }
+
+        template = (Template) configurationFields[0];
+        gitConfiguration = (GitConfiguration) configurationFields[1];
 
         // Create new markdown parser.
         markdownParser = new MarkdownParser(template);
@@ -131,7 +144,7 @@ public class MainWindowController {
                 alert.setAlertType(Alert.AlertType.ERROR);
                 alert.setHeaderText("Error while selecting filtering choice.");
                 alert.setContentText("Filter '" + filterChoice + "' did not exists, please contact administrator.");
-                alert.show();
+                alert.showAndWait();
 
             } else {
 
@@ -144,6 +157,8 @@ public class MainWindowController {
         fillAntipatternList();
 
         btnEditAP.setDisable(true);
+        lblGitLogged.setText(Constants.LBL_GIT_LOGGED_TEXT_DEFAULT + Constants.LBL_GIT_LOGGED_USER_DEFAULT);
+        menuLog.setText(Constants.MENU_LOG_LOGIN_TEXT);
     }
 
     /**
@@ -243,16 +258,6 @@ public class MainWindowController {
     }
 
     /**
-     * Checkbox action for filtering antipatterns which are not created yet.
-     * @param actionEvent - Action event.
-     */
-    @FXML
-    private void chckBoxFilterNonCreatedClicked(ActionEvent actionEvent) {
-
-        fillAntipatternList();
-    }
-
-    /**
      * Perform git push action for current repository defined in configuration.
      * @param actionEvent - Action event.
      */
@@ -274,16 +279,117 @@ public class MainWindowController {
         // TODO: implement menuPullAction.
     }
 
+    /**
+     * Open edit antipattern window.
+     * @param actionEvent - Action event.
+     */
     @FXML
     private void btnEditAPAction(ActionEvent actionEvent) {
 
         editAntipattern();
     }
 
+    /**
+     * Open new antipattern window.
+     * @param actionEvent - Action event.
+     */
     @FXML
     private void btnNewAPAction(ActionEvent actionEvent) {
 
         menuNewAPAction();
+    }
+
+    /**
+     * Open alert displaying info about git configuration (branch name, repository url, user name, ....).
+     * @param actionEvent - Action event.
+     */
+    @FXML
+    private void menuGitInfoAction(ActionEvent actionEvent) {
+
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle(Constants.APP_NAME);
+        alert.setAlertType(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Git configuration parameters");
+
+        String content = "";
+        content += "Branch: " + gitConfiguration.getBranchName() + "\n\n";
+        content += "Repository URL: " + gitConfiguration.getRepositoryUrl() + "\n\n";
+        content += "Username: " + gitConfiguration.getUsername();
+
+        alert.getDialogPane().setMinWidth(600);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    /**
+     * Git log action.
+     * @param actionEvent - Action event.
+     */
+    @FXML
+    private void menuLogAction(ActionEvent actionEvent) {
+
+        // TODO: check for .properties. ??
+
+        if (menuLog.getText().equals(Constants.MENU_LOG_LOGOUT_TEXT)) {
+
+            gitHub = null;
+            menuLog.setText(Constants.MENU_LOG_LOGIN_TEXT);
+            lblGitLogged.setText(Constants.LBL_GIT_LOGGED_TEXT_DEFAULT + Constants.LBL_GIT_LOGGED_USER_DEFAULT);
+
+        } else {
+
+            // Try to connect to git.
+            connectToGit();
+
+            if (gitHub != null) {
+
+                menuLog.setText(Constants.MENU_LOG_LOGOUT_TEXT);
+
+                try {
+
+                    lblGitLogged.setText(Constants.LBL_GIT_LOGGED_TEXT_DEFAULT + gitHub.getMyself().getLogin() + " (" + gitHub.getMyself().getName() + ")");
+
+                } catch (Exception e) {
+
+                    // Do nothing, because it is already handled in loging.
+                }
+            }
+        }
+    }
+
+    /**
+     * Try to connect to git via GitLogin window.
+     */
+    private void connectToGit() {
+
+        try {
+
+            String stageTitle = Constants.APP_NAME;
+
+            // Load antipattern window template.
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_GIT_LOGIN_WINDOW)));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+
+            // Create new antipattern window controller and set values.
+            GitLoginController gitLoginController;
+            gitLoginController = loader.getController();
+            gitLoginController.setGitConfigurationUsername(gitConfiguration.getUsername());
+
+            // Set stage.
+            stage.setTitle(stageTitle);
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            gitHub = gitLoginController.getGitHub();
+
+        } catch (Exception e) {
+
+            log.error("Invalid GitLogin scene.");
+        }
     }
 
     /**
@@ -304,7 +410,7 @@ public class MainWindowController {
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setHeaderText("Error while opening antipattern window");
             alert.setContentText("No antipattern selected.");
-            alert.show();
+            alert.showAndWait();
             return;
         }
 
@@ -446,7 +552,7 @@ public class MainWindowController {
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setHeaderText("Error while opening antipattern window");
             alert.setContentText("Antipattern '" + antipatternName + "' cannot be updated, because it contains link to another antipattern.");
-            alert.show();
+            alert.showAndWait();
     }
 
     /**

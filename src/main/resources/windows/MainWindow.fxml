@@ -16,22 +16,30 @@
 
 <VBox prefHeight="825.0" prefWidth="1193.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <MenuItem mnemonicParsing="false" onAction="#menuNewAPAction" text="New Anti-pattern" />
-            <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Git">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#menuPushAction" text="Push changes" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuPullAction" text="Pull repository" />
-               </items></Menu>
-      </menus>
-    </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="790.0" prefWidth="1152.0" VBox.vgrow="ALWAYS">
+      <AnchorPane minHeight="17.0" prefHeight="31.0" prefWidth="1193.0" styleClass="menu-bar">
+         <children>
+          <MenuBar layoutY="-1.0" prefHeight="17.0" prefWidth="116.0">
+            <menus>
+              <Menu mnemonicParsing="false" text="File">
+                <items>
+                  <MenuItem mnemonicParsing="false" onAction="#menuNewAPAction" text="New Anti-pattern" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
+                </items>
+              </Menu>
+              <Menu mnemonicParsing="false" text="Git">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#menuGitInfoAction" text="Info" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuPushAction" text="Push changes" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuPullAction" text="Pull repository" />
+                        <MenuItem fx:id="menuLog" mnemonicParsing="false" onAction="#menuLogAction" text="Login" />
+                     </items>
+                  </Menu>
+            </menus>
+          </MenuBar>
+            <Label fx:id="lblGitLogged" alignment="CENTER_RIGHT" layoutX="895.0" layoutY="4.0" prefHeight="17.0" prefWidth="292.0" text="Logged as: NONE" textOverrun="CLIP" />
+         </children>
+      </AnchorPane>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="809.0" prefWidth="1193.0" VBox.vgrow="ALWAYS">
          <children>
             <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="669.0" prefWidth="363.0" />
             <Label layoutX="132.0" layoutY="8.0" text="Anti-patterns">

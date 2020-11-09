@@ -220,6 +220,12 @@ public class Template {
         return headingDifferences;
     }
 
+    /**
+     * Check positions of every field in antipattern.
+     * @param antipattern - Antipattern for check.
+     * @param nontemplateFields - Fields, which are in antipattern but not in template.
+     * @return List of error messages.
+     */
     private List<String> checkPositions(Antipattern antipattern, List<String> nontemplateFields) {
 
         List<String> headingDifferences = new ArrayList<>();
@@ -234,6 +240,7 @@ public class Template {
 
                 if (field.isRequired()) {
 
+                    // Check position of required field.
                     if (!heading.equals(field.getText()) && !nontemplateFields.contains(heading)) {
 
                         headingDifferences.add("Bad position for heading '" + heading + "'!");
@@ -241,6 +248,7 @@ public class Template {
 
                 } else {
 
+                    // Check position of optional field.
                     String optionalTextLow = field.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING.toLowerCase();
                     String optionalText = field.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING;
 

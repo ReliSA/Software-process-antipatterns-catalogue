@@ -31,6 +31,7 @@ public class Constants {
     public static final String RESOURCE_ANTIPATTERN_WINDOW = "/windows/AntipatternWindow.fxml";
     public static final String RESOURCE_MAIN_WINDOW = "/windows/MainWindow.fxml";
     public static final String RESOURCE_ANTIPATTERN_RAW_WINDOW = "/windows/AntipatternRawWindow.fxml";
+    public static final String RESOURCE_GIT_LOGIN_WINDOW = "/windows/GitLogin.fxml";
 
     public static final String RESOURCE_PREVIEW_CSS = "/css/AntipatternPreview.css";
     public static final String RESOURCE_ANTIPATTERN_RELATION_CSS = "/css/elements/AntipatternRelationTable.css";
@@ -46,4 +47,10 @@ public class Constants {
 
     public static final String ANTIPATTERN_NOT_CREATED_SYMBOL = "**";
     public static final String TEMPLATE_FIELD_OPTIONAL_STRING = " (Optional)";
+
+    public static final String LBL_GIT_LOGGED_TEXT_DEFAULT = "Logged as: ";
+    public static final String LBL_GIT_LOGGED_USER_DEFAULT = "NONE";
+
+    public static final String MENU_LOG_LOGIN_TEXT = "Login";
+    public static final String MENU_LOG_LOGOUT_TEXT = "Logout";
 }

@@ -6,6 +6,7 @@ import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.TemplateFieldType;
+import cz.zcu.kiv.spac.git.GitConfiguration;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.template.TableColumnField;
@@ -32,15 +33,16 @@ public class FileLoader {
     private static Logger log = Logger.getLogger(FileLoader.class);
 
     /**
-     * Load template.
+     * Load configuration (Template + git configuration).
      * @param configurationPath - Path to configuration.
-     * @return Template.
+     * @return Template and git configuration.
      */
-    public static Template loadTemplate(String configurationPath) {
+    public static Object[] loadConfiguration(String configurationPath) {
+
+        Object[] configurationFields = new Object[2];
 
         Template template;
-
-        List<TemplateField> fieldList = new ArrayList<>();
+        GitConfiguration gitConfiguration;
 
         log.info("Loading configuration file: " + configurationPath);
 
@@ -55,9 +57,41 @@ public class FileLoader {
 
             doc.getDocumentElement().normalize();
 
+            // Create new template object.
+            template = loadTemplate(doc);
+            gitConfiguration = loadGitConfiguration(doc);
+
+        } catch (Exception e) {
+
+            return null;
+        }
+
+        if (template == null || gitConfiguration == null) {
+
+            return null;
+        }
+
+        log.info("Configuration was loaded successfully.");
+
+        configurationFields[0] = template;
+        configurationFields[1] = gitConfiguration;
+
+        return configurationFields;
+    }
+
+    /**
+     * Load template fields from xml document.
+     * @param doc - XML Document.
+     * @return New Template.
+     */
+    private static Template loadTemplate(Document doc) {
+
+        try {
+            List<TemplateField> fieldList = new ArrayList<>();
+
             NodeList fields = doc.getElementsByTagName("field");
 
-            // Iterate through every field in configuration.
+            // Iterate through every template field in configuration.
             for (int i = 0; i < fields.getLength(); i++) {
 
                 Node fieldNode = fields.item(i);
@@ -94,28 +128,60 @@ public class FileLoader {
                 fieldList.add(templateField);
             }
 
-            // Create new template object.
-            template = new Template(fieldList);
+            return new Template(fieldList);
 
         } catch (Exception e) {
 
+            log.error("Error while parsing template! It was probably caused by bad element names or bad attributes names");
             return null;
         }
 
-        log.info("Configuration was loaded successfully.");
-
-        return template;
     }
 
     /**
      * Load configuration for git (branch name, ...).
-     * @param configurationPath - Path to configuration.
+     * @param doc - XML Document.
      * @return Git configuration.
      */
-    public static void loadGitConfiguration(String configurationPath) {
+    private static GitConfiguration loadGitConfiguration(Document doc) {
 
+        try {
 
-        // TODO: implement.
+            String branchName = "";
+            String repositoryUrl = "";
+
+            // Load branch name from configuration.
+            NodeList branchNode = doc.getElementsByTagName("branch");
+            if (branchNode.getLength() == 1) {
+
+                branchName = branchNode.item(0).getAttributes().getNamedItem("name").getTextContent();
+
+            } else {
+
+                log.error("There are more branches specified in configuration!");
+                return null;
+            }
+
+            // Load repository url from configuration.
+            NodeList repositoryNode = doc.getElementsByTagName("repository");
+            if (repositoryNode.getLength() == 1) {
+
+                repositoryUrl = repositoryNode.item(0).getAttributes().getNamedItem("url").getTextContent();
+
+            } else {
+
+                log.error("There are more repositories specified in configuration!");
+                return null;
+            }
+
+            return new GitConfiguration(branchName, repositoryUrl);
+
+        } catch (Exception e) {
+
+            log.error("Error while parsing git configuration! It was probably caused by bad elements name or bad attributes names");
+            return null;
+        }
+
     }
 
     /**
