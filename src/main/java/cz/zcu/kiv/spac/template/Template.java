@@ -102,8 +102,9 @@ public class Template {
         }
 
         // Iterate through every template field.
-        for (TemplateField templateField : fieldList) {
+        for (int i = 0; i < fieldList.size(); i++) {
 
+            TemplateField templateField = fieldList.get(i);
             String text = "Missing heading '" + templateField.getText() + "' !";
 
             // Check only if template field is required.
@@ -159,6 +160,7 @@ public class Template {
 
                                     } else {
 
+
                                         headingTableColumns.remove(tableColumnField.getText());
                                     }
                                 }
@@ -194,9 +196,16 @@ public class Template {
 
             } else {
 
+                if (antipatternHeadingsTexts.contains(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING)) {
+
+                    antipatternHeadingsTexts.remove(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING);
+                }
+
                 // Make sure that even small "optional" is included in field name.
-                antipatternHeadingsTexts.remove(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING);
-                antipatternHeadingsTexts.remove(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING.toLowerCase());
+                if (antipatternHeadingsTexts.contains(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING.toLowerCase())) {
+
+                    antipatternHeadingsTexts.remove(templateField.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING.toLowerCase());
+                }
             }
         }
 
@@ -204,6 +213,46 @@ public class Template {
         for (String remainingHeading : antipatternHeadingsTexts) {
 
             headingDifferences.add("Heading '" + remainingHeading + "' is not presented in template !");
+        }
+
+        headingDifferences.addAll(checkPositions(antipattern, antipatternHeadingsTexts));
+
+        return headingDifferences;
+    }
+
+    private List<String> checkPositions(Antipattern antipattern, List<String> nontemplateFields) {
+
+        List<String> headingDifferences = new ArrayList<>();
+        List<String> antipatternHeadingsTexts = antipattern.getAntipatternHeadingsTexts();
+
+        for (int i = 0; i < fieldList.size(); i++) {
+
+            if (i < antipatternHeadingsTexts.size()) {
+
+                TemplateField field = fieldList.get(i);
+                String heading = antipatternHeadingsTexts.get(i);
+
+                if (field.isRequired()) {
+
+                    if (!heading.equals(field.getText()) && !nontemplateFields.contains(heading)) {
+
+                        headingDifferences.add("Bad position for heading '" + heading + "'!");
+                    }
+
+                } else {
+
+                    String optionalTextLow = field.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING.toLowerCase();
+                    String optionalText = field.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING;
+
+                    if (antipatternHeadingsTexts.contains(optionalText) || antipatternHeadingsTexts.contains(optionalTextLow)) {
+
+                        if (!heading.equals(optionalText) && !heading.equals(optionalTextLow)) {
+
+                            headingDifferences.add("Heading '" + heading + "' has bad position!");
+                        }
+                    }
+                }
+            }
         }
 
         return headingDifferences;

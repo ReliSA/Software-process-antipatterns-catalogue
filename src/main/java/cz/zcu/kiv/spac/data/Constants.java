@@ -44,6 +44,6 @@ public class Constants {
 
     public static final String LINE_BREAKER = "\r\n";
 
-    public static final String ANTIPATTERN_NOT_CREATED_SYMBOL = "*";
+    public static final String ANTIPATTERN_NOT_CREATED_SYMBOL = "**";
     public static final String TEMPLATE_FIELD_OPTIONAL_STRING = " (Optional)";
 }

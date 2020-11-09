@@ -48,12 +48,19 @@ public class MainWindowController {
     @FXML
     private ChoiceBox selectAPFilter;
 
+    @FXML
+    private Button btnEditAP;
+
+    @FXML
+    private Button btnNewAP;
+
     // App variables.
     private MarkdownParser markdownParser;
     private Template template;
     private Map<String, Antipattern> antipatterns;
     private Catalogue catalogue;
     private AntipatternFilterChoices selectedAPFilterChoice;
+    private Antipattern selectedAntipattern;
 
     // Logger.
     private static Logger log = Logger.getLogger(MainWindowController.class);
@@ -135,6 +142,8 @@ public class MainWindowController {
 
         // Add every antipattern to antipattern list element.
         fillAntipatternList();
+
+        btnEditAP.setDisable(true);
     }
 
     /**
@@ -186,13 +195,18 @@ public class MainWindowController {
         item = item.replace(Constants.ANTIPATTERN_NOT_CREATED_SYMBOL, "");
 
         String formattedName = Utils.formatAntipatternName(item);
-        Antipattern selectedAntipattern = antipatterns.get(formattedName);
+        selectedAntipattern = antipatterns.get(formattedName);
 
         // If no antipattern was selected.
         if (selectedAntipattern == null) {
 
             mouseEvent.consume();
+            btnEditAP.setDisable(true);
             return;
+
+        } else {
+
+            btnEditAP.setDisable(false);
         }
 
         // If antipattern was selected by left (primary) button.
@@ -205,18 +219,7 @@ public class MainWindowController {
 
             } else if (mouseEvent.getClickCount() == 2) {
 
-                // Check if selected antipattern contains all needed headings.
-                List<String> missingHeadings = template.getHeadingDifferences(selectedAntipattern);
-
-                // If there is any missing heading, open antipattern raw window, otherwise open classic antipattern window for update.
-                if (missingHeadings.size() > 0 && selectedAntipattern.isCreated()) {
-
-                    openAntipatternRawWindow(selectedAntipattern, missingHeadings);
-
-                } else {
-
-                    openAntipatternWindow(selectedAntipattern);
-                }
+                editAntipattern();
             }
         }
     }
@@ -271,12 +274,52 @@ public class MainWindowController {
         // TODO: implement menuPullAction.
     }
 
+    @FXML
+    private void btnEditAPAction(ActionEvent actionEvent) {
+
+        editAntipattern();
+    }
+
+    @FXML
+    private void btnNewAPAction(ActionEvent actionEvent) {
+
+        menuNewAPAction();
+    }
+
     /**
      * Open antipattern window for creating new antipattern.
      */
     private void openAntipatternWindow() {
 
         openAntipatternWindow(null);
+    }
+
+    private void editAntipattern() {
+
+        if (selectedAntipattern == null) {
+
+            // Create an alert.
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            alert.setTitle(Constants.APP_NAME);
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setHeaderText("Error while opening antipattern window");
+            alert.setContentText("No antipattern selected.");
+            alert.show();
+            return;
+        }
+
+        // Check if selected antipattern contains all needed headings.
+        List<String> missingHeadings = template.getHeadingDifferences(selectedAntipattern);
+
+        // If there is any missing heading, open antipattern raw window, otherwise open classic antipattern window for update.
+        if (missingHeadings.size() > 0 && selectedAntipattern.isCreated()) {
+
+            openAntipatternRawWindow(selectedAntipattern, missingHeadings);
+
+        } else {
+
+            openAntipatternWindow(selectedAntipattern);
+        }
     }
 
     /**
@@ -525,7 +568,7 @@ public class MainWindowController {
 
         if (!antipattern.isCreated()) {
 
-            item += Constants.ANTIPATTERN_NOT_CREATED_SYMBOL;
+            item = Constants.ANTIPATTERN_NOT_CREATED_SYMBOL + item + Constants.ANTIPATTERN_NOT_CREATED_SYMBOL;
         }
 
         return item;

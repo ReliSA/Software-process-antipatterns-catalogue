@@ -24,6 +24,7 @@
 
 	<git>
 		<branch name="development"/>
+		<repository url="https://github.com/ReliSA/Software-process-antipatterns-catalogue.git"/>
 	</git>
 
 </configuration>

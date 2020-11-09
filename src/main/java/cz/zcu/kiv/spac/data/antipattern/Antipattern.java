@@ -107,7 +107,7 @@ public class Antipattern {
 
     public void setAntipatternHeadings(Map<String, AntipatternHeading> antipatternHeadings) {
 
-        this.antipatternHeadings = new HashMap<>(antipatternHeadings);
+        this.antipatternHeadings = new LinkedHashMap<>(antipatternHeadings);
     }
 
     public String getPath() {
