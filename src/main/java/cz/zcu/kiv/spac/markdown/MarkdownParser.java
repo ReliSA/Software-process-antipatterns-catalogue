@@ -6,6 +6,7 @@ import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TableBlock;
 import com.vladsch.flexmark.ext.tables.TableBody;
+import com.vladsch.flexmark.ext.tables.TableHead;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
@@ -86,7 +87,8 @@ public class MarkdownParser {
                 } else {
 
                     // Create new heading type.
-                    if (node.getNext() == null || node.getNext().getClass() == Paragraph.class) {
+                    if (node.getNext() == null || node.getNext().getClass() == Paragraph.class
+                            || node.getNext().getClass() == Heading.class || node.getNext().getClass() == BulletList.class) {
 
                         heading = new AntipatternTextHeading(headingContent.toString());
 
@@ -97,6 +99,7 @@ public class MarkdownParser {
 
                     // Set heading text.
                     heading.setHeadingText(headingName);
+                    heading.setType(AntipatternHeadingType.TEXT);
 
                     headingContent = new StringBuilder();
                 }
@@ -104,10 +107,9 @@ public class MarkdownParser {
                 // Add new heading to map of headings.
                 headings.put(headingName, heading);
 
-
                 // TODO: parse bullet list ! -> add it to antipattern text heading.
 
-            } else if (node.getClass() == Paragraph.class && parsingHeading) {
+            } else if ((node.getClass() == Paragraph.class || node.getClass() == BulletList.class) && parsingHeading) {
 
                 // If node is paragraph, then it means we are working with antipattern text heading.
                 AntipatternTextHeading textHeading = (AntipatternTextHeading) heading;
@@ -127,6 +129,22 @@ public class MarkdownParser {
 
                     // Try to parse all relations.
                     AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
+                    TableHead tableHead = (TableHead) tableBlockNode.getFirstChild();
+
+                    // Get all column names.
+                    if (!tableHead.getChars().equals("")) {
+
+                        String columnsString = tableHead.getChars().toString();
+                        String[] columns = columnsString.split("\\|");
+
+                        // First skipped, because it is blank string.
+                        for (int i = 1; i < columns.length; i++) {
+
+                            tableHeading.addColumn(columns[i].replace(" ", ""));
+                        }
+                    }
+
+                    // Get all relations.
                     TableBody tableBody = (TableBody) tableBlockNode.getLastChild();
 
                     for (Node tableNode : tableBody.getChildren()) {
@@ -134,6 +152,7 @@ public class MarkdownParser {
                         String relation = tableNode.getChars().toString();
                         String[] antipatternRelation = relation.split("\\|");
 
+                        // TODO: maybe rework, because it will work only if 2 columns are presented.
                         // |aa|bb| is splitted into 3 values - first blank, second 'aa', third 'bb'.
                         if (antipatternRelation.length == 3) {
 

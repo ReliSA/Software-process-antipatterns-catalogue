@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<antipattern>
-	<fields>
-		<field name="antipattern_name" 	text="The Antipattern Name" 		field="textfield" 	required="yes"/>
-		<field name="known_as" 			text="Also Known As" 				field="textfield" 	required="yes"/>
-		<field name="summary" 			text="Summary" 						field="textarea" 	required="yes"/>
-		<field name="context" 			text="Context" 						field="textarea" 	required="yes"/>
-		<field name="unbalanced_forces" text="Unbalanced Forces" 			field="textarea" 	required="yes"/>
-		<field name="symptoms" 			text="Symptoms and Consequences" 	field="textarea" 	required="yes"/>
-		<field name="causes" 			text="Causes" 						field="textarea" 	required="yes"/>
-		<field name="solution" 			text="(Refactored) Solution" 		field="textarea" 	required="yes"/>
-		<field name="variations"		text="Variations" 					field="textarea" 	required="no"/>
-		<field name="examples" 			text="Example(s)" 					field="textarea" 	required="no"/>
-		<field name="related" 			text="Related Anti-patterns" 		field="table" 		required="yes">
-			<column text="Anti-pattern" default_value="Anti-pattern name"/>
-			<column text="Relation" 	default_value="Relation"/>
-		</field>
-		<field name="notes" 			text="Notes" 						field="textarea" 	required="no"/>
-		<field name="sources" 			text="Sources" 						field="textarea" 	required="yes"/>
-	</fields>
-</antipattern>
+<configuration>
+
+	<antipattern>
+		<fields>
+			<field name="antipattern_name" 	text="The Anti-pattern Name" 		field="textfield" 	required="yes"/>
+			<field name="known_as" 			text="Also Known As" 				field="textfield" 	required="yes"/>
+			<field name="summary" 			text="Summary" 						field="textarea" 	required="yes"/>
+			<field name="context" 			text="Context" 						field="textarea" 	required="yes"/>
+			<field name="unbalanced_forces" text="Unbalanced Forces" 			field="textarea" 	required="yes"/>
+			<field name="symptoms" 			text="Symptoms and Consequences" 	field="textarea" 	required="yes"/>
+			<field name="causes" 			text="Causes" 						field="textarea" 	required="yes"/>
+			<field name="solution" 			text="(Refactored) Solution" 		field="textarea" 	required="yes"/>
+			<field name="variations"		text="Variations" 					field="textarea" 	required="no"/>
+			<field name="examples" 			text="Example(s)" 					field="textarea" 	required="no"/>
+			<field name="related" 			text="Related Anti-patterns" 		field="table" 		required="yes">
+				<column text="Anti-pattern" default_value="Anti-pattern name"/>
+				<column text="Relation" 	default_value="Relation"/>
+			</field>
+			<field name="notes" 			text="Notes" 						field="textarea" 	required="no"/>
+			<field name="sources" 			text="Sources" 						field="textarea" 	required="yes"/>
+		</fields>
+	</antipattern>
+
+	<git>
+		<branch name="development"/>
+	</git>
+
+</configuration>

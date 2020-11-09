@@ -31,6 +31,12 @@ public class Catalogue {
         this.catalogueRecords.put(key, records);
     }
 
+    public boolean isCatalogueInstanceExists(String instanceName) {
+
+        return this.catalogueRecords.containsValue(instanceName);
+    }
+
+
     public Map<String, List<CatalogueRecord>> getCatalogueRecords() {
 
         return this.catalogueRecords;

@@ -5,6 +5,7 @@ import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
+import cz.zcu.kiv.spac.enums.TemplateFieldType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,15 +121,52 @@ public class Template {
 
                         AntipatternHeading heading = antipattern.getAntipatternHeading(templateField.getText(), true);
 
+                        TemplateFieldType templateFieldType = templateField.getType();
+
+                        if (!templateFieldType.toString().equals(heading.getType().toString())) {
+
+                            if (templateFieldType == TemplateFieldType.TABLE) {
+
+                                headingDifferences.add("Heading '" + templateField.getText() + "' does not contains any record in table !");
+                                antipatternHeadingsTexts.remove(templateField.getText());
+                                continue;
+                            }
+                        }
+
                         switch (heading.getType()) {
 
                             case TABLE:
 
                                 AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
 
-                                if (tableHeading.getRelations() == null || tableHeading.getRelations().size() == 0) {
+                                if (tableHeading.getRelations() == null) {
 
-                                    headingDifferences.add("Heading '" + templateField.getText() + "' does not contains any record in table !");
+                                    if (tableHeading.getRelations().size() == 0) {
+
+                                        headingDifferences.add("Heading '" + templateField.getText() + "' does not contains any record in table !");
+                                    }
+                                }
+                                // Check if table contains all required columns.
+                                TableField tableField = (TableField) templateField;
+
+                                List<String> headingTableColumns = new ArrayList<>(tableHeading.getColumns());
+
+                                for (TableColumnField tableColumnField : tableField.getColumns()) {
+
+                                    if (!headingTableColumns.contains(tableColumnField.getText())) {
+
+                                        headingDifferences.add("Heading '" + templateField.getText() + "': Table does not contains column '" + tableColumnField.getText() + "'");
+
+                                    } else {
+
+                                        headingTableColumns.remove(tableColumnField.getText());
+                                    }
+                                }
+
+                                // If there are any extended table column, add it too.
+                                for (String tableColumn : headingTableColumns) {
+
+                                    headingDifferences.add("Heading '" + templateField.getText() + "': Column '" + tableColumn + "' is not presented in template!");
                                 }
 
                                 break;

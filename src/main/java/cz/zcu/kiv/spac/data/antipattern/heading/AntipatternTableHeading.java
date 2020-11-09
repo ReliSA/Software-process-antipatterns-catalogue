@@ -11,6 +11,7 @@ import java.util.List;
 public class AntipatternTableHeading extends AntipatternHeading {
 
     private List<AntipatternRelation> relations;
+    private List<String> columns;
 
     /**
      * Constructor.
@@ -19,11 +20,13 @@ public class AntipatternTableHeading extends AntipatternHeading {
     public AntipatternTableHeading(List<AntipatternRelation> relations) {
 
         this.relations = relations;
+        this.columns = new ArrayList<>();
     }
 
     public AntipatternTableHeading() {
 
         this.relations = new ArrayList<>();
+        this.columns = new ArrayList<>();
     }
 
     public List<AntipatternRelation> getRelations() {
@@ -34,5 +37,15 @@ public class AntipatternTableHeading extends AntipatternHeading {
     public void addRelation(String antipattern, String relation) {
 
         relations.add(new AntipatternRelation(antipattern.replace(" ", ""), relation.replace(" ", "")));
+    }
+
+    public void addColumn(String column) {
+
+        columns.add(column);
+    }
+
+    public List<String> getColumns() {
+
+        return this.columns;
     }
 }

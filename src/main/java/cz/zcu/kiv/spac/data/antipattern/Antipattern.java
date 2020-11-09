@@ -95,11 +95,7 @@ public class Antipattern {
         }
 
         List<String> antipatternHeadingsTexts = new ArrayList<>();
-
-        for (AntipatternHeading antipatternHeading : antipatternHeadings.values()) {
-
-            antipatternHeadingsTexts.add(antipatternHeading.getHeadingText());
-        }
+        antipatternHeadingsTexts.addAll(antipatternHeadings.keySet());
 
         return antipatternHeadingsTexts;
     }

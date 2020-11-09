@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Constants {
 
-    public static final String APP_NAME = "Antipatterns Catalogue";
+    public static final String APP_NAME = "Anti-patterns Catalogue";
 
     public static final String FILES_EXTENSION = ".md";
 

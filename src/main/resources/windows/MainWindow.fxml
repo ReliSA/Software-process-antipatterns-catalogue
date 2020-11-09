@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -13,44 +13,48 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<VBox prefHeight="782.0" prefWidth="1082.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
+<VBox prefHeight="782.0" prefWidth="1152.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#menuNewAPAction" text="New AP" />
+            <MenuItem mnemonicParsing="false" onAction="#menuNewAPAction" text="New Anti-pattern" />
             <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Git" />
+        <Menu mnemonicParsing="false" text="Git">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#menuPushAction" text="Push changes" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuPullAction" text="Pull repository" />
+               </items></Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="780.0" prefWidth="1082.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="757.0" prefWidth="1140.0" VBox.vgrow="ALWAYS">
          <children>
-            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="669.0" prefWidth="283.0" />
-            <Label layoutX="96.0" layoutY="8.0" text="Antipatterns">
+            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="669.0" prefWidth="338.0" />
+            <Label layoutX="92.0" layoutY="8.0" text="Anti-patterns">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <WebView fx:id="wviewAntipatternPreview" layoutX="314.0" layoutY="78.0" prefHeight="669.0" prefWidth="753.0" />
-            <Label layoutX="596.0" layoutY="8.0" text="Antipattern preview">
+            <WebView fx:id="wviewAntipatternPreview" layoutX="365.0" layoutY="78.0" prefHeight="669.0" prefWidth="776.0" />
+            <Label layoutX="629.0" layoutY="8.0" text="Anti-pattern preview">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <TextField fx:id="txtFieldAPSearch" layoutX="89.0" layoutY="46.0" onKeyTyped="#filterAntipatterns" prefHeight="25.0" prefWidth="183.0" promptText="Antipattern name" />
+            <TextField fx:id="txtFieldAPSearch" layoutX="89.0" layoutY="46.0" onKeyTyped="#filterAntipatterns" prefHeight="25.0" prefWidth="155.0" promptText="Antipattern name" />
             <Label layoutX="14.0" layoutY="49.0" text="Search AP:">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Line endX="652.0" layoutX="415.0" layoutY="78.0" startX="-100.29290771484375" startY="-0.70709228515625" strokeWidth="0.1" />
-            <Line endX="1067.0" endY="747.0" startX="314.0" startY="747.0" strokeWidth="0.1" />
-            <Line endX="-111.5" endY="658.5" layoutX="425.0" layoutY="88.0" startX="-111.0" startY="-10.0" strokeWidth="0.2" />
-            <Line endX="632.5" endY="648.5" layoutX="435.0" layoutY="98.0" startX="632.70703125" startY="-19.29290771484375" strokeWidth="0.2" />
-            <CheckBox fx:id="chckBoxFilterNonCreated" layoutX="281.0" layoutY="48.0" mnemonicParsing="false" onAction="#chckBoxFilterNonCreatedClicked" prefHeight="20.0" prefWidth="16.0" />
+            <Line endX="726.0" layoutX="415.0" layoutY="78.0" startX="-50.70709228515625" strokeWidth="0.1" />
+            <Line endX="1141.0" endY="747.0" startX="364.29290771484375" startY="747.7070922851562" strokeWidth="0.1" />
+            <Line endX="-60.0" endY="659.0" layoutX="425.0" layoutY="88.0" startX="-61.20709228515625" startY="-9.5" strokeWidth="0.2" />
+            <Line endX="706.0" endY="649.0" layoutX="435.0" layoutY="98.0" startX="706.70703125" startY="-19.29290771484375" strokeWidth="0.2" />
+            <ChoiceBox fx:id="selectAPFilter" layoutX="249.0" layoutY="46.0" prefHeight="25.0" prefWidth="104.0" />
          </children>
     </AnchorPane>
   </children>

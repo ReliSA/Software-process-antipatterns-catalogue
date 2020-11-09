@@ -4,7 +4,11 @@ import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.enums.TemplateFieldType;
+import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
+import cz.zcu.kiv.spac.template.TableColumnField;
+import cz.zcu.kiv.spac.template.TableField;
 import cz.zcu.kiv.spac.template.Template;
 import cz.zcu.kiv.spac.template.TemplateField;
 import javafx.event.ActionEvent;
@@ -36,6 +40,9 @@ public class AntipatternRawWindowController {
 
     @FXML
     private Button btnSave;
+
+    @FXML
+    private ListView listTemplateFields;
 
 
     private Antipattern antipattern;
@@ -84,7 +91,8 @@ public class AntipatternRawWindowController {
     @FXML
     private void saveRawAntipattern(ActionEvent actionEvent) {
 
-        tempAntipattern.setContent(txtAreaRawAntipatternContent.getText());
+        String formattedContent = MarkdownFormatter.formatMarkdownTable(txtAreaRawAntipatternContent.getText());
+        tempAntipattern.setContent(formattedContent);
         tempAntipattern.setAntipatternHeadings(parser.parseHeadings(tempAntipattern.getName(), txtAreaRawAntipatternContent.getText()));
 
         List<String> differences = template.getHeadingDifferences(tempAntipattern);
@@ -131,6 +139,32 @@ public class AntipatternRawWindowController {
     public void setTemplate(Template template) {
 
         this.template = template;
+
+        for (TemplateField field : template.getFieldList()) {
+
+            String text = field.getText();
+
+            if (!field.isRequired()) {
+
+                text += " (Optional)";
+            }
+
+            // TODO: table columns show
+
+            text += " - " + field.getType().toString();
+
+            listTemplateFields.getItems().add(text);
+
+            if (field.getType() == TemplateFieldType.TABLE) {
+
+                TableField tableField = (TableField) field;
+
+                for (TableColumnField tableColumnField : tableField.getColumns()) {
+
+                    listTemplateFields.getItems().add("\t" + tableColumnField.getText() + " - TABLECOLUMN");
+                }
+            }
+        }
     }
 
     public Antipattern getTempAntipattern() {

@@ -12,7 +12,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -69,6 +68,12 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.4</version>
+        </dependency>
+
+        <dependency>
+                <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>1.116</version>
         </dependency>
 
     </dependencies>

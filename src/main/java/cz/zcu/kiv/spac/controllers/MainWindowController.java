@@ -4,6 +4,7 @@ import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.enums.AntipatternFilterChoices;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
@@ -45,13 +46,14 @@ public class MainWindowController {
     private WebView wviewAntipatternPreview;
 
     @FXML
-    private CheckBox chckBoxFilterNonCreated;
+    private ChoiceBox selectAPFilter;
 
     // App variables.
     private MarkdownParser markdownParser;
     private Template template;
     private Map<String, Antipattern> antipatterns;
     private Catalogue catalogue;
+    private AntipatternFilterChoices selectedAPFilterChoice;
 
     // Logger.
     private static Logger log = Logger.getLogger(MainWindowController.class);
@@ -67,7 +69,7 @@ public class MainWindowController {
     public void initialize() {
 
         // Load configuration.
-        template = FileLoader.loadConfiguration(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
+        template = FileLoader.loadTemplate(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
 
         // If configuration was not loaded correctly.
         if (template == null) {
@@ -102,14 +104,37 @@ public class MainWindowController {
         // Load all antipatterns from catalogue folder.
         antipatterns = FileLoader.loadAntipatterns(markdownParser, catalogue);
 
-        // Add every antipattern to antipattern list element.
-        fillAntipatternList();
-
         // Set css styles for preview.
         wviewAntipatternPreview.getEngine().setUserStyleSheetLocation(getClass().getResource(Constants.RESOURCE_PREVIEW_CSS).toString());
 
-        // Set tooltip for checkbox for filtering noncreated antipatterns.
-        chckBoxFilterNonCreated.setTooltip(new Tooltip("If selected, then all antipatterns, which are not created (does not have file in catalogue folder), will be filtered."));
+        // Add all choices for filtering.
+        selectAPFilter.getItems().addAll(AntipatternFilterChoices.getTexts());
+        selectAPFilter.getSelectionModel().select(0);
+        selectedAPFilterChoice = AntipatternFilterChoices.ALL;
+        selectAPFilter.setOnAction(e -> {
+
+            String filterChoice = (String) selectAPFilter.getSelectionModel().getSelectedItem();
+
+            AntipatternFilterChoices choice = AntipatternFilterChoices.getAntipatternFilterChoice(filterChoice);
+
+            if (choice == null) {
+
+                Alert alert = new Alert(Alert.AlertType.NONE);
+                alert.setTitle(Constants.APP_NAME);
+                alert.setAlertType(Alert.AlertType.ERROR);
+                alert.setHeaderText("Error while selecting filtering choice.");
+                alert.setContentText("Filter '" + filterChoice + "' did not exists, please contact administrator.");
+                alert.show();
+
+            } else {
+
+                selectedAPFilterChoice = choice;
+                fillAntipatternList();
+            }
+        });
+
+        // Add every antipattern to antipattern list element.
+        fillAntipatternList();
     }
 
     /**
@@ -225,6 +250,28 @@ public class MainWindowController {
     }
 
     /**
+     * Perform git push action for current repository defined in configuration.
+     * @param actionEvent - Action event.
+     */
+    @FXML
+    private void menuPushAction(ActionEvent actionEvent) {
+
+        System.out.println("Menu push action.");
+        // TODO: implement menuPushAction.
+    }
+
+    /**
+     * Perform git pull action for current repository defined in configuration.
+     * @param actionEvent - Action event.
+     */
+    @FXML
+    private void menuPullAction(ActionEvent actionEvent) {
+
+        System.out.println("Menu pull action.");
+        // TODO: implement menuPullAction.
+    }
+
+    /**
      * Open antipattern window for creating new antipattern.
      */
     private void openAntipatternWindow() {
@@ -242,9 +289,25 @@ public class MainWindowController {
 
             Antipattern antipattern = antipatterns.get(aPatternName);
 
-            if (chckBoxFilterNonCreated.isSelected() && !antipattern.isCreated()) {
+            switch(selectedAPFilterChoice) {
 
-                continue;
+                case CREATED:
+
+                    if (!antipattern.isCreated()) {
+
+                        continue;
+                    }
+
+                    break;
+
+                case MENTIONED:
+
+                    if (antipattern.isCreated()) {
+
+                        continue;
+                    }
+
+                    break;
             }
 
             listAntipatterns.getItems().add(prepareAntipatternName(antipattern));
@@ -264,7 +327,7 @@ public class MainWindowController {
             // If antipattern is null, then it means that we want to create new antipattern.
             if (antipattern == null || (antipattern != null && !antipattern.isCreated())) {
 
-                stageTitle += " - New Antipattern";
+                stageTitle += " - New Anti-pattern";
 
             } else {
 
@@ -274,7 +337,7 @@ public class MainWindowController {
                     return;
                 }
 
-                stageTitle += " - Edit Antipattern (" + antipattern.getName() + ")";
+                stageTitle += " - Edit Anti-pattern (" + antipattern.getName() + ")";
             }
 
             // Create new stage.
@@ -319,6 +382,7 @@ public class MainWindowController {
                 Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
                 antipattern.setContent(updatedAntipattern.getContent().toString());
                 antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
+                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(updatedAntipattern.getContent().toString()));
             }
 
         } catch (Exception e) {
@@ -389,8 +453,12 @@ public class MainWindowController {
                 antipattern.setContent(tempAntipattern.getContent().toString());
                 antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
 
+                // TODO: Also create catalogue records from antipatterns 'Known as' and linked it via see.....
+                // TODO: do check if this instance already exists (catalogue.isCatalogueInstanceExists(instanceName)).
+
                 // Save content changes to file.
                 FileWriter.write(new File(Utils.getRootDir() + "/" + antipattern.getPath()), antipattern.getContent().toString());
+                wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(tempAntipattern.getContent().toString()));
             }
 
 
@@ -422,6 +490,9 @@ public class MainWindowController {
 
             // Add created antipattern to list.
             catalogueRecords.add(new CatalogueRecord(newAntipattern.getName(), Constants.CATALOGUE_FOLDER + "/" + Utils.getFilenameFromStringPath(newAntipattern.getPath())));
+
+            // TODO: Also create catalogue records from antipatterns 'Known as' and linked it via see.....
+            // TODO: do check if this instance already exists (catalogue.isCatalogueInstanceExists(instanceName)).
 
             // Push it to catalogue.
             catalogue.addCatalogueInstance(firstLetter, catalogueRecords);

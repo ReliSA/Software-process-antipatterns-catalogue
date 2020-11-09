@@ -32,11 +32,11 @@ public class FileLoader {
     private static Logger log = Logger.getLogger(FileLoader.class);
 
     /**
-     * Load configuration.
+     * Load template.
      * @param configurationPath - Path to configuration.
      * @return Template.
      */
-    public static Template loadConfiguration(String configurationPath) {
+    public static Template loadTemplate(String configurationPath) {
 
         Template template;
 
@@ -105,6 +105,17 @@ public class FileLoader {
         log.info("Configuration was loaded successfully.");
 
         return template;
+    }
+
+    /**
+     * Load configuration for git (branch name, ...).
+     * @param configurationPath - Path to configuration.
+     * @return Git configuration.
+     */
+    public static void loadGitConfiguration(String configurationPath) {
+
+
+        // TODO: implement.
     }
 
     /**
