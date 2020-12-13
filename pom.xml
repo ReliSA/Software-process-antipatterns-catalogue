@@ -71,9 +71,15 @@
         </dependency>
 
         <dependency>
-                <groupId>org.kohsuke</groupId>
-            <artifactId>github-api</artifactId>
-            <version>1.116</version>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.9.0.202009080501-r</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
         </dependency>
 
     </dependencies>
