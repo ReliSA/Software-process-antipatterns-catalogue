@@ -21,7 +21,7 @@ public class TableField extends TemplateField {
      */
     public TableField(String name, String text, TemplateFieldType type, boolean required) {
 
-        super(name, text, type, required);
+        super(name, text, type, required, "", "");
         columns = new ArrayList<>();
     }
 
