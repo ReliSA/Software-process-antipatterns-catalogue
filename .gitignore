@@ -1,3 +1,4 @@
 .idea
 AntipatternCatalogue.iml
 target
+*.properties
