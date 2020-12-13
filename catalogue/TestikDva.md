@@ -5,51 +5,61 @@
 
 ## Also Known As
 
-alfabeta
+alfabetagama
 
 ## Summary
 
 asd
 
+
 ## Context
 
 asd
+
 
 ## Unbalanced Forces
 
 asd
 
+
 ## Symptoms and Consequences
 
 asd
+
 
 ## Causes
 
 asd
 
+
 ## (Refactored) Solution
 
 asd
+
 
 ## Variations (Optional)
 
 asd
 
+
 ## Example(s) (Optional)
 
 asd
+
 
 ## Related Anti-patterns
 
 |Anti-pattern|Relation|
 |---|---|
-|Anti-pattern name|Relation
+|Anti-patternname|Relation
 
 
 ## Notes (Optional)
 
 asd
 
+
 ## Sources
 
 asd
+
