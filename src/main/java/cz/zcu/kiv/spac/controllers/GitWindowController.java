@@ -280,11 +280,11 @@ public class GitWindowController {
                     .setOldTree(oldTreeIter)
                     .call();
 
-            System.out.println("Pulled files: " + diffs.size());
+            String content = "Pulling commits from git was successful. Pulled files (" + diffs.size() + "):";
 
             for (DiffEntry entry : diffs) {
 
-                System.out.println(entry.toString());
+                content += "\n" + entry.getNewPath();
             }
 
             log.info("Pull command completed successfully.");
@@ -293,7 +293,7 @@ public class GitWindowController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(Constants.APP_NAME);
             alert.setHeaderText("Pull from git");
-            alert.setContentText("Pulling commits from git was successful.");
+            alert.setContentText(content);
             alert.showAndWait();
 
             getBranchTrackingStatus();
