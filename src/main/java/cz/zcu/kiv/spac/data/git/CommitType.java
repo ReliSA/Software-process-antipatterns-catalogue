@@ -1,4 +1,8 @@
 package cz.zcu.kiv.spac.data.git;
 
-public class CommitType {
+public enum CommitType {
+
+    ADD,
+    MODIFY,
+    REMOVE;
 }

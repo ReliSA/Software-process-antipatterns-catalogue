@@ -1,12 +1,10 @@
 package cz.zcu.kiv.spac.controllers;
 
-import com.vladsch.flexmark.ast.Text;
 import cz.zcu.kiv.spac.components.ListViewItemWithStringAndCheckBox;
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.git.CommitType;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
-import cz.zcu.kiv.spac.data.git.MyOutputStream;
 import cz.zcu.kiv.spac.file.FileLoader;
-import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,40 +16,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import org.eclipse.jgit.api.AddCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PullCommand;
-import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.diff.Edit;
-import org.eclipse.jgit.diff.EditList;
 import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.patch.FileHeader;
-import org.eclipse.jgit.revwalk.DepthWalk;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.PathFilter;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
 
-import javax.swing.*;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Controller for git window.
@@ -351,41 +327,34 @@ public class GitWindowController {
 
         try {
 
-            Git git = customGitObject.getGit();
-            Repository repository = git.getRepository();
-            String branch = repository.getBranch();
-            ObjectId head = repository.resolve("refs/heads/"+branch+"^{tree}");
-
-            git.fetch();
-            ObjectId fetchHead = repository.resolve("FETCH_HEAD^{tree}");
-
-            ObjectReader reader = repository.newObjectReader();
-            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-            oldTreeIter.reset(reader, head);
-            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-            newTreeIter.reset(reader, fetchHead);
-
-            List<DiffEntry> diffs= git.diff()
-                    //.setNewTree(newTreeIter)
-                    //.setOldTree(oldTreeIter)
-                    .call();
-
-            MyOutputStream stream = new MyOutputStream();
-            DiffFormatter formatter = new DiffFormatter(stream);
-            formatter.setRepository(repository);
-
             listViewFileChanged.getItems().clear();
-            for(DiffEntry entry : diffs) {
+            Git git = customGitObject.getGit();
 
-                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(entry.getNewPath(), false, entry.getChangeType()));
+            Status status = git.status().call();
+
+            Set<String> added = status.getAdded();
+            for(String add : added) {
+
+                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(add, false, CommitType.ADD));
             }
 
-            lblChangedFiles.setText(diffs.size() + " changed files");
+            Set<String> modified = status.getModified();
+            for(String modify : modified) {
+
+                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(modify, false, CommitType.MODIFY));
+            }
+
+            Set<String> removed = status.getRemoved();
+            for(String remove : removed) {
+
+                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(remove, false, CommitType.REMOVE));
+            }
+
+            lblChangedFiles.setText(listViewFileChanged.getItems().size() + " changed files");
 
         } catch (Exception e) {
 
-            // TODO: log it.
-            e.printStackTrace();
+            log.warn("Error while getting differences.");
         }
     }
 

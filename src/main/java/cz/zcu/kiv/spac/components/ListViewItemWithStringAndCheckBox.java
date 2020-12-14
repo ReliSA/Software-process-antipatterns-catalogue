@@ -1,5 +1,6 @@
 package cz.zcu.kiv.spac.components;
 
+import cz.zcu.kiv.spac.data.git.CommitType;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,7 +13,7 @@ public class ListViewItemWithStringAndCheckBox {
     private final BooleanProperty on = new SimpleBooleanProperty();
     private String filename;
 
-    public ListViewItemWithStringAndCheckBox(String name, boolean on, DiffEntry.ChangeType type) {
+    public ListViewItemWithStringAndCheckBox(String name, boolean on, CommitType type) {
 
         this.filename = name;
 
@@ -30,7 +31,7 @@ public class ListViewItemWithStringAndCheckBox {
                 typeChar = "?";
                 break;
 
-            case DELETE:
+            case REMOVE:
 
                 typeChar = "x";
                 break;
