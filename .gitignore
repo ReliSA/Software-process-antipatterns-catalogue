@@ -1,4 +1,4 @@
 .idea
 AntipatternCatalogue.iml
 target
-*.properties
+git.properties
