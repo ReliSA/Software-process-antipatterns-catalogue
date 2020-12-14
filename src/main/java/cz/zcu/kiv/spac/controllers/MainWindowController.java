@@ -7,10 +7,10 @@ import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.AntipatternFilterChoices;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.file.FileWriter;
-import cz.zcu.kiv.spac.git.GitConfiguration;
+import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
-import cz.zcu.kiv.spac.template.Template;
+import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,8 +24,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
+import org.eclipse.jgit.api.Git;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,24 +53,14 @@ public class MainWindowController {
     @FXML
     private Button btnEditAP;
 
-    @FXML
-    private Button btnNewAP;
-
-    @FXML
-    private Label lblGitLogged;
-
-    @FXML
-    private MenuItem menuLog;
-
     // App variables.
     private MarkdownParser markdownParser;
     private Template template;
-    private GitConfiguration gitConfiguration;
+    private CustomGitObject customGitObject;
     private Map<String, Antipattern> antipatterns;
     private Catalogue catalogue;
     private AntipatternFilterChoices selectedAPFilterChoice;
     private Antipattern selectedAntipattern;
-    private GitHub gitHub;
 
     // Logger.
     private static Logger log = Logger.getLogger(MainWindowController.class);
@@ -86,17 +75,14 @@ public class MainWindowController {
     @FXML
     public void initialize() {
 
-        // Load configuration.
-        Object[] configurationFields = FileLoader.loadConfiguration(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
+        // Load configurations.
+        template = FileLoader.loadTemplate(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
+        customGitObject = FileLoader.loadGitConfiguration(Utils.getRootDir() + "/" + Constants.PROPERTIES_NAME);
 
-        if (configurationFields == null) {
+        if (template == null || customGitObject == null || customGitObject.getGit() == null) {
 
-            log.error("Configuration file '" + Constants.CATALOGUE_FILE + "' does not exists or it has bad xml format!");
             System.exit(1);
         }
-
-        template = (Template) configurationFields[0];
-        gitConfiguration = (GitConfiguration) configurationFields[1];
 
         // Create new markdown parser.
         markdownParser = new MarkdownParser(template);
@@ -157,8 +143,6 @@ public class MainWindowController {
         fillAntipatternList();
 
         btnEditAP.setDisable(true);
-        lblGitLogged.setText(Constants.LBL_GIT_LOGGED_TEXT_DEFAULT + Constants.LBL_GIT_LOGGED_USER_DEFAULT);
-        menuLog.setText(Constants.MENU_LOG_LOGIN_TEXT);
     }
 
     /**
@@ -258,25 +242,13 @@ public class MainWindowController {
     }
 
     /**
-     * Perform git push action for current repository defined in configuration.
+     * Open git window for pushing and pulling changes from / to git.
      * @param actionEvent - Action event.
      */
     @FXML
-    private void menuPushAction(ActionEvent actionEvent) {
+    private void menuGitManageAction(ActionEvent actionEvent) {
 
-        System.out.println("Menu push action.");
-        // TODO: implement menuPushAction.
-    }
-
-    /**
-     * Perform git pull action for current repository defined in configuration.
-     * @param actionEvent - Action event.
-     */
-    @FXML
-    private void menuPullAction(ActionEvent actionEvent) {
-
-        System.out.println("Menu pull action.");
-        // TODO: implement menuPullAction.
+        openGitManageWindow();
     }
 
     /**
@@ -312,9 +284,9 @@ public class MainWindowController {
         alert.setHeaderText("Git configuration parameters");
 
         String content = "";
-        content += "Branch: " + gitConfiguration.getBranchName() + "\n\n";
-        content += "Repository URL: " + gitConfiguration.getRepositoryUrl() + "\n\n";
-        content += "Username: " + gitConfiguration.getUsername();
+        content += "Branch: " + customGitObject.getBranchName() + "\n\n";
+        content += "Repository URL: " + customGitObject.getRepositoryUrl() + "\n\n";
+        content += "Username: " + customGitObject.getUsername();
 
         alert.getDialogPane().setMinWidth(600);
         alert.setContentText(content);
@@ -322,60 +294,24 @@ public class MainWindowController {
     }
 
     /**
-     * Git log action.
-     * @param actionEvent - Action event.
+     * Prepare and open git manage window.
      */
-    @FXML
-    private void menuLogAction(ActionEvent actionEvent) {
-
-        // TODO: check for .properties. ??
-
-        if (menuLog.getText().equals(Constants.MENU_LOG_LOGOUT_TEXT)) {
-
-            gitHub = null;
-            menuLog.setText(Constants.MENU_LOG_LOGIN_TEXT);
-            lblGitLogged.setText(Constants.LBL_GIT_LOGGED_TEXT_DEFAULT + Constants.LBL_GIT_LOGGED_USER_DEFAULT);
-
-        } else {
-
-            // Try to connect to git.
-            connectToGit();
-
-            if (gitHub != null) {
-
-                menuLog.setText(Constants.MENU_LOG_LOGOUT_TEXT);
-
-                try {
-
-                    lblGitLogged.setText(Constants.LBL_GIT_LOGGED_TEXT_DEFAULT + gitHub.getMyself().getLogin() + " (" + gitHub.getMyself().getName() + ")");
-
-                } catch (Exception e) {
-
-                    // Do nothing, because it is already handled in loging.
-                }
-            }
-        }
-    }
-
-    /**
-     * Try to connect to git via GitLogin window.
-     */
-    private void connectToGit() {
+    private void openGitManageWindow() {
 
         try {
 
             String stageTitle = Constants.APP_NAME;
 
             // Load antipattern window template.
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_GIT_LOGIN_WINDOW)));
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_GIT_MANAGE_WINDOW)));
             Parent root = loader.load();
 
             Stage stage = new Stage();
 
             // Create new antipattern window controller and set values.
-            GitLoginController gitLoginController;
-            gitLoginController = loader.getController();
-            gitLoginController.setGitConfigurationUsername(gitConfiguration.getUsername());
+            GitWindowController gitWindowController;
+            gitWindowController = loader.getController();
+            gitWindowController.setCustomGitObject(customGitObject);
 
             // Set stage.
             stage.setTitle(stageTitle);
@@ -384,11 +320,9 @@ public class MainWindowController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            gitHub = gitLoginController.getGitHub();
-
         } catch (Exception e) {
 
-            log.error("Invalid GitLogin scene.");
+            log.error("Invalid GitManage scene.");
         }
     }
 
@@ -502,6 +436,7 @@ public class MainWindowController {
             antipatternWindowController.setAntipattern(antipattern);
             antipatternWindowController.setTemplate(template);
             antipatternWindowController.setMarkdownParser(markdownParser);
+            antipatternWindowController.setCatalogue(catalogue);
 
             // Create Form tab and init values in fields.
             antipatternWindowController.loadAntipatternInfo();
@@ -518,11 +453,6 @@ public class MainWindowController {
 
                 Antipattern createdAntipattern = antipatternWindowController.getTempAntipattern();
                 addNewAntipatternToCatalogue(createdAntipattern);
-
-                antipatterns = null;
-                antipatterns = FileLoader.loadAntipatterns(markdownParser, catalogue);
-
-                fillAntipatternList();
             }
 
             // If existing antipattern was updated, then replace old antipattern with newer.
@@ -531,13 +461,53 @@ public class MainWindowController {
                 Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
                 antipattern.setContent(updatedAntipattern.getContent().toString());
                 antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
+
+                updateCatalogueWithLinkedAntipatterns(antipattern, updatedAntipattern);
+
                 wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(updatedAntipattern.getContent().toString()));
             }
+
+            antipatterns = null;
+            antipatterns = FileLoader.loadAntipatterns(markdownParser, catalogue);
+
+            fillAntipatternList();
 
         } catch (Exception e) {
 
             log.error("Invalid AntipatternWindowController scene.");
         }
+    }
+
+    /**
+     * Update catalogue by adding new linked antipatterns and removing deleted linked antipatterns.
+     * @param antipattern - Current antipattern values.
+     * @param updatedAntipattern - Updated antipattern values.
+     */
+    private void updateCatalogueWithLinkedAntipatterns(Antipattern antipattern, Antipattern updatedAntipattern) {
+
+        List<String> addedLinkedAntipatterns = new ArrayList<>(updatedAntipattern.getLinkedAntipatterns());
+        addedLinkedAntipatterns.removeAll(antipattern.getLinkedAntipatterns());
+
+        List<String> deletedLinkedAntipatterns = new ArrayList<>(antipattern.getLinkedAntipatterns());
+        deletedLinkedAntipatterns.removeAll(updatedAntipattern.getLinkedAntipatterns());
+
+        for (String linkedAntipatternString : addedLinkedAntipatterns) {
+
+            addAntipatternToMapAndCatalogue(linkedAntipatternString, updatedAntipattern);
+        }
+
+        for (String linkedAntipatternString : deletedLinkedAntipatterns) {
+
+            Antipattern deletedLinkedAntipattern = antipatterns.get(Utils.formatAntipatternName(linkedAntipatternString));
+            antipatterns.remove(deletedLinkedAntipattern);
+            catalogue.deleteCatalogueRecord(linkedAntipatternString);
+        }
+
+        // Create new catalogue content.
+        String catalogueMarkdownContent = MarkdownFormatter.createCatalogueMarkdownContent(catalogue, antipatterns);
+
+        // Replace old catalogue content with new catalogue content.
+        FileWriter.write(new File(Constants.CATALOGUE_FILE), catalogueMarkdownContent);
     }
 
     /**
@@ -602,9 +572,6 @@ public class MainWindowController {
                 antipattern.setContent(tempAntipattern.getContent().toString());
                 antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
 
-                // TODO: Also create catalogue records from antipatterns 'Known as' and linked it via see.....
-                // TODO: do check if this instance already exists (catalogue.isCatalogueInstanceExists(instanceName)).
-
                 // Save content changes to file.
                 FileWriter.write(new File(Utils.getRootDir() + "/" + antipattern.getPath()), antipattern.getContent().toString());
                 wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(tempAntipattern.getContent().toString()));
@@ -615,6 +582,39 @@ public class MainWindowController {
 
             log.error("Invalid AntipatternRawWindowController scene.");
         }
+    }
+
+    /**
+     * Add antipattern to map of antipatterns and to catalogue.
+     * @param linkedAntipatternString - Linked antipattern name.
+     * @param antipattern - Antipattern.
+     */
+    private void addAntipatternToMapAndCatalogue(String linkedAntipatternString, Antipattern antipattern) {
+
+        // Firstly, create antipattern and add it to list of antipatterns (for future linking).
+        Antipattern linkedAntipattern = new Antipattern(linkedAntipatternString, antipattern.getContent(), antipattern.getPath());
+        linkedAntipattern.setLinking(true);
+        antipatterns.put(linkedAntipattern.getFormattedName(), linkedAntipattern);
+
+        // Then create catalogue record to push it to catalogue filel
+        String firstLetter = linkedAntipatternString.toUpperCase().substring(0, 1);
+
+        // Get catalogue instance for linked antipattern.
+        List<CatalogueRecord> catalogueRecords = catalogue.getCatalogueInstance(firstLetter);
+
+        // If catalogue does not contains specific instance, then create new arraylist.
+        if (catalogueRecords == null) {
+
+            catalogueRecords = new ArrayList<>();
+        }
+
+        catalogueRecords.add(new CatalogueRecord(linkedAntipattern.getName(), antipattern.getPath()));
+
+        // Push it to catalogue.
+        catalogue.addCatalogueInstance(firstLetter, catalogueRecords);
+
+        // Sort specific instance.
+        catalogue.sortCatalogueInstance(firstLetter);
     }
 
     /**
@@ -638,16 +638,21 @@ public class MainWindowController {
             }
 
             // Add created antipattern to list.
-            catalogueRecords.add(new CatalogueRecord(newAntipattern.getName(), Constants.CATALOGUE_FOLDER + "/" + Utils.getFilenameFromStringPath(newAntipattern.getPath())));
-
-            // TODO: Also create catalogue records from antipatterns 'Known as' and linked it via see.....
-            // TODO: do check if this instance already exists (catalogue.isCatalogueInstanceExists(instanceName)).
+            String path = Constants.CATALOGUE_FOLDER + "/" + Utils.getFilenameFromStringPath(newAntipattern.getPath());
+            catalogueRecords.add(new CatalogueRecord(newAntipattern.getName(), path));
+            antipatterns.put(newAntipattern.getFormattedName(), newAntipattern);
 
             // Push it to catalogue.
             catalogue.addCatalogueInstance(firstLetter, catalogueRecords);
 
             // Sort specific instance.
             catalogue.sortCatalogueInstance(firstLetter);
+
+            // Create CatalogueRecords from 'Known as' field.
+            for (String linkedAntipatternString : newAntipattern.getLinkedAntipatterns()) {
+
+                addAntipatternToMapAndCatalogue(linkedAntipatternString, newAntipattern);
+            }
 
             // Create new catalogue content.
             String catalogueMarkdownContent = MarkdownFormatter.createCatalogueMarkdownContent(catalogue, antipatterns);
@@ -660,6 +665,7 @@ public class MainWindowController {
         } catch (Exception ee) {
 
             log.warn("New antipattern '" + newAntipattern.getName() + "' was not added into template because of error.");
+            log.warn(ee.getMessage());
         }
     }
 

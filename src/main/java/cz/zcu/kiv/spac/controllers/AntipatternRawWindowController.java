@@ -3,14 +3,13 @@ package cz.zcu.kiv.spac.controllers;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
-import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.enums.TemplateFieldType;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
-import cz.zcu.kiv.spac.template.TableColumnField;
-import cz.zcu.kiv.spac.template.TableField;
-import cz.zcu.kiv.spac.template.Template;
-import cz.zcu.kiv.spac.template.TemplateField;
+import cz.zcu.kiv.spac.data.template.TableColumnField;
+import cz.zcu.kiv.spac.data.template.TableField;
+import cz.zcu.kiv.spac.data.template.Template;
+import cz.zcu.kiv.spac.data.template.TemplateField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -20,9 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Controller for antipattern raw window.
@@ -98,6 +95,7 @@ public class AntipatternRawWindowController {
         List<String> differences = template.getHeadingDifferences(tempAntipattern);
 
         if (differences.size() == 0) {
+
             antipatternUpdated = true;
 
             Stage stage = (Stage) btnBack.getScene().getWindow();
@@ -144,21 +142,21 @@ public class AntipatternRawWindowController {
 
             String text = field.getText();
 
+            // Add additional string to optional tablecolumns.
             if (!field.isRequired()) {
 
                 text += " (Optional)";
             }
-
-            // TODO: table columns show
-
             text += " - " + field.getType().toString();
 
             listTemplateFields.getItems().add(text);
 
+            // If current field is table, then show tablecolumns as well.
             if (field.getType() == TemplateFieldType.TABLE) {
 
                 TableField tableField = (TableField) field;
 
+                // Display tablecolumns.
                 for (TableColumnField tableColumnField : tableField.getColumns()) {
 
                     listTemplateFields.getItems().add("\t" + tableColumnField.getText() + " - TABLECOLUMN");

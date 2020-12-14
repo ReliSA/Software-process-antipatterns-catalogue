@@ -1,4 +1,4 @@
-package cz.zcu.kiv.spac.template;
+package cz.zcu.kiv.spac.data.template;
 
 import cz.zcu.kiv.spac.enums.TemplateFieldType;
 

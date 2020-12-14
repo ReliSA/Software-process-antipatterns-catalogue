@@ -7,14 +7,15 @@ import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
+import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
-import cz.zcu.kiv.spac.template.TableColumnField;
-import cz.zcu.kiv.spac.template.TableField;
-import cz.zcu.kiv.spac.template.Template;
-import cz.zcu.kiv.spac.template.TemplateField;
+import cz.zcu.kiv.spac.data.template.TableColumnField;
+import cz.zcu.kiv.spac.data.template.TableField;
+import cz.zcu.kiv.spac.data.template.Template;
+import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -62,6 +63,7 @@ public class AntipatternWindowController {
     private Antipattern antipattern;
     private Antipattern tempAntipattern;
     private Template template;
+    private Catalogue catalogue;
 
     private boolean antipatternUpdated = false;
     private boolean antipatternCreated = false;
@@ -275,6 +277,9 @@ public class AntipatternWindowController {
                     field = new TextField();
                     TextField textField = (TextField) field;
 
+                    textField.setText(templateField.getDefaultValue());
+                    textField.setPromptText(templateField.getPlaceholder());
+
                     // Get value from antipattern heading.
                     if (heading != null) {
 
@@ -311,7 +316,7 @@ public class AntipatternWindowController {
                 case TEXTAREA:
 
                     /*
-                    // TODO: HTMLEditor as Rich TextArea ?
+                    // TODO: ADDITIONAL: HTMLEditor as Rich TextArea ?
                     // https://stackoverflow.com/questions/10075841/how-to-hide-the-controls-of-htmleditor
                     field = new HTMLEditor();
                     HTMLEditor htmlEditorField = (HTMLEditor) field;
@@ -325,6 +330,9 @@ public class AntipatternWindowController {
                     // Create textarea.
                     field = new TextArea();
                     TextArea textAreaField = (TextArea) field;
+
+                    textAreaField.setText(templateField.getDefaultValue());
+                    textAreaField.setPromptText(templateField.getPlaceholder());
 
                     // Get value from antipattern heading.
                     if (heading != null) {
@@ -382,7 +390,7 @@ public class AntipatternWindowController {
                     // Click event for add button.
                     addRowButton.setOnAction((event) -> {
 
-                        // TODO: Not good, because if someone add another column for table, then it will fail.
+                        // TODO: MAYBE IN FUTURE: Not good, because if someone add another column for table, then it will fail.
                         AntipatternRelation antipatternRelation = new AntipatternRelation();
 
                         // Iterate through every column in template field.
@@ -566,6 +574,7 @@ public class AntipatternWindowController {
         List<String> fieldNameList = template.getFieldNameList();
 
         boolean firstHeadingAdded = false;
+        boolean knownAsAdded = false;
 
         // Iterate through every field on tab.
         for (Node node : nodes) {
@@ -578,7 +587,7 @@ public class AntipatternWindowController {
 
                 String headingName = node.getId();
 
-                 AntipatternHeading heading = null;
+                AntipatternHeading heading = null;
 
                 // Get text from field.
                 switch (field.getType()) {
@@ -641,6 +650,39 @@ public class AntipatternWindowController {
                             // First heading is always antipattern name.
                             firstHeadingAdded = true;
                             tempAntipattern.setName(textHeading.getValue());
+
+                        } else if (!knownAsAdded) {
+
+                            // Second heading will be 'known as'.
+                            // Split values in 'known as' by ; and add it to the list of linked antipatterns.
+                            String[] linkedAntipatterns = textHeading.getValue().split(";");
+
+                            for (String linkedAntipattern : linkedAntipatterns) {
+
+                                if (linkedAntipattern.contains(field.getDefaultValue().toUpperCase()) || linkedAntipattern.contains(field.getDefaultValue().toLowerCase())) {
+
+                                    continue;
+                                }
+
+                                if (antipattern == null || (antipattern != null && !antipattern.getLinkedAntipatterns().contains(linkedAntipattern))) {
+
+                                    if (catalogue.isAntipatternPresentedInCatalogue(linkedAntipattern)) {
+
+                                        log.warn("Column 'known as' contains antipattern name '" + linkedAntipattern + "', which is already presented in catalogue!");
+
+                                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                                        alert.setTitle(Constants.APP_NAME);
+                                        alert.setHeaderText("Existing antipattern");
+                                        alert.setContentText("Column 'known as' contains antipattern name '" + linkedAntipattern + "', which is already presented in catalogue!");
+                                        alert.show();
+                                        return false;
+                                    }
+                                }
+
+                                tempAntipattern.addLinkedAntipattern(linkedAntipattern);
+                            }
+
+                            knownAsAdded = true;
                         }
                     }
 
@@ -734,5 +776,10 @@ public class AntipatternWindowController {
     public boolean isAntipatternCreated() {
 
         return antipatternCreated;
+    }
+
+    public void setCatalogue(Catalogue catalogue) {
+
+        this.catalogue = catalogue;
     }
 }

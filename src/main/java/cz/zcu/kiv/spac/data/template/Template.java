@@ -1,4 +1,4 @@
-package cz.zcu.kiv.spac.template;
+package cz.zcu.kiv.spac.data.template;
 
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
@@ -9,7 +9,6 @@ import cz.zcu.kiv.spac.enums.TemplateFieldType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class representing template.

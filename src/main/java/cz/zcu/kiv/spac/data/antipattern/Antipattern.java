@@ -20,6 +20,7 @@ public class Antipattern {
     private boolean linking;
 
     private Map<String, AntipatternHeading> antipatternHeadings;
+    private List<String> linkedAntipatterns;
 
     /**
      * Constructor.
@@ -34,6 +35,7 @@ public class Antipattern {
         this.content = content;
         this.path = path;
         this.antipatternHeadings = new LinkedHashMap<>();
+        this.linkedAntipatterns = new ArrayList<>();
 
         if (path.equals("")) {
 
@@ -108,6 +110,16 @@ public class Antipattern {
     public void setAntipatternHeadings(Map<String, AntipatternHeading> antipatternHeadings) {
 
         this.antipatternHeadings = new LinkedHashMap<>(antipatternHeadings);
+    }
+
+    public void addLinkedAntipattern(String antipatternName) {
+
+        this.linkedAntipatterns.add(antipatternName);
+    }
+
+    public List<String> getLinkedAntipatterns() {
+
+        return linkedAntipatterns;
     }
 
     public String getPath() {

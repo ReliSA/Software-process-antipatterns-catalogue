@@ -13,15 +13,13 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
-import com.vladsch.flexmark.util.sequence.BasedSequence;
-import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
-import cz.zcu.kiv.spac.template.Template;
+import cz.zcu.kiv.spac.data.template.Template;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -107,7 +105,7 @@ public class MarkdownParser {
                 // Add new heading to map of headings.
                 headings.put(headingName, heading);
 
-                // TODO: parse bullet list ! -> add it to antipattern text heading.
+                // TODO: ADDITIONAL: parse bullet list ! -> add it to antipattern text heading.
 
             } else if ((node.getClass() == Paragraph.class || node.getClass() == BulletList.class) && parsingHeading) {
 
@@ -152,7 +150,7 @@ public class MarkdownParser {
                         String relation = tableNode.getChars().toString();
                         String[] antipatternRelation = relation.split("\\|");
 
-                        // TODO: maybe rework, because it will work only if 2 columns are presented.
+                        // TODO: MAYBE IN FUTURE: maybe rework, because it will work only if 2 columns are presented.
                         // |aa|bb| is splitted into 3 values - first blank, second 'aa', third 'bb'.
                         if (antipatternRelation.length == 3) {
 

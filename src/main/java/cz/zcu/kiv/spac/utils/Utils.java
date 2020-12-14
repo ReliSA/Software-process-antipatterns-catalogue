@@ -1,9 +1,12 @@
 package cz.zcu.kiv.spac.utils;
 
+import cz.zcu.kiv.spac.data.Constants;
 import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Class with utils methods.
@@ -56,5 +59,15 @@ public class Utils {
         antipatternName2 = antipatternName2.replace("'", "").replace("’", "").replace("_", " ");;
 
         return antipatternName1.equalsIgnoreCase(antipatternName2);
+    }
+
+    public static String replaceLineBreakersForHTMLNewLine(String content) {
+
+        return content.replaceAll(Constants.LINE_BREAKER, "<br>");
+    }
+
+    public static String getCurrentDateInString() {
+
+        return new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
     }
 }

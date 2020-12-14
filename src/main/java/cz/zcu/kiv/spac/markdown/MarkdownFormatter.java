@@ -9,10 +9,9 @@ import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
-import cz.zcu.kiv.spac.enums.TemplateFieldType;
-import cz.zcu.kiv.spac.template.TableColumnField;
-import cz.zcu.kiv.spac.template.TableField;
-import cz.zcu.kiv.spac.template.TemplateField;
+import cz.zcu.kiv.spac.data.template.TableColumnField;
+import cz.zcu.kiv.spac.data.template.TableField;
+import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -96,7 +95,7 @@ public class MarkdownFormatter {
      */
     public static String createAntipatternMarkdownContent(Map<String, AntipatternHeading> headings, List<TemplateField> fieldList) {
 
-        // TODO: Tasklist not implemented yet.
+        // TODO: ADDITIONAL: Tasklist not implemented yet.
         StringBuilder sb = new StringBuilder();
 
         // Add path to antipattern name.
@@ -153,8 +152,8 @@ public class MarkdownFormatter {
 
                     sb.append(createTableHeaderMarkdownContent(tableField));
 
-                    // TODO: Create link for source if exists.
-                    // TODO: Link two antipatterns / sources if exists in bibtex.
+                    // TODO: ADDITIONAL: Create link for source if exists.
+                    // TODO: ADDITIONAL: Link two antipatterns / sources if exists in bibtex.
                     for(AntipatternRelation relation : tableHeading.getRelations()) {
 
                         sb.append("|").append(relation.getAntipattern()).append("|").append(relation.getRelation());

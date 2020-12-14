@@ -6,13 +6,13 @@ import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.TemplateFieldType;
-import cz.zcu.kiv.spac.git.GitConfiguration;
+import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
-import cz.zcu.kiv.spac.template.TableColumnField;
-import cz.zcu.kiv.spac.template.TableField;
-import cz.zcu.kiv.spac.template.Template;
-import cz.zcu.kiv.spac.template.TemplateField;
+import cz.zcu.kiv.spac.data.template.TableColumnField;
+import cz.zcu.kiv.spac.data.template.TableField;
+import cz.zcu.kiv.spac.data.template.Template;
+import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.*;
@@ -20,6 +20,7 @@ import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -37,12 +38,10 @@ public class FileLoader {
      * @param configurationPath - Path to configuration.
      * @return Template and git configuration.
      */
-    public static Object[] loadConfiguration(String configurationPath) {
-
-        Object[] configurationFields = new Object[2];
+    public static Template loadTemplate(String configurationPath) {
 
         Template template;
-        GitConfiguration gitConfiguration;
+        CustomGitObject customGitObject;
 
         log.info("Loading configuration file: " + configurationPath);
 
@@ -58,130 +57,106 @@ public class FileLoader {
             doc.getDocumentElement().normalize();
 
             // Create new template object.
-            template = loadTemplate(doc);
-            gitConfiguration = loadGitConfiguration(doc);
+            try {
 
-        } catch (Exception e) {
+                List<TemplateField> fieldList = new ArrayList<>();
 
-            return null;
-        }
+                NodeList fields = doc.getElementsByTagName("field");
 
-        if (template == null || gitConfiguration == null) {
+                // Iterate through every template field in configuration.
+                for (int i = 0; i < fields.getLength(); i++) {
 
-            return null;
-        }
+                    Node fieldNode = fields.item(i);
+                    NamedNodeMap attributes = fieldNode.getAttributes();
 
-        log.info("Configuration was loaded successfully.");
+                    String name = attributes.getNamedItem("name").getTextContent();
+                    String text = attributes.getNamedItem("text").getTextContent();
+                    TemplateFieldType field = TemplateFieldType.valueOf(attributes.getNamedItem("field").getTextContent().toUpperCase());
+                    boolean required = attributes.getNamedItem("required").getTextContent().equals("yes");
+                    String defaultValue = attributes.getNamedItem("default_value").getTextContent();
+                    String placeholder = attributes.getNamedItem("placeholder").getTextContent();
 
-        configurationFields[0] = template;
-        configurationFields[1] = gitConfiguration;
+                    TemplateField templateField;
 
-        return configurationFields;
-    }
+                    // If current field is table, parse its columns and add it to list.
+                    if (field == TemplateFieldType.TABLE) {
 
-    /**
-     * Load template fields from xml document.
-     * @param doc - XML Document.
-     * @return New Template.
-     */
-    private static Template loadTemplate(Document doc) {
+                        templateField = new TableField(name, text, field, required);
 
-        try {
-            List<TemplateField> fieldList = new ArrayList<>();
+                        NodeList columns = ((Element) fieldNode).getElementsByTagName("column");
 
-            NodeList fields = doc.getElementsByTagName("field");
+                        for (int j = 0; j < columns.getLength(); j++) {
+                            String columnName = columns.item(j).getAttributes().getNamedItem("text").getTextContent();
+                            String columnDefaultValue = columns.item(j).getAttributes().getNamedItem("default_value").getTextContent();
 
-            // Iterate through every template field in configuration.
-            for (int i = 0; i < fields.getLength(); i++) {
+                            ((TableField) templateField).addColumn(new TableColumnField(columnName, columnDefaultValue));
+                        }
 
-                Node fieldNode = fields.item(i);
-                NamedNodeMap attributes = fieldNode.getAttributes();
+                    } else {
 
-                String name = attributes.getNamedItem("name").getTextContent();
-                String text = attributes.getNamedItem("text").getTextContent();
-                TemplateFieldType field = TemplateFieldType.valueOf(attributes.getNamedItem("field").getTextContent().toUpperCase());
-                boolean required = attributes.getNamedItem("required").getTextContent().equals("yes");
-
-                TemplateField templateField;
-
-                // If current field is table, parse its columns and add it to list.
-                if (field == TemplateFieldType.TABLE) {
-
-                    templateField = new TableField(name, text, field, required);
-
-                    NodeList columns = ((Element) fieldNode).getElementsByTagName("column");
-
-                    for (int j = 0; j < columns.getLength(); j++) {
-                        String columnName = columns.item(j).getAttributes().getNamedItem("text").getTextContent();
-                        String columnDefaultValue = columns.item(j).getAttributes().getNamedItem("default_value").getTextContent();
-
-                        ((TableField) templateField).addColumn(new TableColumnField(columnName, columnDefaultValue));
+                        // Otherwise create normal template field.
+                        templateField = new TemplateField(name, text, field, required, defaultValue, placeholder);
                     }
 
-                } else {
-
-                    // Otherwise create normal template field.
-                    templateField = new TemplateField(name, text, field, required);
+                    // Add field to list.
+                    fieldList.add(templateField);
                 }
 
-                // Add field to list.
-                fieldList.add(templateField);
-            }
+                template = new Template(fieldList);
 
-            return new Template(fieldList);
+            } catch (Exception e) {
+
+                log.error("Error while parsing template! It was probably caused by bad element names or bad attributes names");
+                return null;
+            }
 
         } catch (Exception e) {
 
-            log.error("Error while parsing template! It was probably caused by bad element names or bad attributes names");
             return null;
         }
 
+        log.info("Template was loaded successfully.");
+
+        return template;
     }
 
     /**
      * Load configuration for git (branch name, ...).
-     * @param doc - XML Document.
+     * @param propertiesFilePath - Path to properties file.
      * @return Git configuration.
      */
-    private static GitConfiguration loadGitConfiguration(Document doc) {
+    public static CustomGitObject loadGitConfiguration(String propertiesFilePath) {
 
-        try {
+        String branchName = "";
+        String repositoryUrl = "";
+        String username = "";
+        String password = "";
 
-            String branchName = "";
-            String repositoryUrl = "";
+        // Get username and password from properties file.
+        File propertiesFile = new File(propertiesFilePath);
 
-            // Load branch name from configuration.
-            NodeList branchNode = doc.getElementsByTagName("branch");
-            if (branchNode.getLength() == 1) {
+        if (propertiesFile.exists()) {
 
-                branchName = branchNode.item(0).getAttributes().getNamedItem("name").getTextContent();
+            Properties properties = new Properties();
 
-            } else {
+            try {
 
-                log.error("There are more branches specified in configuration!");
+                properties.load(new FileInputStream(propertiesFilePath));
+                username = properties.getProperty("username");
+                password = properties.getProperty("password");
+                branchName = properties.getProperty("branch");
+                repositoryUrl = properties.getProperty("repository");
+
+            } catch (Exception e) {
+
+                // Do nothing.
+                log.info("Error while retrieving git attributes from properties file!");
                 return null;
             }
-
-            // Load repository url from configuration.
-            NodeList repositoryNode = doc.getElementsByTagName("repository");
-            if (repositoryNode.getLength() == 1) {
-
-                repositoryUrl = repositoryNode.item(0).getAttributes().getNamedItem("url").getTextContent();
-
-            } else {
-
-                log.error("There are more repositories specified in configuration!");
-                return null;
-            }
-
-            return new GitConfiguration(branchName, repositoryUrl);
-
-        } catch (Exception e) {
-
-            log.error("Error while parsing git configuration! It was probably caused by bad elements name or bad attributes names");
-            return null;
         }
 
+        log.info("Git attributes was loaded successfully.");
+        return new CustomGitObject(branchName, repositoryUrl, username, password);
     }
 
     /**
@@ -277,6 +252,9 @@ public class FileLoader {
             linkingAntipattern.setContent(linkedAntipattern.getContent());
 
             linkingAntipattern.setLinking(true);
+
+            // Add name of linking antipattern to list of linked antipatterns.
+            linkedAntipattern.addLinkedAntipattern(antipatternName);
         }
 
         log.info("Antipattern list initialized, loaded " + antipatterns.size() + " antipatterns");
