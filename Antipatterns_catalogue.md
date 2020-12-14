@@ -1,11 +1,10 @@
 [Home](README.md) > Catalogue
-# Antipatterns Catalogue
+# Anti-patterns Catalogue
 
 [Template](catalogue/template.md) for new anti-pattern contents.
 
 
 ## A
-
 [Absentee Manager](catalogue/Absentee_Manager.md)
 
 All You Have Is a Hammer
@@ -271,6 +270,8 @@ Mythical Man Month
 ## N
 [Net Negative Producing Programmer](catalogue/Net_Negative_Producing_Programmer.md)
 
+[NewlyAddedAntipattern](catalogue/NewlyAddedAntipattern.md)
+
 [Nine Pregnant Women](catalogue/Nine_Pregnant_Women.md)
 
 Ninety-Ninety Rule
@@ -327,6 +328,8 @@ Proletariat Hero
 
 ## R
 Radio-Silence
+
+[RazDvaTri](catalogue/RazDvaTri.md)
 
 Requirement Creep
 
@@ -463,3 +466,5 @@ Yet Another Programmer
 Yet Another Thread Will Solve It
 
 You Aren’t Gonna Need It
+
+

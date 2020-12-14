@@ -378,6 +378,12 @@ public class GitWindowController {
                 listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(add, false, CommitType.ADD));
             }
 
+            Set<String> untracked = status.getUntracked();
+            for(String untrack : untracked) {
+
+                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(untrack, false, CommitType.ADD));
+            }
+
             Set<String> modified = status.getModified();
             for(String modify : modified) {
 
