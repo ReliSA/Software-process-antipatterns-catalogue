@@ -21,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.*;
@@ -80,6 +81,8 @@ public class GitWindowController {
     private String defaultTextLblFetch;
     private int commitsAhead = 0;
     private int commitsBehind = 0;
+
+    private boolean successfullyPulled = false;
 
 
     // Logger.
@@ -256,9 +259,33 @@ public class GitWindowController {
 
         try {
 
+            Git git = customGitObject.getGit();
+            Repository repository = git.getRepository();
+
+            ObjectId oldHead = repository.resolve("HEAD^{tree}");
+
             PullCommand pullCommand = customGitObject.getGit().pull();
             pullCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(customGitObject.getUsername(), customGitObject.getPassword()));
             pullCommand.call();
+
+            ObjectId head = repository.resolve("HEAD^{tree}");
+            ObjectReader reader = repository.newObjectReader();
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+            oldTreeIter.reset(reader, oldHead);
+            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+            newTreeIter.reset(reader, head);
+
+            List<DiffEntry> diffs = git.diff()
+                    .setNewTree(newTreeIter)
+                    .setOldTree(oldTreeIter)
+                    .call();
+
+            System.out.println("Pulled files: " + diffs.size());
+
+            for (DiffEntry entry : diffs) {
+
+                System.out.println(entry.toString());
+            }
 
             log.info("Pull command completed successfully.");
 
@@ -270,6 +297,19 @@ public class GitWindowController {
             alert.showAndWait();
 
             getBranchTrackingStatus();
+
+            successfullyPulled = true;
+
+        } catch (CheckoutConflictException ee) {
+
+            log.warn("Checkout conflict exception!");
+            log.warn(ee.getMessage());
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(Constants.APP_NAME);
+            alert.setHeaderText("Pull from git");
+            alert.setContentText(ee.getMessage());
+            alert.showAndWait();
 
         } catch (Exception e) {
 
@@ -475,4 +515,8 @@ public class GitWindowController {
         doFetch();
     }
 
+    public boolean isSuccessfullyPulled() {
+
+        return successfullyPulled;
+    }
 }

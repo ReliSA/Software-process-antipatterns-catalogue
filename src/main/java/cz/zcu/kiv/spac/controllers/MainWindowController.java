@@ -320,6 +320,37 @@ public class MainWindowController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
+            if (gitWindowController.isSuccessfullyPulled()) {
+
+                template = FileLoader.loadTemplate(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
+
+                // Create new markdown parser.
+                markdownParser = new MarkdownParser(template);
+
+                // Get catalogue markdown content.
+                String catalogueContent = FileLoader.loadFileContent(Utils.getRootDir() + "/" + Constants.CATALOGUE_FILE);
+
+                // If catalogue file was not loaded correctly.
+                if (catalogueContent == null) {
+
+                    log.error("Catalogue file '" + Constants.CATALOGUE_FILE + "' does not exists !");
+                    System.exit(1);
+                }
+
+                // Parse catalogue content.
+                catalogue = markdownParser.parseCatalogue(catalogueContent);
+
+                // If catalogue content is not correctly writed.
+                if (catalogue == null) {
+
+                    log.error("Catalogue file has bad markdown format.");
+                    System.exit(1);
+                }
+
+                // Load all antipatterns from catalogue folder.
+                antipatterns = FileLoader.loadAntipatterns(markdownParser, catalogue);
+            }
+
         } catch (Exception e) {
 
             log.error("Invalid GitManage scene.");
@@ -516,13 +547,13 @@ public class MainWindowController {
      */
     private void displayAntipatternLinkedError(String antipatternName) {
 
-            // Create an alert.
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error while opening antipattern window");
-            alert.setContentText("Antipattern '" + antipatternName + "' cannot be updated, because it contains link to another antipattern.");
-            alert.showAndWait();
+        // Create an alert.
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle(Constants.APP_NAME);
+        alert.setAlertType(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error while opening antipattern window");
+        alert.setContentText("Antipattern '" + antipatternName + "' cannot be updated, because it contains link to another antipattern.");
+        alert.showAndWait();
     }
 
     /**
