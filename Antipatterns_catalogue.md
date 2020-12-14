@@ -162,6 +162,8 @@ Fungible Project Manager
 ## G
 Geographically Distributed Development
 
+[GitPullAntipattern](catalogue/GitPullAntipattern.md)
+
 Give Me Estimates Now
 
 [Glass Case Plan](catalogue/Glass_Case_Plan.md)
