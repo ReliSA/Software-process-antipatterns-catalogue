@@ -12,9 +12,17 @@ Requirements and Analysis phases prolonged and consuming disproportionate amount
 
 ## Context
 
+Waterfall(ish) projects, especially when project oversight is loose and/or management is not driven by outcome.
+
 ## Unbalanced Forces
 
+ - need (desire) to have specifications perfect
+ - actual development of a high-quality product takes time
+ - quality objectives formally stated and high
+ - strict deadlines for delivery
+
 ## Symptoms and Consequences
+
  - rock-edge burndown (especially when viewing implementation tasks only)
  - long period at project start where activities connected to requirements, analysis and planning prevale, and design and implementation activities are rare
  - only analytical or documentational artefacts for a long time
@@ -25,7 +33,18 @@ Requirements and Analysis phases prolonged and consuming disproportionate amount
 
 ## Causes
 
+ - management does not take seriously development effort (time) estimates
+ - team is happy to produce artefacts early in the project
+ - requirements are complex and their prioritization is not forced early on
+ - team overseeing the need to prioritize "working code over comprehensive documentation" 
+ - management wants to appear the project to be on track
+ - management believes it is more important to deliver complete functionality than good quality
+ - project tracking and oversight is loose, easily lulled inco complacency by easy-to-reach outcomes
+
 ## (Refactored) Solution
+
+ - force the team to start delivering (parts of) the "consumable solution" early, possibly alongside the analysis and planning artefacts, by instituting strong project tracking and oversight related to actual outcomes
+ - it helps to follow an iterative process
 
 ## Variations (optional) 
 
