@@ -17,6 +17,7 @@ Waterfall(ish) projects, especially when project oversight is loose and/or manag
 ## Unbalanced Forces
 
  - need (desire) to have specifications perfect
+ - management consumed by internal (political) issues
  - actual development of a high-quality product takes time
  - quality objectives formally stated and high
  - strict deadlines for delivery
@@ -34,6 +35,7 @@ Waterfall(ish) projects, especially when project oversight is loose and/or manag
 ## Causes
 
  - management does not take seriously development effort (time) estimates
+ - management absorbed in "various technopolitical issues (...) prevent[ing] the development staff from making progress"
  - team is happy to produce artefacts early in the project
  - requirements are complex and their prioritization is not forced early on
  - team overseeing the need to prioritize "working code over comprehensive documentation" 
@@ -44,7 +46,7 @@ Waterfall(ish) projects, especially when project oversight is loose and/or manag
 ## (Refactored) Solution
 
  - force the team to start delivering (parts of) the "consumable solution" early, possibly alongside the analysis and planning artefacts, by instituting strong project tracking and oversight related to actual outcomes
- - it helps to follow an iterative process
+ - it helps to follow an iterative process, architecture-driven development, and have a well-performing product owner 
 
 ## Variations (optional) 
 
