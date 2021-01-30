@@ -1,7 +1,6 @@
 package cz.zcu.kiv.spac;
 
 import cz.zcu.kiv.spac.data.Constants;
-import cz.zcu.kiv.spac.utils.Utils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

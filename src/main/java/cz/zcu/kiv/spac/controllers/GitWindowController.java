@@ -2,7 +2,7 @@ package cz.zcu.kiv.spac.controllers;
 
 import cz.zcu.kiv.spac.components.ListViewItemWithStringAndCheckBox;
 import cz.zcu.kiv.spac.data.Constants;
-import cz.zcu.kiv.spac.data.git.CommitType;
+import cz.zcu.kiv.spac.enums.CommitType;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.utils.Utils;
@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;

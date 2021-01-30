@@ -6,8 +6,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * CLass representing git attributes for git connection.

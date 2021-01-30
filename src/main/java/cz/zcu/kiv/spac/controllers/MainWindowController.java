@@ -24,7 +24,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import org.eclipse.jgit.api.Git;
 
 import java.io.File;
 import java.util.ArrayList;

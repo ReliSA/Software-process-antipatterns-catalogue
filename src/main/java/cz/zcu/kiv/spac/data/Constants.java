@@ -3,10 +3,6 @@ package cz.zcu.kiv.spac.data;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * CLass containing constants for application.
  */
@@ -35,7 +31,7 @@ public class Constants {
     public static final String RESOURCE_GIT_MANAGE_WINDOW = "/windows/GitWindow.fxml";
 
     public static final String RESOURCE_PREVIEW_CSS = "/css/AntipatternPreview.css";
-    public static final String RESOURCE_ANTIPATTERN_RELATION_CSS = "/css/elements/AntipatternRelationTable.css";
+    public static final String RESOURCE_ANTIPATTERN_RELATION_CSS = "/css/AntipatternWindowStyles.css";
     public static final String RESOURCE_GIT_WINDOW_STYLES_CSS = "/css/GitWindowStyles.css";
 
     public static final String CATALOGUE_NAME = "../Antipatterns_catalogue.md";

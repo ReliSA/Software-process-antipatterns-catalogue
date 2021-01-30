@@ -1,18 +1,26 @@
 package cz.zcu.kiv.spac.components;
 
-import cz.zcu.kiv.spac.data.git.CommitType;
+import cz.zcu.kiv.spac.enums.CommitType;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.eclipse.jgit.diff.DiffEntry;
 
+/**
+ * Custom ListviewItem for git window.
+ */
 public class ListViewItemWithStringAndCheckBox {
 
     private final StringProperty name = new SimpleStringProperty();
     private final BooleanProperty on = new SimpleBooleanProperty();
     private String filename;
 
+    /**
+     * Constructor.
+     * @param name - Displayed name.
+     * @param on - True if selected, false if not.
+     * @param type - Change type (ADDED, MODIFIED, ...)
+     */
     public ListViewItemWithStringAndCheckBox(String name, boolean on, CommitType type) {
 
         this.filename = name;
