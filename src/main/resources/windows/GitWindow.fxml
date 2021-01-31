@@ -32,8 +32,8 @@
             </Label>
             <Line endX="786.0" endY="-18.0" layoutX="425.0" layoutY="88.0" startX="59.0" startY="-18.0" strokeWidth="0.1" />
             <Line endX="49.0" endY="556.0" layoutX="435.0" layoutY="98.0" startX="49.0" startY="-28.0" strokeWidth="0.1" />
-            <Line endX="776.0" endY="556.0" layoutX="435.0" layoutY="98.0" startX="49.0" startY="556.0" strokeWidth="0.1" />
-            <Line endX="776.5" endY="-27.5" layoutX="435.0" layoutY="98.0" startX="776.0" startY="556.0" strokeWidth="0.1" />
+            <Line endX="778.0" endY="558.0" layoutX="435.0" layoutY="98.0" startX="50.0" startY="558.0" strokeWidth="0.1" />
+            <Line endX="778.0" endY="-27.0" layoutX="435.0" layoutY="98.0" startX="778.5" startY="557.5" strokeWidth="0.1" />
             <Label layoutX="506.0" layoutY="14.0" text="Current branch">
                <font>
                   <Font size="14.0" />
@@ -68,7 +68,7 @@
             </Label>
             <Button fx:id="buttonFetch" layoutX="736.0" layoutY="33.0" mnemonicParsing="false" onAction="#doFetch" prefHeight="35.0" prefWidth="74.0" text="Fetch" />
             <Button fx:id="buttonPull" layoutX="1123.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPull" prefHeight="35.0" prefWidth="74.0" text="Pull" />
-            <CheckBox fx:id="chckboxSelectAll" layoutX="14.0" layoutY="72.0" mnemonicParsing="false" onAction="#selectAllFiles" />
+            <CheckBox fx:id="chckboxSelectAll" layoutX="22.0" layoutY="72.0" mnemonicParsing="false" onAction="#selectAllFiles" />
          </children>
       </AnchorPane>
    </children>

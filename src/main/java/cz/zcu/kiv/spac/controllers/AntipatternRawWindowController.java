@@ -3,7 +3,7 @@ package cz.zcu.kiv.spac.controllers;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
-import cz.zcu.kiv.spac.enums.TemplateFieldType;
+import cz.zcu.kiv.spac.data.template.TemplateFieldType;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.data.template.TableColumnField;

@@ -1,7 +1,5 @@
 package cz.zcu.kiv.spac.data.template;
 
-import cz.zcu.kiv.spac.enums.TemplateFieldType;
-
 import java.util.ArrayList;
 import java.util.List;
 

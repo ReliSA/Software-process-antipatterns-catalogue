@@ -5,7 +5,7 @@ import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
-import cz.zcu.kiv.spac.enums.TemplateFieldType;
+import cz.zcu.kiv.spac.data.template.TemplateFieldType;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
@@ -217,7 +217,7 @@ public class FileLoader {
                         } else {
 
                             String markdownContent = loadFileContent(catalogueAntipattern.getPath());
-                            markdownContent = markdownContent.replace("\r\r", Constants.LINE_BREAKER);
+                            markdownContent = markdownContent.replace("\r\r", Constants.LINE_BREAKER_CRLF);
 
                             content = new AntipatternContent(MarkdownFormatter.formatMarkdownTable(markdownContent));
                         }

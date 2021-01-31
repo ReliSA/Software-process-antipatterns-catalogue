@@ -5,7 +5,6 @@ import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
-import cz.zcu.kiv.spac.enums.TemplateFieldType;
 
 import java.util.ArrayList;
 import java.util.List;

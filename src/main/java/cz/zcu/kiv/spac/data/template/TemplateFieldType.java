@@ -1,4 +1,4 @@
-package cz.zcu.kiv.spac.enums;
+package cz.zcu.kiv.spac.data.template;
 
 /**
  * Enum representing used type of fields in template.

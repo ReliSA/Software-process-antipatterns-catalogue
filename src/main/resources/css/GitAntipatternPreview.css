@@ -1,0 +1,39 @@
+td.line {
+
+}
+
+td.line-added {
+
+    background-color: #99ff99;
+}
+
+td.line-deleted {
+
+    background-color: #ff9999;
+}
+
+table {
+
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+table, tr, th, td {
+
+    border: 1px solid black;
+}
+
+
+tr, th, td {
+
+    border-top: none;
+    border-bottom: none;
+}
+
+td.line-index {
+
+    text-align: right;
+    width: 8%;
+}

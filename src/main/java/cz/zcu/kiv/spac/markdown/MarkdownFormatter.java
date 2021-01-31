@@ -43,7 +43,7 @@ public class MarkdownFormatter {
         StringBuilder newString = new StringBuilder();
 
         // Iterate through every line in markdown.
-        for (String contentLine : markdownContent.split(Constants.LINE_BREAKER)) {
+        for (String contentLine : markdownContent.split(Constants.LINE_BREAKER_CRLF)) {
             Matcher matcher = pattern.matcher(contentLine);
 
             // If lines contains markdown table column specification, then format it.
@@ -76,12 +76,12 @@ public class MarkdownFormatter {
                 }
 
                 newString.append(newParts);
-                newString.append(Constants.LINE_BREAKER);
+                newString.append(Constants.LINE_BREAKER_CRLF);
                 continue;
             }
 
             newString.append(contentLine);
-            newString.append(Constants.LINE_BREAKER);
+            newString.append(Constants.LINE_BREAKER_CRLF);
         }
 
         return newString.toString();
@@ -117,9 +117,9 @@ public class MarkdownFormatter {
 
                 // Add antipatern name to path.
                 sb.append(textHeading.getValue());
-                sb.append(Constants.LINE_BREAKER);
-                sb.append(Constants.LINE_BREAKER);
-                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER_CRLF);
+                sb.append(Constants.LINE_BREAKER_CRLF);
+                sb.append(Constants.LINE_BREAKER_CRLF);
 
                 nameWrited = true;
 
@@ -136,8 +136,8 @@ public class MarkdownFormatter {
                     sb.append(Constants.TEMPLATE_FIELD_OPTIONAL_STRING);
                 }
 
-                sb.append(Constants.LINE_BREAKER);
-                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER_CRLF);
+                sb.append(Constants.LINE_BREAKER_CRLF);
 
                 // Check textarea and textfield.
                 if (antipatternHeading.getType() == AntipatternHeadingType.TEXT) {
@@ -157,15 +157,15 @@ public class MarkdownFormatter {
                     for(AntipatternRelation relation : tableHeading.getRelations()) {
 
                         sb.append("|").append(relation.getAntipattern()).append("|").append(relation.getRelation());
-                        sb.append(Constants.LINE_BREAKER);
+                        sb.append(Constants.LINE_BREAKER_CRLF);
                     }
                 }
             }
 
             if (i < fieldList.size() - 1) {
 
-                sb.append(Constants.LINE_BREAKER);
-                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER_CRLF);
+                sb.append(Constants.LINE_BREAKER_CRLF);
             }
 
             i++;
@@ -191,7 +191,7 @@ public class MarkdownFormatter {
             sb.append(tableColumnField.getText()).append("|");
         }
 
-        sb.append(Constants.LINE_BREAKER);
+        sb.append(Constants.LINE_BREAKER_CRLF);
         sb.append("|");
 
         // Append column separators.
@@ -200,7 +200,7 @@ public class MarkdownFormatter {
             sb.append("---|");
         }
 
-        sb.append(Constants.LINE_BREAKER);
+        sb.append(Constants.LINE_BREAKER_CRLF);
 
         return sb.toString();
     }
@@ -218,23 +218,23 @@ public class MarkdownFormatter {
         Map<String, List<CatalogueRecord>> catalogueRecordMap = catalogue.getCatalogueRecords();
 
         sb.append("[Home](").append(Utils.getFilenameFromStringPath(Constants.README_NAME)).append(") > Catalogue");
-        sb.append(Constants.LINE_BREAKER);
+        sb.append(Constants.LINE_BREAKER_CRLF);
 
         sb.append("# " + Constants.APP_NAME);
-        sb.append(Constants.LINE_BREAKER);
-        sb.append(Constants.LINE_BREAKER);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
 
         sb.append("[Template](" + Constants.CATALOGUE_FOLDER + "/" + Constants.TEMPLATE_FILE + ") for new anti-pattern contents.");
-        sb.append(Constants.LINE_BREAKER);
-        sb.append(Constants.LINE_BREAKER);
-        sb.append(Constants.LINE_BREAKER);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
 
         for (String key : catalogueRecordMap.keySet()) {
 
             List<CatalogueRecord> recordList = catalogueRecordMap.get(key);
 
             sb.append("## ").append(key);
-            sb.append(Constants.LINE_BREAKER);
+            sb.append(Constants.LINE_BREAKER_CRLF);
 
             for (CatalogueRecord record : recordList) {
 
@@ -262,8 +262,8 @@ public class MarkdownFormatter {
                     }
                 }
 
-                sb.append(Constants.LINE_BREAKER);
-                sb.append(Constants.LINE_BREAKER);
+                sb.append(Constants.LINE_BREAKER_CRLF);
+                sb.append(Constants.LINE_BREAKER_CRLF);
             }
 
         }
@@ -282,8 +282,8 @@ public class MarkdownFormatter {
 
         sb.append("# " + antipatternName);
 
-        sb.append(Constants.LINE_BREAKER);
-        sb.append(Constants.LINE_BREAKER);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
 
         sb.append("This antipattern was not yet created, only mentioned in antipattern catalogue.");
 

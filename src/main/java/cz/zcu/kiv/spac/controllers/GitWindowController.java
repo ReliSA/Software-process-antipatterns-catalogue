@@ -2,8 +2,10 @@ package cz.zcu.kiv.spac.controllers;
 
 import cz.zcu.kiv.spac.components.ListViewItemWithStringAndCheckBox;
 import cz.zcu.kiv.spac.data.Constants;
-import cz.zcu.kiv.spac.enums.CommitType;
+import cz.zcu.kiv.spac.data.git.CommitType;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
+import cz.zcu.kiv.spac.data.git.PreviewFileContentLine;
+import cz.zcu.kiv.spac.data.git.PreviewFileContentLineType;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.collections.ObservableList;
@@ -23,11 +25,17 @@ import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.FileTreeIterator;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Controller for git window.
@@ -81,6 +89,8 @@ public class GitWindowController {
     private int commitsAhead = 0;
     private int commitsBehind = 0;
 
+    private HashMap<String, List<PreviewFileContentLine>> changedFiles;
+
     private boolean successfullyPulled = false;
 
 
@@ -92,6 +102,7 @@ public class GitWindowController {
      */
     public GitWindowController() {
 
+        changedFiles = new HashMap<>();
     }
 
     /**
@@ -107,6 +118,8 @@ public class GitWindowController {
         txtareaDescription.setWrapText(true);
 
         listViewFileChanged.setCellFactory(CheckBoxListCell.forListView(ListViewItemWithStringAndCheckBox::onProperty));
+
+        wviewChanges.getEngine().setUserStyleSheetLocation(getClass().getResource(Constants.RESOURCE_GIT_PREVIEW_CSS).toString());
     }
 
     /**
@@ -166,6 +179,10 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Preview selected file.
+     * @param mouseEvent - Event.
+     */
     @FXML
     private void previewFile(MouseEvent mouseEvent) {
 
@@ -181,6 +198,19 @@ public class GitWindowController {
 
         String content = FileLoader.loadFileContent(Utils.getRootDir() + "/" + selectedItem.getFilename());
 
+        // TODO: test preview file
+        if (selectedItem.getType() == CommitType.MODIFY) {
+
+            wviewChanges.getEngine().loadContent(Utils.replaceLineBreakersForHTMLNewLine(content));
+
+        } else {
+
+            wviewChanges.getEngine().loadContent(createHTMLFileContent(changedFiles.get(selectedItem.getFilename())));
+        }
+
+        /*
+        String content = FileLoader.loadFileContent(Utils.getRootDir() + "/" + selectedItem.getFilename());
+
         if (content != null) {
 
             wviewChanges.getEngine().loadContent(Utils.replaceLineBreakersForHTMLNewLine(content));
@@ -189,8 +219,12 @@ public class GitWindowController {
 
             log.warn("File '" + selectedItem.getFilename() + "' did not exists in source control!");
         }
+         */
     }
 
+    /**
+     * Do PUSH command.
+     */
     @FXML
     private void doPush() {
 
@@ -237,12 +271,20 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Do FETCH command.
+     * @param actionEvent - Event.
+     */
     @FXML
     private void doFetch(ActionEvent actionEvent) {
 
         doFetch();
     }
 
+    /**
+     * Do PULL command.
+     * @param actionEvent - Event.
+     */
     @FXML
     private void doPull(ActionEvent actionEvent) {
 
@@ -323,6 +365,10 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Select all changed files in listview.
+     * @param actionEvent - Event.
+     */
     @FXML
     private void selectAllFiles(ActionEvent actionEvent) {
 
@@ -341,6 +387,9 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Do FETCH command.
+     */
     private void doFetch() {
 
         try {
@@ -362,6 +411,9 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Get differences from STATUS command and display it in list of changes.
+     */
     private void getDifferences() {
 
         try {
@@ -372,35 +424,86 @@ public class GitWindowController {
             Status status = git.status().call();
 
             Set<String> added = status.getAdded();
+            Set<String> untracked = status.getUntracked();
+            Set<String> modified = status.getModified();
+            Set<String> removed = status.getRemoved();
+
+            Set<String> setIntersection = getIntersection(added, modified, removed);
+
             for(String add : added) {
 
-                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(add, false, CommitType.ADD));
+                if (!setIntersection.contains(Utils.getFilenameFromStringPath(add))) {
+
+                    listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(add, false, CommitType.ADD));
+
+                } else {
+
+                    listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(add, false, CommitType.RENAMED));
+                }
             }
 
-            Set<String> untracked = status.getUntracked();
             for(String untrack : untracked) {
 
                 listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(untrack, false, CommitType.ADD));
             }
 
-            Set<String> modified = status.getModified();
             for(String modify : modified) {
 
-                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(modify, false, CommitType.MODIFY));
+                if (!setIntersection.contains(Utils.getFilenameFromStringPath(modify))) {
+
+                    listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(modify, false, CommitType.MODIFY));
+                }
             }
 
-            Set<String> removed = status.getRemoved();
             for(String remove : removed) {
 
-                listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(remove, false, CommitType.REMOVE));
+                if (!setIntersection.contains(Utils.getFilenameFromStringPath(remove))) {
+
+                    listViewFileChanged.getItems().add(new ListViewItemWithStringAndCheckBox(remove, false, CommitType.REMOVE));
+                }
             }
 
             lblChangedFiles.setText(listViewFileChanged.getItems().size() + " changed files");
 
         } catch (Exception e) {
-
-            log.warn("Error while getting differences.");
+            e.printStackTrace();
+            log.warn("Error while getting differences " + e.getMessage() + ".");
         }
+    }
+
+    /**
+     * Get intersection of added / modified / deleted set of changes.
+     * @param added - Set of added files.
+     * @param modified - Set of modified files.
+     * @param removed - Set of deleted files.
+     * @return Intersection set of all sets.
+     */
+    private Set<String> getIntersection(Set<String> added, Set<String> modified, Set<String> removed) {
+
+        // Get intersection (renamed values are in added + modified + deleted sets).
+        Set<String> setIntersection = added.stream()
+                .distinct()
+                .filter(modified::contains)
+                .collect(Collectors.toSet());
+
+        Set<String> setIntersectionOnlyFilename = new HashSet<>();
+
+        for (String intersectionFilename : setIntersection) {
+
+            setIntersectionOnlyFilename.add(Utils.getFilenameFromStringPath(intersectionFilename));
+        }
+
+        setIntersection.clear();
+        for (String remove : removed) {
+
+            String removeFilename = Utils.getFilenameFromStringPath(remove);
+            if (setIntersectionOnlyFilename.contains(removeFilename)) {
+
+                setIntersection.add(removeFilename);
+            }
+        }
+
+        return setIntersection;
     }
 
     /**
@@ -447,6 +550,9 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Get number of commits ahead / behind of selected branch and display it.
+     */
     private void getBranchTrackingStatus() {
 
         try {
@@ -478,6 +584,12 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Get number of commits ahead / behind of selected branch.
+     * @param repository - Currently logged repository.
+     * @param branchName - Name of branch.
+     * @return List of number counts for commits ahead / behind.
+     */
     private List<Integer> getBranchTrackingCount(Repository repository, String branchName) {
 
         try {
@@ -501,6 +613,228 @@ public class GitWindowController {
         }
     }
 
+    /**
+     * Compare updated files with files from latest commit and assign color to lines (GREEN - Added line, RED - deleted line).
+     */
+    private void compareUpdatedFiles() {
+
+        // Get map of files from latest commit.
+        Map<String, List<String>> filesFromPreviousCommit = loadFilesFromPreviousCommit();
+
+        if (filesFromPreviousCommit == null) {
+
+            return;
+        }
+
+        // Get list of updated files.
+        ObservableList updatedFiles = listViewFileChanged.getItems();
+
+        if (updatedFiles == null) {
+
+            return;
+        }
+
+        for (Object file : updatedFiles) {
+
+            ListViewItemWithStringAndCheckBox updatedFile = (ListViewItemWithStringAndCheckBox) file;
+            String fullPathFilename = updatedFile.getFilename();
+            String filename = Utils.getFilenameFromStringPath(fullPathFilename);
+
+            if (updatedFile.getType() == CommitType.ADD) {
+
+                // File was added.
+                // Get new lines from disk.
+                try {
+
+                    String content = FileLoader.loadFileContent(Utils.getRootDir() + "/" + fullPathFilename);
+                    List<String> lines = Utils.parseStringByLines(content);
+
+                    changedFiles.put(fullPathFilename, createPreviewLinesWithOneType(lines, PreviewFileContentLineType.ADDED));
+
+                } catch (Exception e) {
+
+                    // Do nothing.
+                    continue;
+                }
+
+            } else if (updatedFile.getType() == CommitType.REMOVE) {
+
+                // File was deleted.
+                // Get lines from latest commit.
+                try {
+
+                    List<String> lines = filesFromPreviousCommit.get(filename);
+
+                    if (lines == null) {
+
+                        log.error("Error while comparing updated files (deleting).");
+                    }
+
+                    changedFiles.put(fullPathFilename, createPreviewLinesWithOneType(lines, PreviewFileContentLineType.DELETED));
+
+                } catch (Exception e) {
+
+                    // Do nothing.
+                    continue;
+                }
+
+            } else {
+
+                // TODO: compare modified files.
+            }
+
+        }
+    }
+
+    /**
+     * Create content line (line + type of line (ADDED, DELETED)).
+     * @param lines - Content in lines.
+     * @param type - Type of lines.
+     * @return Content lines.
+     */
+    private List<PreviewFileContentLine> createPreviewLinesWithOneType(List<String> lines, PreviewFileContentLineType type) {
+
+        long i = 1;
+        List<PreviewFileContentLine> contentLines = new ArrayList<>();
+        for (String line : lines) {
+
+            contentLines.add(new PreviewFileContentLine(line, type, i));
+            i++;
+        }
+
+        return contentLines;
+    }
+
+    /**
+     * Load files from previous commit.
+     * @return Map of files with its content from latest commit.
+     */
+    private Map<String, List<String>> loadFilesFromPreviousCommit() {
+
+        Map<String, List<String>> filesFromPreviousCommit = new HashMap<>();
+
+        // TODO: ADDITIONAL: highlight changes.
+        // Momentálně to načte last commit, ze kterýho si vyberu specifický soubor (který je smazaný) a vypíšu jeho kontent
+        // -> lze použít při porovnávání řádků souboru z commitu a z aktuálního stavu a možnost highlightu
+        Git git = customGitObject.getGit();
+        Repository repository = git.getRepository();
+        RevWalk rw = new RevWalk(repository);
+
+        try (TreeWalk tw = new TreeWalk(repository)) {
+
+
+            RevCommit latestCommit = git.log().setMaxCount(1).call().iterator().next();
+
+            String latestCommitHash = latestCommit.getName();
+
+            RevCommit commitToCheck = rw.parseCommit(repository.resolve(latestCommitHash));
+            tw.addTree(commitToCheck.getTree());
+            tw.addTree(new DirCacheIterator(repository.readDirCache()));
+            tw.addTree(new FileTreeIterator(repository));
+            tw.setRecursive(true);
+
+            while (tw.next()) {
+
+                String filename = tw.getPathString();
+
+                // Get object ID of file from latest commit.
+                ObjectId objectId;
+
+                if (tw.getFileMode(0).getBits() != 0) {
+
+                    objectId = tw.getObjectId(0);
+
+                } else {
+
+                    objectId = tw.getObjectId(1);
+                }
+
+                // Get content of file from latest commit.
+
+                /*
+                System.out.printf(
+                        "path: %s, Commit(mode/oid): %s/%s, Index(mode/oid): %s/%s, Workingtree(mode/oid): %s/%s\n",
+                        tw.getPathString(), tw.getFileMode(0), tw.getObjectId(0), tw.getFileMode(1), tw.getObjectId(1),
+                        tw.getFileMode(2), tw.getObjectId(2));
+                 */
+
+                // Commit(mode/oid): 0/AnyObjectId[0000000000000000000000000000000000000000],
+
+                byte[] bytes = repository.open(objectId).getBytes();
+                String content = new String(bytes);
+
+                filesFromPreviousCommit.put(Utils.getFilenameFromStringPath(filename), Utils.parseStringByLines(content));
+            }
+
+        } catch (Exception e) {
+
+            // TODO: what if there are no commits (newly created branch) ?
+            e.printStackTrace();
+        }
+
+        return filesFromPreviousCommit;
+    }
+
+    /**
+     * Create HTML content from file content lines.
+     * @param contentLines - File content lines.
+     * @return HTML file content.
+     */
+    public static String createHTMLFileContent(List<PreviewFileContentLine> contentLines) {
+
+        StringBuilder htmlContent = new StringBuilder();
+        htmlContent.append("<table>");
+
+        if (contentLines != null) {
+
+            for (PreviewFileContentLine contentLine : contentLines) {
+
+                String line = "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                for (char c : contentLine.getLine().toCharArray()) {
+
+                    if (c != ' ') {
+
+                        break;
+                    }
+
+                    line += "&nbsp";
+                }
+
+                line += contentLine.getLine();
+
+                htmlContent.append("<tr>");
+
+                switch (contentLine.getType()) {
+
+                    case ADDED:
+
+                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\">" + contentLine.getLineNumber() + "</td>");
+                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\"></td>");
+                        break;
+                    case DELETED:
+
+                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\"></td>");
+                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\">" + contentLine.getLineNumber() + "</td>");
+                        break;
+                }
+
+                htmlContent.append("<td class=\"line line-" + contentLine.getType().name().toLowerCase() + "\">" + line + "</td>");
+                htmlContent.append("</tr>");
+            }
+            htmlContent.append("</table>");
+
+        } else {
+
+            htmlContent.append("<h1>No content for preview</h1>");
+        }
+
+        return htmlContent.toString();
+    }
+
+    /**
+     * Set custom git object + additional informations into labels (branch name, repository name, ...).
+     * @param customGitObject
+     */
     public void setCustomGitObject(CustomGitObject customGitObject) {
 
         this.customGitObject = customGitObject;
@@ -518,6 +852,10 @@ public class GitWindowController {
         defaultTextLblFetch = lblFetched.getText();
 
         doFetch();
+
+        compareUpdatedFiles();
+
+        System.out.println();
     }
 
     public boolean isSuccessfullyPulled() {

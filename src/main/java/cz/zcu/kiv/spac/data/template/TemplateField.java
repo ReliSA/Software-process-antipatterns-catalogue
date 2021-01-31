@@ -1,7 +1,5 @@
 package cz.zcu.kiv.spac.data.template;
 
-import cz.zcu.kiv.spac.enums.TemplateFieldType;
-
 /**
  * Class representing template field.
  */

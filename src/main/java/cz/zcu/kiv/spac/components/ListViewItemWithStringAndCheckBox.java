@@ -1,6 +1,6 @@
 package cz.zcu.kiv.spac.components;
 
-import cz.zcu.kiv.spac.enums.CommitType;
+import cz.zcu.kiv.spac.data.git.CommitType;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +14,7 @@ public class ListViewItemWithStringAndCheckBox {
     private final StringProperty name = new SimpleStringProperty();
     private final BooleanProperty on = new SimpleBooleanProperty();
     private String filename;
+    private CommitType type;
 
     /**
      * Constructor.
@@ -24,6 +25,7 @@ public class ListViewItemWithStringAndCheckBox {
     public ListViewItemWithStringAndCheckBox(String name, boolean on, CommitType type) {
 
         this.filename = name;
+        this.type = type;
 
         String typeChar = "";
 
@@ -42,6 +44,11 @@ public class ListViewItemWithStringAndCheckBox {
             case REMOVE:
 
                 typeChar = "x";
+                break;
+
+            case RENAMED:
+
+                typeChar = "->";
                 break;
         }
 
@@ -88,5 +95,10 @@ public class ListViewItemWithStringAndCheckBox {
     public String toString() {
 
         return getName();
+    }
+
+    public CommitType getType() {
+
+        return type;
     }
 }

@@ -31,6 +31,7 @@ public class Constants {
     public static final String RESOURCE_GIT_MANAGE_WINDOW = "/windows/GitWindow.fxml";
 
     public static final String RESOURCE_PREVIEW_CSS = "/css/AntipatternPreview.css";
+    public static final String RESOURCE_GIT_PREVIEW_CSS = "/css/GitAntipatternPreview.css";
     public static final String RESOURCE_ANTIPATTERN_RELATION_CSS = "/css/AntipatternWindowStyles.css";
     public static final String RESOURCE_GIT_WINDOW_STYLES_CSS = "/css/GitWindowStyles.css";
 
@@ -42,7 +43,8 @@ public class Constants {
     public static final String CATALOGUE_FILE = "Antipatterns_catalogue" + FILES_EXTENSION;
     public static final String TEMPLATE_FILE = "template" + FILES_EXTENSION;
 
-    public static final String LINE_BREAKER = "\r\n";
+    public static final String LINE_BREAKER_LF = "\n";
+    public static final String LINE_BREAKER_CRLF = "\r\n";
 
     public static final String ANTIPATTERN_NOT_CREATED_SYMBOL = "**";
     public static final String TEMPLATE_FIELD_OPTIONAL_STRING = " (Optional)";
