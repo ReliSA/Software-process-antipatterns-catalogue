@@ -1,17 +1,17 @@
 package cz.zcu.kiv.spac.utils;
 
-import cz.zcu.kiv.spac.data.Constants;
-import cz.zcu.kiv.spac.data.git.PreviewFileContentLine;
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.jgit.diff.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Class with utils methods.
@@ -67,18 +67,6 @@ public class Utils {
     }
 
     /**
-     * Replace line breakers with html '<br>' tag.
-     * @param content - String with line breakers.
-     * @return String with html line breakers.
-     */
-    public static String replaceLineBreakersForHTMLNewLine(String content) {
-
-        String newContent = content.replaceAll(Constants.LINE_BREAKER_CRLF, "<br>");
-        newContent = newContent.replaceAll(Constants.LINE_BREAKER_LF, "<br>");
-        return newContent;
-    }
-
-    /**
      * Parse string into list of lines.
      * @param content - String.
      * @return List of lines.
@@ -96,5 +84,31 @@ public class Utils {
     public static String getCurrentDateInString() {
 
         return new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+    }
+
+    /**
+     * Get differences between two file contents (used for comparing file in 2 revisions)
+     * @param content1 - Content of file from previous commit.
+     * @param content2 - Current content file.
+     * @return Differences in git diff command output format.
+     */
+    public static String getFilesDifference(String content1, String content2) {
+
+        OutputStream out = new ByteArrayOutputStream();
+
+        try {
+
+            RawText rt1 = new RawText(content1.getBytes());
+            RawText rt2 = new RawText(content2.getBytes());
+            EditList diffList = new EditList();
+            diffList.addAll(new HistogramDiff().diff(RawTextComparator.WS_IGNORE_ALL, rt1, rt2));
+            new DiffFormatter(out).format(diffList, rt1, rt2);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+        return out.toString();
     }
 }

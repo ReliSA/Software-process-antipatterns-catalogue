@@ -8,7 +8,6 @@ import com.vladsch.flexmark.ext.tables.TableBlock;
 import com.vladsch.flexmark.ext.tables.TableBody;
 import com.vladsch.flexmark.ext.tables.TableHead;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
@@ -20,6 +19,7 @@ import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.data.template.Template;
+import cz.zcu.kiv.spac.utils.HTMLGenerator;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -310,11 +310,10 @@ public class MarkdownParser {
 
         MutableDataHolder options = getDataOptions();
         Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
         // You can re-use parser and renderer instances
         Node document = parser.parse(markdownContent);
-        return renderer.render(document);
+        return HTMLGenerator.generateHTMLContentFromMarkdown(options, document);
     }
 
     /**

@@ -1,15 +1,36 @@
 td.line {
 
+    width: 88%;
 }
 
 td.line-added {
 
-    background-color: #99ff99;
+    background-color: #e6ffed;
+}
+
+td.line-index-added {
+
+    background-color: #cdffd8;
 }
 
 td.line-deleted {
 
-    background-color: #ff9999;
+    background-color: #ffeef0;
+}
+
+td.line-index-deleted {
+
+    background-color: #ffdce0;
+}
+
+td.line-diff-info {
+
+    background-color: #f1f8ff;
+}
+
+td.line-index-diff-info {
+
+    background-color: #dbedff;
 }
 
 table {
@@ -28,12 +49,23 @@ table, tr, th, td {
 
 tr, th, td {
 
-    border-top: none;
-    border-bottom: none;
+    border: none;
+}
+
+th, td {
+
+    padding: 15px;
 }
 
 td.line-index {
 
     text-align: right;
-    width: 8%;
+    width: 6%;
+}
+
+span.line-symbol {
+
+    float: left;
+    width: 15px;
+
 }

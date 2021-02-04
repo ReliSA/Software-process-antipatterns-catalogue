@@ -12,9 +12,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1226.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.GitWindowController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1320.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.GitWindowController">
    <children>
-      <AnchorPane fx:id="contentPane" prefHeight="680.0" prefWidth="1226.0">
+      <AnchorPane fx:id="contentPane" prefHeight="668.0" prefWidth="1269.0">
          <children>
             <Button fx:id="btnCommit" layoutX="14.0" layoutY="619.0" mnemonicParsing="false" onAction="#btnCommitAction" prefHeight="35.0" prefWidth="462.0" text="Commit to" />
             <TextField fx:id="txtfieldSummary" layoutX="14.0" layoutY="472.0" prefHeight="25.0" prefWidth="462.0" promptText="Summary (required)" />
@@ -30,11 +30,11 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Line endX="786.0" endY="-18.0" layoutX="425.0" layoutY="88.0" startX="59.0" startY="-18.0" strokeWidth="0.1" />
+            <Line endX="886.0" endY="-17.0" layoutX="425.0" layoutY="88.0" startX="59.0" startY="-18.0" strokeWidth="0.1" />
             <Line endX="49.0" endY="556.0" layoutX="435.0" layoutY="98.0" startX="49.0" startY="-28.0" strokeWidth="0.1" />
-            <Line endX="778.0" endY="558.0" layoutX="435.0" layoutY="98.0" startX="50.0" startY="558.0" strokeWidth="0.1" />
-            <Line endX="778.0" endY="-27.0" layoutX="435.0" layoutY="98.0" startX="778.5" startY="557.5" strokeWidth="0.1" />
-            <Label layoutX="506.0" layoutY="14.0" text="Current branch">
+            <Line endX="876.0" endY="558.0" layoutX="435.0" layoutY="98.0" startX="50.0" startY="558.0" strokeWidth="0.1" />
+            <Line endX="876.0" endY="-27.0" layoutX="435.0" layoutY="98.0" startX="876.0" startY="558.0" strokeWidth="0.1" />
+            <Label layoutX="506.0" layoutY="10.0" text="Current branch">
                <font>
                   <Font size="14.0" />
                </font>
@@ -44,7 +44,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="lblFetched" layoutX="665.0" layoutY="14.0" text="Last fetched: ">
+            <Label fx:id="lblFetched" layoutX="713.0" layoutY="10.0" text="Last fetched: ">
                <font>
                   <Font size="14.0" />
                </font>
@@ -54,20 +54,20 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <WebView fx:id="wviewChanges" layoutX="485.0" layoutY="71.0" prefHeight="585.0" prefWidth="728.0" />
-            <Button fx:id="buttonPush" layoutX="993.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPush" prefHeight="35.0" prefWidth="74.0" text="Push" />
-            <Label fx:id="lblCommitsAhead" layoutX="993.0" layoutY="10.0" text="↑">
+            <WebView fx:id="wviewChanges" layoutX="485.0" layoutY="71.0" prefHeight="585.0" prefWidth="826.0" />
+            <Button fx:id="buttonPush" layoutX="1102.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPush" prefHeight="35.0" prefWidth="74.0" text="Push" />
+            <Label fx:id="lblCommitsAhead" layoutX="1102.0" layoutY="10.0" text="↑">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="lblCommitsBehind" layoutX="1123.0" layoutY="10.0" text="↓">
+            <Label fx:id="lblCommitsBehind" layoutX="1232.0" layoutY="10.0" text="↓">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Button fx:id="buttonFetch" layoutX="736.0" layoutY="33.0" mnemonicParsing="false" onAction="#doFetch" prefHeight="35.0" prefWidth="74.0" text="Fetch" />
-            <Button fx:id="buttonPull" layoutX="1123.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPull" prefHeight="35.0" prefWidth="74.0" text="Pull" />
+            <Button fx:id="buttonFetch" layoutX="784.0" layoutY="29.0" mnemonicParsing="false" onAction="#doFetch" prefHeight="35.0" prefWidth="74.0" text="Fetch" />
+            <Button fx:id="buttonPull" layoutX="1232.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPull" prefHeight="35.0" prefWidth="74.0" text="Pull" />
             <CheckBox fx:id="chckboxSelectAll" layoutX="22.0" layoutY="72.0" mnemonicParsing="false" onAction="#selectAllFiles" />
          </children>
       </AnchorPane>

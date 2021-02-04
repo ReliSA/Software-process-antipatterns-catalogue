@@ -7,6 +7,7 @@ import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.data.git.PreviewFileContentLine;
 import cz.zcu.kiv.spac.data.git.PreviewFileContentLineType;
 import cz.zcu.kiv.spac.file.FileLoader;
+import cz.zcu.kiv.spac.utils.HTMLGenerator;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,15 +25,10 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.dircache.DirCacheIterator;
+import org.eclipse.jgit.diff.*;
 import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.FileTreeIterator;
-import org.eclipse.jgit.treewalk.TreeWalk;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -196,30 +192,7 @@ public class GitWindowController {
 
         ListViewItemWithStringAndCheckBox selectedItem = (ListViewItemWithStringAndCheckBox) item;
 
-        String content = FileLoader.loadFileContent(Utils.getRootDir() + "/" + selectedItem.getFilename());
-
-        // TODO: test preview file
-        if (selectedItem.getType() == CommitType.MODIFY) {
-
-            wviewChanges.getEngine().loadContent(Utils.replaceLineBreakersForHTMLNewLine(content));
-
-        } else {
-
-            wviewChanges.getEngine().loadContent(createHTMLFileContent(changedFiles.get(selectedItem.getFilename())));
-        }
-
-        /*
-        String content = FileLoader.loadFileContent(Utils.getRootDir() + "/" + selectedItem.getFilename());
-
-        if (content != null) {
-
-            wviewChanges.getEngine().loadContent(Utils.replaceLineBreakersForHTMLNewLine(content));
-
-        } else {
-
-            log.warn("File '" + selectedItem.getFilename() + "' did not exists in source control!");
-        }
-         */
+        wviewChanges.getEngine().loadContent(HTMLGenerator.createHTMLFileContent(changedFiles.get(selectedItem.getFilename())));
     }
 
     /**
@@ -564,7 +537,7 @@ public class GitWindowController {
 
                 if (ref.getName().contains(customGitObject.getBranchName())) {
 
-                    List<Integer> counts = getBranchTrackingCount(git.getRepository(), ref.getName());
+                    List<Integer> counts = customGitObject.getBranchTrackingCount();
 
                     if (counts != null) {
 
@@ -585,46 +558,12 @@ public class GitWindowController {
     }
 
     /**
-     * Get number of commits ahead / behind of selected branch.
-     * @param repository - Currently logged repository.
-     * @param branchName - Name of branch.
-     * @return List of number counts for commits ahead / behind.
-     */
-    private List<Integer> getBranchTrackingCount(Repository repository, String branchName) {
-
-        try {
-
-            BranchTrackingStatus trackingStatus = BranchTrackingStatus.of(repository, branchName);
-            List<Integer> counts = new ArrayList<>();
-            if (trackingStatus != null) {
-                counts.add(trackingStatus.getAheadCount());
-                counts.add(trackingStatus.getBehindCount());
-            } else {
-                System.out.println("Returned null, likely no remote tracking of branch " + branchName);
-                counts.add(0);
-                counts.add(0);
-            }
-            return counts;
-
-        } catch (Exception e) {
-
-            log.warn("Error while getting count in branch tracking.");
-            return null;
-        }
-    }
-
-    /**
      * Compare updated files with files from latest commit and assign color to lines (GREEN - Added line, RED - deleted line).
      */
     private void compareUpdatedFiles() {
 
         // Get map of files from latest commit.
-        Map<String, List<String>> filesFromPreviousCommit = loadFilesFromPreviousCommit();
-
-        if (filesFromPreviousCommit == null) {
-
-            return;
-        }
+        Map<String, String> filesFromPreviousCommit = customGitObject.loadFilesFromPreviousCommit();
 
         // Get list of updated files.
         ObservableList updatedFiles = listViewFileChanged.getItems();
@@ -647,14 +586,13 @@ public class GitWindowController {
                 try {
 
                     String content = FileLoader.loadFileContent(Utils.getRootDir() + "/" + fullPathFilename);
-                    List<String> lines = Utils.parseStringByLines(content);
+                    List<String> lines = Utils.parseStringByLines(Utils.getFilesDifference("", content));
 
                     changedFiles.put(fullPathFilename, createPreviewLinesWithOneType(lines, PreviewFileContentLineType.ADDED));
 
                 } catch (Exception e) {
 
                     // Do nothing.
-                    continue;
                 }
 
             } else if (updatedFile.getType() == CommitType.REMOVE) {
@@ -663,26 +601,86 @@ public class GitWindowController {
                 // Get lines from latest commit.
                 try {
 
-                    List<String> lines = filesFromPreviousCommit.get(filename);
+                    String content = filesFromPreviousCommit.get(filename);
 
-                    if (lines == null) {
+                    if (content == null) {
 
                         log.error("Error while comparing updated files (deleting).");
                     }
+
+                    List<String> lines = Utils.parseStringByLines(Utils.getFilesDifference(content, ""));
 
                     changedFiles.put(fullPathFilename, createPreviewLinesWithOneType(lines, PreviewFileContentLineType.DELETED));
 
                 } catch (Exception e) {
 
                     // Do nothing.
-                    continue;
                 }
 
             } else {
 
-                // TODO: compare modified files.
-            }
+                // Get contents.
+                String oldContent = filesFromPreviousCommit.get(filename);
+                String newContent = FileLoader.loadFileContent(Utils.getRootDir() + "/" + fullPathFilename);
 
+                // Get different lines.
+                List<String> lines = Utils.parseStringByLines(Utils.getFilesDifference(oldContent, newContent));
+                List<PreviewFileContentLine> contentLines = new ArrayList<>();
+
+                int infoOldIndex = 0;
+                int infoNewIndex = 0;
+
+                // Iterate through every diff line and assign his line index and type.
+                for (String line : lines) {
+
+                    PreviewFileContentLineType type;
+
+                    int lineIndex = 0;
+
+                    switch (line.charAt(0)) {
+
+                        case '-':
+
+                            type = PreviewFileContentLineType.DELETED;
+                            lineIndex = infoOldIndex;
+                            infoOldIndex++;
+                            break;
+
+                        case '+':
+
+                            type = PreviewFileContentLineType.ADDED;
+                            lineIndex = infoNewIndex;
+                            infoNewIndex++;
+                            break;
+
+                        case ' ':
+
+                            type = PreviewFileContentLineType.NOT_MODIFIED;
+                            lineIndex = infoNewIndex;
+                            infoOldIndex++;
+                            infoNewIndex++;
+                            break;
+
+                        default:
+
+                            type = PreviewFileContentLineType.DIFF_INFO;
+
+                            // If current line is diff info.
+                            if (line.contains("@")) {
+
+                                List<String> indexes = getIndexesFromDiff(line);
+
+                                // Do Math.abs, because old file index contains '-'.
+                                infoOldIndex = Math.abs(Integer.parseInt(indexes.get(0)));
+                                infoNewIndex = Integer.parseInt(indexes.get(1));
+                            }
+                            break;
+                    }
+                    contentLines.add(new PreviewFileContentLine(line, type, lineIndex));
+                }
+
+                changedFiles.put(fullPathFilename, contentLines);
+            }
         }
     }
 
@@ -696,139 +694,20 @@ public class GitWindowController {
 
         long i = 1;
         List<PreviewFileContentLine> contentLines = new ArrayList<>();
+
         for (String line : lines) {
+
+            if (line.matches("^(@@)[^@]*(@@)$")) {
+
+                contentLines.add(new PreviewFileContentLine(line, PreviewFileContentLineType.DIFF_INFO, 0));
+                continue;
+            }
 
             contentLines.add(new PreviewFileContentLine(line, type, i));
             i++;
         }
 
         return contentLines;
-    }
-
-    /**
-     * Load files from previous commit.
-     * @return Map of files with its content from latest commit.
-     */
-    private Map<String, List<String>> loadFilesFromPreviousCommit() {
-
-        Map<String, List<String>> filesFromPreviousCommit = new HashMap<>();
-
-        // TODO: ADDITIONAL: highlight changes.
-        // Momentálně to načte last commit, ze kterýho si vyberu specifický soubor (který je smazaný) a vypíšu jeho kontent
-        // -> lze použít při porovnávání řádků souboru z commitu a z aktuálního stavu a možnost highlightu
-        Git git = customGitObject.getGit();
-        Repository repository = git.getRepository();
-        RevWalk rw = new RevWalk(repository);
-
-        try (TreeWalk tw = new TreeWalk(repository)) {
-
-
-            RevCommit latestCommit = git.log().setMaxCount(1).call().iterator().next();
-
-            String latestCommitHash = latestCommit.getName();
-
-            RevCommit commitToCheck = rw.parseCommit(repository.resolve(latestCommitHash));
-            tw.addTree(commitToCheck.getTree());
-            tw.addTree(new DirCacheIterator(repository.readDirCache()));
-            tw.addTree(new FileTreeIterator(repository));
-            tw.setRecursive(true);
-
-            while (tw.next()) {
-
-                String filename = tw.getPathString();
-
-                // Get object ID of file from latest commit.
-                ObjectId objectId;
-
-                if (tw.getFileMode(0).getBits() != 0) {
-
-                    objectId = tw.getObjectId(0);
-
-                } else {
-
-                    objectId = tw.getObjectId(1);
-                }
-
-                // Get content of file from latest commit.
-
-                /*
-                System.out.printf(
-                        "path: %s, Commit(mode/oid): %s/%s, Index(mode/oid): %s/%s, Workingtree(mode/oid): %s/%s\n",
-                        tw.getPathString(), tw.getFileMode(0), tw.getObjectId(0), tw.getFileMode(1), tw.getObjectId(1),
-                        tw.getFileMode(2), tw.getObjectId(2));
-                 */
-
-                // Commit(mode/oid): 0/AnyObjectId[0000000000000000000000000000000000000000],
-
-                byte[] bytes = repository.open(objectId).getBytes();
-                String content = new String(bytes);
-
-                filesFromPreviousCommit.put(Utils.getFilenameFromStringPath(filename), Utils.parseStringByLines(content));
-            }
-
-        } catch (Exception e) {
-
-            // TODO: what if there are no commits (newly created branch) ?
-            e.printStackTrace();
-        }
-
-        return filesFromPreviousCommit;
-    }
-
-    /**
-     * Create HTML content from file content lines.
-     * @param contentLines - File content lines.
-     * @return HTML file content.
-     */
-    public static String createHTMLFileContent(List<PreviewFileContentLine> contentLines) {
-
-        StringBuilder htmlContent = new StringBuilder();
-        htmlContent.append("<table>");
-
-        if (contentLines != null) {
-
-            for (PreviewFileContentLine contentLine : contentLines) {
-
-                String line = "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
-                for (char c : contentLine.getLine().toCharArray()) {
-
-                    if (c != ' ') {
-
-                        break;
-                    }
-
-                    line += "&nbsp";
-                }
-
-                line += contentLine.getLine();
-
-                htmlContent.append("<tr>");
-
-                switch (contentLine.getType()) {
-
-                    case ADDED:
-
-                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\">" + contentLine.getLineNumber() + "</td>");
-                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\"></td>");
-                        break;
-                    case DELETED:
-
-                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\"></td>");
-                        htmlContent.append("<td class=\"line-index line line-" + contentLine.getType().name().toLowerCase() + "\">" + contentLine.getLineNumber() + "</td>");
-                        break;
-                }
-
-                htmlContent.append("<td class=\"line line-" + contentLine.getType().name().toLowerCase() + "\">" + line + "</td>");
-                htmlContent.append("</tr>");
-            }
-            htmlContent.append("</table>");
-
-        } else {
-
-            htmlContent.append("<h1>No content for preview</h1>");
-        }
-
-        return htmlContent.toString();
     }
 
     /**
@@ -856,6 +735,31 @@ public class GitWindowController {
         compareUpdatedFiles();
 
         System.out.println();
+    }
+
+    /**
+     * Get indexes from diff string.
+     * @param diffString - Diff string.
+     * @return List of indexes.
+     */
+    private static List<String> getIndexesFromDiff(String diffString) {
+
+        // Format: @@ -61,11 +66,33 @@
+
+        String[] diffStringArray = diffString.split(" ");
+
+        String infoOld = diffStringArray[1];
+        String infoNew = diffStringArray[2];
+
+        String[] infoOldIndex = infoOld.split(",");
+        String[] infoNewIndex = infoNew.split(",");
+
+        List<String> indexes = new ArrayList<>();
+
+        indexes.add(infoOldIndex[0]);
+        indexes.add(infoNewIndex[0]);
+
+        return indexes;
     }
 
     public boolean isSuccessfullyPulled() {

@@ -6,5 +6,7 @@ package cz.zcu.kiv.spac.data.git;
 public enum  PreviewFileContentLineType {
 
     ADDED,
-    DELETED;
+    DELETED,
+    NOT_MODIFIED,
+    DIFF_INFO;
 }
