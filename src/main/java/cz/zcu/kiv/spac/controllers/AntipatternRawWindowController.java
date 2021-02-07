@@ -4,12 +4,13 @@ import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.template.TemplateFieldType;
-import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
+import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.data.template.TemplateField;
+import cz.zcu.kiv.spac.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -88,9 +89,9 @@ public class AntipatternRawWindowController {
     @FXML
     private void saveRawAntipattern(ActionEvent actionEvent) {
 
-        String formattedContent = MarkdownFormatter.formatMarkdownTable(txtAreaRawAntipatternContent.getText());
+        String formattedContent = MarkdownGenerator.formatMarkdownTable(txtAreaRawAntipatternContent.getText());
         tempAntipattern.setContent(formattedContent);
-        tempAntipattern.setAntipatternHeadings(parser.parseHeadings(tempAntipattern.getName(), txtAreaRawAntipatternContent.getText()));
+        tempAntipattern.setAntipatternHeadings(parser.parseHeadings(tempAntipattern, txtAreaRawAntipatternContent.getText()));
 
         List<String> differences = template.getHeadingDifferences(tempAntipattern);
 
@@ -103,11 +104,8 @@ public class AntipatternRawWindowController {
 
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Antipattern content does not match template !");
-            alert.setContentText("Antipattern content does not match template fields !");
-            alert.show();
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Antipattern content does not match template !",
+                    "Antipattern content does not match template fields !");
 
             listDifferences.getItems().clear();
             setDifferences(differences);

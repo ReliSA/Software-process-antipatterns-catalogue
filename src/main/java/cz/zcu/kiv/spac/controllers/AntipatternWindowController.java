@@ -10,14 +10,19 @@ import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.file.FileWriter;
-import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
+import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -28,6 +33,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
+import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.apache.commons.beanutils.BeanUtils;
@@ -35,8 +41,8 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Controller for antipattern window.
@@ -103,16 +109,11 @@ public class AntipatternWindowController {
             return;
         }
 
-        // Create an alert.
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle(Constants.APP_NAME);
-
         // If antipattern is null, then it means that we want to create new antipattern.
         if (antipattern == null) {
 
             // Create antipattern file.
-            String filename = tempAntipattern.getFormattedName().replace(" ", "_");
-            File file = new File(Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER + "/" + filename + ".md");
+            File file = new File(Utils.createMarkdownFilename(tempAntipattern));
 
             try {
 
@@ -126,10 +127,9 @@ public class AntipatternWindowController {
                     // Save antipattern content to new file.
                     if (saveAntipatternToFile(file)) {
 
-                        alert.setAlertType(Alert.AlertType.INFORMATION);
-                        alert.setHeaderText("Antipattern created successfully.");
-                        alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was created successfully.");
-                        alert.show();
+                        Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME,
+                                "Antipattern created successfully.",
+                                "Antipattern '" + tempAntipattern.getName() + "' was created successfully.");
 
                         tempAntipattern.setPath(file.getPath());
                         antipatternCreated = true;
@@ -138,10 +138,9 @@ public class AntipatternWindowController {
 
                     } else {
 
-                        alert.setAlertType(Alert.AlertType.ERROR);
-                        alert.setHeaderText("Error while creating Antipattern.");
-                        alert.setContentText("Antipattern '" + tempAntipattern.getName() + "' was not created successfully.");
-                        alert.show();
+                        Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                                "Error while creating Antipattern.",
+                                "Antipattern '" + tempAntipattern.getName() + "' was not created successfully.");
                     }
                 }
 
@@ -155,10 +154,9 @@ public class AntipatternWindowController {
             // Save antipattern content to already existing antipattern file.
             if (saveAntipatternToFile(new File(antipattern.getPath()))) {
 
-                alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("Antipattern updated successfully.");
-                alert.setContentText("Antipattern '" + antipattern.getName() + "' was updated successfully.");
-                alert.show();
+                Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME,
+                        "Antipattern updated successfully.",
+                        "Antipattern '" + antipattern.getName() + "' was updated successfully.");
 
                 antipatternUpdated = true;
 
@@ -166,10 +164,9 @@ public class AntipatternWindowController {
 
             } else {
 
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error while updating Antipattern.");
-                alert.setContentText("Antipattern '" + antipattern.getName() + "' was not updated successfully.");
-                alert.show();
+                Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                        "Error while updating Antipattern.",
+                        "Antipattern '" + antipattern.getName() + "' was not updated successfully.");
 
                 return;
             }
@@ -265,7 +262,7 @@ public class AntipatternWindowController {
 
             if (antipattern != null) {
 
-                heading = antipattern.getAntipatternHeading(templateField.getText(), templateField.isRequired());
+                heading = antipattern.getAntipatternHeading(templateField.getName(), templateField.isRequired());
             }
 
             // Create specific field by its type.
@@ -315,8 +312,9 @@ public class AntipatternWindowController {
 
                 case TEXTAREA:
 
-                    /*
+
                     // TODO: ADDITIONAL: HTMLEditor as Rich TextArea ?
+                    /*
                     // https://stackoverflow.com/questions/10075841/how-to-hide-the-controls-of-htmleditor
                     field = new HTMLEditor();
                     HTMLEditor htmlEditorField = (HTMLEditor) field;
@@ -325,7 +323,10 @@ public class AntipatternWindowController {
 
                     htmlEditorField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
                     layoutY += Constants.TEXTAREA_HEIGHT;
-                     */
+
+                    htmlEditorField.getStylesheets().add(Constants.RESOURCE_ANTIPATTERN_RELATION_CSS);
+                    */
+
 
                     // Create textarea.
                     field = new TextArea();
@@ -352,6 +353,7 @@ public class AntipatternWindowController {
                     // Add offset to Y layout for next element.
                     layoutY += Constants.TEXTAREA_HEIGHT;
 
+
                     // Add textarea to tab.
                     childrens.add(field);
 
@@ -370,10 +372,27 @@ public class AntipatternWindowController {
                     setRegionBounds(tableViewField, templateFieldLabel);
 
                     // Add columns to table specified in template.
-                    tableViewField.getColumns().addAll(prepareTableColumns((TableField) templateField, tableViewField.getMinWidth()));
+                    tableViewField.getColumns().addAll(prepareTableColumns((TableField) templateField, tableViewField, tableViewField.getMinWidth()));
 
                     // Editable table.
                     tableViewField.setEditable(true);
+
+                    // Add observable for antipattern name for relation.
+                    ObservableList<AntipatternRelation> tableItemsPrepare =
+                            FXCollections.observableArrayList(relation -> new Observable[] {relation.getAntipatternProperty(), relation.getRelationProperty()});
+
+                    tableItemsPrepare.addListener((ListChangeListener.Change<? extends AntipatternRelation> c) -> {
+
+                        while(c.next()) {
+
+                            if (c.wasAdded() || c.wasUpdated()) {
+
+                                checkDuplicate(tableItemsPrepare, c);
+                            }
+                        }
+                    });
+
+                    tableViewField.setItems(tableItemsPrepare);
 
                     // Add css class.
                     tableViewField.getStyleClass().add("table-view");
@@ -399,19 +418,20 @@ public class AntipatternWindowController {
                             // Get factory value for column.
                             String valueFactory = prepareColumnValueFactory(column.getText());
 
-                            try {
+                            StringProperty property = antipatternRelation.getProperty(valueFactory);
 
-                                // Set default value for antipattern column field.
-                                BeanUtils.setProperty(antipatternRelation, valueFactory, column.getDefaultValue());
+                            if (property != null) {
 
-                            } catch (InvocationTargetException | IllegalAccessException e) {
+                                property.setValue(column.getDefaultValue());
+                                tableViewField.getItems().add(antipatternRelation);
 
-                                log.warn("Cannot save default value '" + column.getDefaultValue() + "' to column '" + column + "'");
+                            } else {
+
+                                System.out.println("Error while adding new row in antipattern relation.");
                             }
                         }
-
-                        tableViewField.getItems().add(antipatternRelation);
                     });
+
 
                     // Add add button to tab.
                     childrens.add(addRowButton);
@@ -425,11 +445,18 @@ public class AntipatternWindowController {
                         // Get selected indexes in table.
                         ObservableList<Integer> selectedItems = tableViewField.getSelectionModel().getSelectedIndices();
 
+                        // Create temporary items-
+                        ObservableList tableItems = tableViewField.getItems();
+                        ObservableList tempTableItems =  FXCollections.observableArrayList(tableItems);
+
                         // Remove all selected items by his index in table.
                         for (Integer selectedRowIndex : selectedItems) {
 
-                            tableViewField.getItems().remove(tableViewField.getItems().get(selectedRowIndex));
+                            AntipatternRelation relation = (AntipatternRelation) tableItems.get(selectedRowIndex);
+                            tempTableItems.remove(relation);
                         }
+
+                        tableViewField.setItems(tempTableItems);
                     });
 
                     // Add delete button to tab.
@@ -468,12 +495,29 @@ public class AntipatternWindowController {
     }
 
     /**
+     * Check if list contains duplicate after adding new item to table / changing current.
+     * @param list - List with items in table.
+     * @param c - Current change.
+     */
+    private void checkDuplicate(ObservableList list, ListChangeListener.Change c) {
+
+        AntipatternRelation relation = (AntipatternRelation) c.getList().get(c.getFrom());
+
+        if (Collections.frequency(list, relation) > 1) {
+
+            Utils.showAlertWindow(Alert.AlertType.WARNING, Constants.APP_NAME,
+                    "Adding Anti-pattern relation",
+                    "There are duplicates in table, please remove them (they will be removed automatically after saving).");
+        }
+    }
+
+    /**
      * Create table columns specified in template.
      * @param tableField - Table field.
      * @param tableViewWidth - Width of table view.
      * @return List of table columns.
      */
-    private List<TableColumn> prepareTableColumns(TableField tableField, Double tableViewWidth) {
+    private List<TableColumn> prepareTableColumns(TableField tableField, TableView tableView, Double tableViewWidth) {
 
         List<TableColumn> columns = new ArrayList<>();
 
@@ -567,6 +611,8 @@ public class AntipatternWindowController {
             tempAntipattern = new Antipattern("", new AntipatternContent(""), "");
         }
 
+        tempAntipattern.getAntipatternHeadings().clear();
+
         // Get all tab elements.
         ObservableList<Node> nodes = tabFormPane.getChildren();
 
@@ -609,8 +655,10 @@ public class AntipatternWindowController {
                         TableView table = (TableView) node;
 
                         ObservableList<AntipatternRelation> relations = table.getItems();
+                        Set<AntipatternRelation> relationsSet = new LinkedHashSet<>();
+                        relationsSet.addAll(relations);
 
-                        heading = new AntipatternTableHeading(relations);
+                        heading = new AntipatternTableHeading(relationsSet);
                         heading.setType(AntipatternHeadingType.TABLE);
                         break;
 
@@ -619,7 +667,8 @@ public class AntipatternWindowController {
                         log.error("Undefined field type for field: " + headingName);
                 }
 
-                heading.setHeadingText(headingName);
+                heading.setHeadingText(field.getText());
+                heading.setHeadingName(headingName);
 
                 // Check textarea and textfield.
                 if (heading.getType() == AntipatternHeadingType.TEXT) {
@@ -632,11 +681,9 @@ public class AntipatternWindowController {
 
                         log.warn("Field '" + field.getText() + "' is blank!");
 
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle(Constants.APP_NAME);
-                        alert.setHeaderText("Blank field!");
-                        alert.setContentText("Field '" + field.getText() + "' is blank!");
-                        alert.show();
+                        Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                                "Blank field!",
+                                "Field '" + field.getText() + "' is blank!");
 
                         return false;
 
@@ -670,11 +717,10 @@ public class AntipatternWindowController {
 
                                         log.warn("Column 'known as' contains antipattern name '" + linkedAntipattern + "', which is already presented in catalogue!");
 
-                                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                                        alert.setTitle(Constants.APP_NAME);
-                                        alert.setHeaderText("Existing antipattern");
-                                        alert.setContentText("Column 'known as' contains antipattern name '" + linkedAntipattern + "', which is already presented in catalogue!");
-                                        alert.show();
+                                        Utils.showAlertWindow(Alert.AlertType.WARNING, Constants.APP_NAME,
+                                                "Existing antipattern",
+                                                "Column 'known as' contains antipattern name '" + linkedAntipattern + "', which is already presented in catalogue!");
+
                                         return false;
                                     }
                                 }
@@ -698,11 +744,9 @@ public class AntipatternWindowController {
 
                         log.warn("Field '" + field.getText() + "' does not contains any record!");
 
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle(Constants.APP_NAME);
-                        alert.setHeaderText("No records in table!");
-                        alert.setContentText("Field '" + field.getText() + "' does not contains any record!");
-                        alert.show();
+                        Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                                "No records in table!",
+                                "Field '" + field.getText() + "' does not contains any record!");
 
                         return false;
 
@@ -710,13 +754,14 @@ public class AntipatternWindowController {
 
                         // Add new heading to antipattern.
                         tempAntipattern.addAntipatternHeading(headingName, heading);
+                        tempAntipattern.setRelationsHeadingName(headingName);
                     }
                 }
             }
         }
 
         // Create markdown content from headings.
-        String markdownContent = MarkdownFormatter.createAntipatternMarkdownContent(tempAntipattern.getAntipatternHeadings(), template.getFieldList());
+        String markdownContent = MarkdownGenerator.createAntipatternMarkdownContent(tempAntipattern.getAntipatternHeadings(), template.getFieldList(), catalogue);
 
         // Set created markdown content to antipattern.
         tempAntipattern.setContent(markdownContent);

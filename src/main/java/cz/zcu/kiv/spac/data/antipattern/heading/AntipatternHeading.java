@@ -8,6 +8,7 @@ import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 public abstract class AntipatternHeading {
 
     private String headingText;
+    private String headingName;
     private AntipatternHeadingType type;
 
     public void setType(AntipatternHeadingType type) {
@@ -28,5 +29,15 @@ public abstract class AntipatternHeading {
     public String getHeadingText() {
 
         return this.headingText;
+    }
+
+    public void setHeadingName(String headingName) {
+
+        this.headingName = headingName;
+    }
+
+    public String getHeadingName() {
+
+        return this.headingName;
     }
 }

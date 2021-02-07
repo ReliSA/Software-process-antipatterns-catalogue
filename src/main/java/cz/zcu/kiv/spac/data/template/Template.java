@@ -71,10 +71,21 @@ public class Template {
 
         for (TemplateField field : fieldList) {
 
-            if (field.getName().equals(fieldName)) {
+            if (field.getName().equals(fieldName) || field.getText().equals(fieldName)) {
 
                 return field;
+
             }
+
+            if (!field.isRequired()) {
+
+                String name = field.getName() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING;
+                String text = field.getText() + Constants.TEMPLATE_FIELD_OPTIONAL_STRING;
+
+                if (name.equals(fieldName) || text.equals(fieldName))
+
+                    return field;
+                }
         }
         return null;
     }
@@ -118,7 +129,7 @@ public class Template {
 
                     } else {
 
-                        AntipatternHeading heading = antipattern.getAntipatternHeading(templateField.getText(), true);
+                        AntipatternHeading heading = antipattern.getAntipatternHeading(templateField.getName(), true);
 
                         TemplateFieldType templateFieldType = templateField.getType();
 

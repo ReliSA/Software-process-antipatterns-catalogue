@@ -1,5 +1,6 @@
 package cz.zcu.kiv.spac.controllers;
 
+import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
@@ -8,7 +9,7 @@ import cz.zcu.kiv.spac.enums.AntipatternFilterChoices;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
-import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
+import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.utils.Utils;
@@ -26,10 +27,7 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Controller for Main window.
@@ -124,12 +122,8 @@ public class MainWindowController {
 
             if (choice == null) {
 
-                Alert alert = new Alert(Alert.AlertType.NONE);
-                alert.setTitle(Constants.APP_NAME);
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error while selecting filtering choice.");
-                alert.setContentText("Filter '" + filterChoice + "' did not exists, please contact administrator.");
-                alert.showAndWait();
+                Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Error while selecting filtering choice.",
+                        "Filter '" + filterChoice + "' did not exists, please contact administrator.");
 
             } else {
 
@@ -277,19 +271,33 @@ public class MainWindowController {
     @FXML
     private void menuGitInfoAction(ActionEvent actionEvent) {
 
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle(Constants.APP_NAME);
-        alert.setAlertType(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("Git configuration parameters");
-
         String content = "";
         content += "Branch: " + customGitObject.getBranchName() + "\n\n";
         content += "Repository URL: " + customGitObject.getRepositoryUrl() + "\n\n";
         content += "Username: " + customGitObject.getUsername();
 
-        alert.getDialogPane().setMinWidth(600);
-        alert.setContentText(content);
-        alert.showAndWait();
+        Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME, "Git configuration parameters",
+                content, 600);
+    }
+
+    /**
+     * Existence check for all antipatterns via button.
+     * @param actionEvent - Action event.
+     */
+    @FXML
+    private void relationExistenceCheckAll(ActionEvent actionEvent) {
+
+        List<String> notCompletedExistenceCheck = new ArrayList<>();
+
+        for (Antipattern antipattern : antipatterns.values()) {
+
+            notCompletedExistenceCheck.addAll(relationExistenceCheck(antipattern));
+        }
+
+        if (notCompletedExistenceCheck.size() > 0) {
+
+            printExistenceCheckError(notCompletedExistenceCheck);
+        }
     }
 
     /**
@@ -369,12 +377,8 @@ public class MainWindowController {
         if (selectedAntipattern == null) {
 
             // Create an alert.
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setHeaderText("Error while opening antipattern window");
-            alert.setContentText("No antipattern selected.");
-            alert.showAndWait();
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Error while opening antipattern window",
+                    "No antipattern selected.");
             return;
         }
 
@@ -478,11 +482,19 @@ public class MainWindowController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
+            List<String> notCompletedExistenceCheck = new ArrayList<>();
+
             // If new antipattern was created in form, then save this antipattern to new file and update catalogue file.
             if (antipatternWindowController.isAntipatternCreated()) {
 
                 Antipattern createdAntipattern = antipatternWindowController.getTempAntipattern();
                 addNewAntipatternToCatalogue(createdAntipattern);
+                notCompletedExistenceCheck = relationExistenceCheck(createdAntipattern);
+
+                if (notCompletedExistenceCheck.size() > 0) {
+
+                    printExistenceCheckError(notCompletedExistenceCheck);
+                }
             }
 
             // If existing antipattern was updated, then replace old antipattern with newer.
@@ -490,9 +502,15 @@ public class MainWindowController {
 
                 Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
                 antipattern.setContent(updatedAntipattern.getContent().toString());
-                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
+                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern, antipattern.getContent().toString()));
 
                 updateCatalogueWithLinkedAntipatterns(antipattern, updatedAntipattern);
+                notCompletedExistenceCheck = relationExistenceCheck(antipattern);
+
+                if (notCompletedExistenceCheck.size() > 0) {
+
+                    printExistenceCheckError(notCompletedExistenceCheck);
+                }
 
                 wviewAntipatternPreview.getEngine().loadContent(markdownParser.generateHTMLContent(updatedAntipattern.getContent().toString()));
             }
@@ -504,7 +522,68 @@ public class MainWindowController {
 
         } catch (Exception e) {
 
+            e.printStackTrace();
             log.error("Invalid AntipatternWindowController scene.");
+        }
+    }
+
+    /**
+     * Existence check for antipattern relations.
+     * @param antipattern - Current antipattern.
+     */
+    private List<String> relationExistenceCheck(Antipattern antipattern) {
+
+        List<String> notCompletedExistenceCheck = new ArrayList<>();
+
+        // Do relations existence check for current antipattern.
+        MarkdownGenerator.relationsExistenceCheck(antipattern, template, catalogue);
+
+        // Iterate through every relation of current antipattern and do the same existence check.
+        for (AntipatternRelation relation : antipattern.getRelations()) {
+
+            Antipattern relatedAntipattern = antipatterns.get(relation.getAntipattern());
+
+            if (relatedAntipattern != null && relatedAntipattern.isCreated() && !relatedAntipattern.isLinking()) {
+
+                // Antipattern must have same structure as template, otherwise do not add both-sided link.
+                if (template.getHeadingDifferences(relatedAntipattern).size() == 0) {
+
+                    relatedAntipattern.getRelations().add(new AntipatternRelation(antipattern.getName(), relation.getRelation()));
+                    MarkdownGenerator.relationsExistenceCheck(relatedAntipattern, template, catalogue);
+
+                } else {
+
+                    notCompletedExistenceCheck.add(relatedAntipattern.getName());
+                }
+            }
+        }
+
+        return notCompletedExistenceCheck;
+    }
+
+    /**
+     * Print error alert with info about not added both-sided links for relations.
+     * @param notCompletedExistenceCheck - List of antipattern names, which failed to relation existence check.
+     */
+    private void printExistenceCheckError(List<String> notCompletedExistenceCheck) {
+
+        if (notCompletedExistenceCheck.size() > 0) {
+
+            String contentText = "Anti-patterns (";
+
+            for (String badAntipattern : notCompletedExistenceCheck) {
+
+                contentText += badAntipattern + ", ";
+            }
+
+            // Remove last comma.
+            contentText = contentText.substring(0, contentText.length() - 1);
+
+            contentText += ") does not match template. Both-sided links was not added for those anti-patterns. ";
+
+            // Create an alert.
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Error while doing relation existence check.",
+                    contentText);
         }
     }
 
@@ -534,7 +613,7 @@ public class MainWindowController {
         }
 
         // Create new catalogue content.
-        String catalogueMarkdownContent = MarkdownFormatter.createCatalogueMarkdownContent(catalogue, antipatterns);
+        String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns);
 
         // Replace old catalogue content with new catalogue content.
         FileWriter.write(new File(Constants.CATALOGUE_FILE), catalogueMarkdownContent);
@@ -547,12 +626,8 @@ public class MainWindowController {
     private void displayAntipatternLinkedError(String antipatternName) {
 
         // Create an alert.
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setTitle(Constants.APP_NAME);
-        alert.setAlertType(Alert.AlertType.ERROR);
-        alert.setHeaderText("Error while opening antipattern window");
-        alert.setContentText("Antipattern '" + antipatternName + "' cannot be updated, because it contains link to another antipattern.");
-        alert.showAndWait();
+        Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Error while opening antipattern window",
+                "Anti-pattern '" + antipatternName + "' cannot be updated, because it contains link to another antipattern.");
     }
 
     /**
@@ -600,7 +675,7 @@ public class MainWindowController {
                 Antipattern tempAntipattern = antipatternRawWindowController.getTempAntipattern();
                 antipattern.setAntipatternHeadings(tempAntipattern.getAntipatternHeadings());
                 antipattern.setContent(tempAntipattern.getContent().toString());
-                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), antipattern.getContent().toString()));
+                antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern, antipattern.getContent().toString()));
 
                 // Save content changes to file.
                 FileWriter.write(new File(Utils.getRootDir() + "/" + antipattern.getPath()), antipattern.getContent().toString());
@@ -685,7 +760,7 @@ public class MainWindowController {
             }
 
             // Create new catalogue content.
-            String catalogueMarkdownContent = MarkdownFormatter.createCatalogueMarkdownContent(catalogue, antipatterns);
+            String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns);
 
             // Replace old catalogue content with new catalogue content.
             FileWriter.write(new File(Constants.CATALOGUE_FILE), catalogueMarkdownContent);

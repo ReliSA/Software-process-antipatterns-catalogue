@@ -1,6 +1,7 @@
 package cz.zcu.kiv.spac.controllers;
 
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -60,12 +61,8 @@ public class GitLoginController {
 
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setHeaderText("Git authentication window.");
-            alert.setContentText("Username or password is not set!");
-            alert.showAndWait();
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Git authentication window.",
+                    "Username or password is not set!");
         }
     }
 

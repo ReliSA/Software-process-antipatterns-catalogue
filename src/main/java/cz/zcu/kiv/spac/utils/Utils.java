@@ -1,5 +1,9 @@
 package cz.zcu.kiv.spac.utils;
 
+import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Region;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jgit.diff.*;
 
@@ -110,5 +114,38 @@ public class Utils {
         }
 
         return out.toString();
+    }
+
+    /**
+     * Create antipattern markdown filename.
+     * @param antipattern - Antipattern.
+     * @return Markdown filename for antipattern.
+     */
+    public static String createMarkdownFilename(Antipattern antipattern) {
+
+        String filename = antipattern.getFormattedName().replace(" ", "_");
+        return getRootDir() + "/" + Constants.CATALOGUE_FOLDER + "/" + filename + ".md";
+    }
+
+    /**
+     * Show alert window.
+     * @param type - Type of alert.
+     * @param title - Alert title.
+     * @param headerText - Alert header.
+     * @param contentText - Alert content.
+     */
+    public static void showAlertWindow(Alert.AlertType type, String title, String headerText, String contentText) {
+
+        showAlertWindow(type, title, headerText, contentText, Region.USE_PREF_SIZE);
+    }
+
+    public static void showAlertWindow(Alert.AlertType type, String title, String headerText, String contentText, double minWidth) {
+
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.getDialogPane().setMinWidth(minWidth);
+        alert.showAndWait();
     }
 }

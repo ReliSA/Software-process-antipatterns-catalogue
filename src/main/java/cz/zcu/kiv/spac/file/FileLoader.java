@@ -7,7 +7,7 @@ import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.data.template.TemplateFieldType;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
-import cz.zcu.kiv.spac.markdown.MarkdownFormatter;
+import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
@@ -188,7 +188,7 @@ public class FileLoader {
                 // If antipattern does not have path, then
                 if (catalogueAntipattern.getPath().equals("")) {
 
-                    AntipatternContent content = new AntipatternContent(MarkdownFormatter.getNonExistingAntipatternContent(catalogueAntipattern.getAntipatternName()));
+                    AntipatternContent content = new AntipatternContent(MarkdownGenerator.getNonExistingAntipatternContent(catalogueAntipattern.getAntipatternName()));
                     Antipattern nonCreatedAntipattern = new Antipattern(catalogueAntipattern.getAntipatternName(), content, "");
 
                     antipatterns.put(nonCreatedAntipattern.getFormattedName(), nonCreatedAntipattern);
@@ -219,14 +219,14 @@ public class FileLoader {
                             String markdownContent = loadFileContent(catalogueAntipattern.getPath());
                             markdownContent = markdownContent.replace("\r\r", Constants.LINE_BREAKER_CRLF);
 
-                            content = new AntipatternContent(MarkdownFormatter.formatMarkdownTable(markdownContent));
+                            content = new AntipatternContent(MarkdownGenerator.formatMarkdownTable(markdownContent));
                         }
 
                         Antipattern antipattern = new Antipattern(catalogueAntipattern.getAntipatternName(), content, catalogueAntipattern.getPath());
 
                         if (content != null) {
 
-                            antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern.getName(), content.toString()));
+                            antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern, content.toString()));
                         }
 
                         antipatterns.put(antipattern.getFormattedName(), antipattern);

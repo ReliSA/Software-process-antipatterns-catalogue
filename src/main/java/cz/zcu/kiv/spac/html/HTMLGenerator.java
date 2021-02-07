@@ -1,4 +1,4 @@
-package cz.zcu.kiv.spac.utils;
+package cz.zcu.kiv.spac.html;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.util.ast.Node;

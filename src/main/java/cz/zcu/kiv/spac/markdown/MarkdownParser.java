@@ -12,14 +12,16 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.data.template.Template;
-import cz.zcu.kiv.spac.utils.HTMLGenerator;
+import cz.zcu.kiv.spac.html.HTMLGenerator;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -45,12 +47,13 @@ public class MarkdownParser {
 
     /**
      * Parse antipattern headings from markdown content.
-     * @param antipatternName - Name of antipattern.
+     * @param antipattern - Antipattern.
      * @param markdownContent - Markdown content.
      * @return Map of antipattern headings.
      */
-    public Map<String, AntipatternHeading> parseHeadings(String antipatternName, String markdownContent) {
+    public Map<String, AntipatternHeading> parseHeadings(Antipattern antipattern, String markdownContent) {
 
+        String antipatternName = antipattern.getName();
         Map<String, AntipatternHeading> headings = new LinkedHashMap<>();
 
         MutableDataHolder options = getDataOptions();
@@ -62,6 +65,10 @@ public class MarkdownParser {
         StringBuilder headingContent = new StringBuilder();
         AntipatternHeading heading = null;
         String headingName = "";
+        String headingText = "";
+        String value = "";
+
+        List<TemplateField> fieldList = template.getFieldList();
 
         for (Node node : document.getChildren()) {
 
@@ -69,20 +76,35 @@ public class MarkdownParser {
 
                 parsingHeading = true;
 
-                headingName = node.getFirstChild().getChars().toString();
+                headingText = node.getFirstChild().getChars().toString();
 
                 if (!firstHeadingAdded) {
 
+                    TemplateField nameField = fieldList.get(0);
+                    headingName = nameField.getName();
+                    value = headingText;
+                    headingText = nameField.getText();
+
                     firstHeadingAdded = true;
-                    heading = new AntipatternTextHeading(headingName);
+                    heading = new AntipatternTextHeading(value);
                     heading.setType(AntipatternHeadingType.TEXT);
 
                     // Get "The Antipattern Name" field text and set it as heading text for antipattern name.
-                    String antipatternFieldText = template.getFieldTextList().get(0);
-                    heading.setHeadingText(antipatternFieldText);
-                    headingName = antipatternFieldText;
+                    heading.setHeadingText(headingText);
+                    heading.setHeadingName(headingName);
 
                 } else {
+
+                    TemplateField field = template.getField(headingText);
+
+                    if (field != null) {
+
+                        headingName = field.getName();
+
+                    } else {
+
+                        headingName = headingText;
+                    }
 
                     // Create new heading type.
                     if (node.getNext() == null || node.getNext().getClass() == Paragraph.class
@@ -96,7 +118,8 @@ public class MarkdownParser {
                     }
 
                     // Set heading text.
-                    heading.setHeadingText(headingName);
+                    heading.setHeadingText(headingText);
+                    heading.setHeadingName(headingName);
                     heading.setType(AntipatternHeadingType.TEXT);
 
                     headingContent = new StringBuilder();
@@ -122,6 +145,8 @@ public class MarkdownParser {
                 heading.setType(AntipatternHeadingType.TABLE);
 
                 TableBlock tableBlockNode = (TableBlock) node;
+
+                antipattern.setRelationsHeadingName(heading.getHeadingName());
 
                 try {
 
@@ -152,6 +177,7 @@ public class MarkdownParser {
 
                         // TODO: MAYBE IN FUTURE: maybe rework, because it will work only if 2 columns are presented.
                         // |aa|bb| is splitted into 3 values - first blank, second 'aa', third 'bb'.
+
                         if (antipatternRelation.length == 3) {
 
                             tableHeading.addRelation(antipatternRelation[1], antipatternRelation[2]);

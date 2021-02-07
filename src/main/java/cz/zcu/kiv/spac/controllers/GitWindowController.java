@@ -7,7 +7,7 @@ import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.data.git.PreviewFileContentLine;
 import cz.zcu.kiv.spac.data.git.PreviewFileContentLineType;
 import cz.zcu.kiv.spac.file.FileLoader;
-import cz.zcu.kiv.spac.utils.HTMLGenerator;
+import cz.zcu.kiv.spac.html.HTMLGenerator;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -125,8 +125,6 @@ public class GitWindowController {
     @FXML
     private void btnCommitAction(ActionEvent actionEvent) {
 
-        // TODO: create button for checking / unchecking all files for commit.
-
         String summary = txtfieldSummary.getText();
         String description = txtareaDescription.getText();
 
@@ -150,12 +148,11 @@ public class GitWindowController {
         if (selectedFiles.size() == 0) {
 
             // Create an alert.
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setHeaderText("Creating commit");
-            alert.setContentText("No files were selected for commit.");
-            alert.showAndWait();
+
+            Utils.showAlertWindow(Alert.AlertType.WARNING, Constants.APP_NAME,
+                    "Creating commit",
+                    "No files were selected for commit.");
+
             return;
         }
 
@@ -204,11 +201,11 @@ public class GitWindowController {
         if (commitsAhead == 0) {
 
             // Create an alert.
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Push to git");
-            alert.setContentText("There are no commits to push.");
-            alert.showAndWait();
+
+            Utils.showAlertWindow(Alert.AlertType.WARNING, Constants.APP_NAME,
+                    "Push to git",
+                    "There are no commits to push.");
+
             return;
         }
 
@@ -223,22 +220,20 @@ public class GitWindowController {
             log.info("Push command completed successfully.");
 
             // Create an alert.
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Push to git");
-            alert.setContentText("Pushing commits to git was successful.");
-            alert.showAndWait();
+
+            Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME,
+                    "Push to git",
+                    "Pushing commits to git was successful.");
 
             getBranchTrackingStatus();
 
         } catch (Exception e) {
 
             log.warn("Invalid credentials!");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Push to git");
-            alert.setContentText("Invalid credentials!");
-            alert.showAndWait();
+
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                    "Push to git",
+                    "Invalid credentials!");
 
             openGitLoginWindow();
         }
@@ -262,12 +257,12 @@ public class GitWindowController {
     private void doPull(ActionEvent actionEvent) {
 
         if (commitsBehind == 0) {
+
             // Create an alert.
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Pull from git");
-            alert.setContentText("There are no commits to pull.");
-            alert.showAndWait();
+
+            Utils.showAlertWindow(Alert.AlertType.WARNING, Constants.APP_NAME,
+                    "Pull from git",
+                    "There are no commits to pull.");
             return;
         }
 
@@ -304,11 +299,10 @@ public class GitWindowController {
             log.info("Pull command completed successfully.");
 
             // Create an alert.
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Pull from git");
-            alert.setContentText(content);
-            alert.showAndWait();
+
+            Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME,
+                    "Pull from git",
+                    content);
 
             getBranchTrackingStatus();
 
@@ -319,20 +313,17 @@ public class GitWindowController {
             log.warn("Checkout conflict exception!");
             log.warn(ee.getMessage());
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Pull from git");
-            alert.setContentText(ee.getMessage());
-            alert.showAndWait();
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                    "Pull from git",
+                    ee.getMessage());
 
         } catch (Exception e) {
 
             log.warn("Invalid credentials!");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setHeaderText("Pull from git");
-            alert.setContentText("Invalid credentials!");
-            alert.showAndWait();
+
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                    "Pull from git",
+                    "Invalid credentials!");
 
             openGitLoginWindow();
         }
@@ -373,12 +364,9 @@ public class GitWindowController {
 
         } catch (Exception e) {
 
-            Alert alert = new Alert(Alert.AlertType.NONE);
-            alert.setTitle(Constants.APP_NAME);
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setHeaderText("Git fetch");
-            alert.setContentText("Undefined error while fetching.");
-            alert.showAndWait();
+            Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
+                    "Git fetch",
+                    "Undefined error while fetching.");
 
             log.warn("Error while fetching.");
         }

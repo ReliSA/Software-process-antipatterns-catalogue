@@ -12,10 +12,6 @@ public class AntipatternTextHeading extends AntipatternHeading {
         this.value = value;
     }
 
-    public AntipatternTextHeading() {
-
-    }
-
     public String getValue() {
 
         return value;

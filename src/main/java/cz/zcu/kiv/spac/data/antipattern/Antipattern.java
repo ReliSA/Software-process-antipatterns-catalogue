@@ -2,6 +2,7 @@ package cz.zcu.kiv.spac.data.antipattern;
 
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.utils.Utils;
 
 import java.util.*;
@@ -20,6 +21,7 @@ public class Antipattern {
     private boolean linking;
 
     private Map<String, AntipatternHeading> antipatternHeadings;
+    private String relationsHeadingName;
     private List<String> linkedAntipatterns;
 
     /**
@@ -36,6 +38,8 @@ public class Antipattern {
         this.path = path;
         this.antipatternHeadings = new LinkedHashMap<>();
         this.linkedAntipatterns = new ArrayList<>();
+
+        relationsHeadingName = "";
 
         if (path.equals("")) {
 
@@ -97,7 +101,11 @@ public class Antipattern {
         }
 
         List<String> antipatternHeadingsTexts = new ArrayList<>();
-        antipatternHeadingsTexts.addAll(antipatternHeadings.keySet());
+
+        for (AntipatternHeading heading : antipatternHeadings.values()) {
+
+            antipatternHeadingsTexts.add(heading.getHeadingText());
+        }
 
         return antipatternHeadingsTexts;
     }
@@ -120,6 +128,12 @@ public class Antipattern {
     public List<String> getLinkedAntipatterns() {
 
         return linkedAntipatterns;
+    }
+
+    public Set<AntipatternRelation> getRelations() {
+
+        AntipatternTableHeading relationsHeading = (AntipatternTableHeading) antipatternHeadings.get(relationsHeadingName);
+        return relationsHeading.getRelations();
     }
 
     public String getPath() {
@@ -156,5 +170,15 @@ public class Antipattern {
     public String getFormattedName() {
 
         return formattedName;
+    }
+
+    public void setRelationsHeadingName(String relationsHeadingName) {
+
+        this.relationsHeadingName = relationsHeadingName;
+    }
+
+    public String getRelationsHeadingName() {
+
+        return this.relationsHeadingName;
     }
 }
