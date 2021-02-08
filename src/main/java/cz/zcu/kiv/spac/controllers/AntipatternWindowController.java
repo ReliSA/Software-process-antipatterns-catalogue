@@ -17,11 +17,8 @@ import cz.zcu.kiv.spac.data.template.TableField;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
-import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -33,7 +30,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
-import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.apache.commons.beanutils.BeanUtils;
@@ -42,7 +38,6 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Controller for antipattern window.
@@ -711,7 +706,7 @@ public class AntipatternWindowController {
                                     continue;
                                 }
 
-                                if (antipattern == null || (antipattern != null && !antipattern.getLinkedAntipatterns().contains(linkedAntipattern))) {
+                                if (antipattern == null || (antipattern != null && !antipattern.getLinkingAntipatterns().contains(linkedAntipattern))) {
 
                                     if (catalogue.isAntipatternPresentedInCatalogue(linkedAntipattern)) {
 

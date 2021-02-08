@@ -22,7 +22,7 @@ public class Antipattern {
 
     private Map<String, AntipatternHeading> antipatternHeadings;
     private String relationsHeadingName;
-    private List<String> linkedAntipatterns;
+    private List<String> linkingAntipatterns;
 
     /**
      * Constructor.
@@ -37,7 +37,7 @@ public class Antipattern {
         this.content = content;
         this.path = path;
         this.antipatternHeadings = new LinkedHashMap<>();
-        this.linkedAntipatterns = new ArrayList<>();
+        this.linkingAntipatterns = new ArrayList<>();
 
         relationsHeadingName = "";
 
@@ -122,18 +122,27 @@ public class Antipattern {
 
     public void addLinkedAntipattern(String antipatternName) {
 
-        this.linkedAntipatterns.add(antipatternName);
+        this.linkingAntipatterns.add(antipatternName);
     }
 
-    public List<String> getLinkedAntipatterns() {
+    public List<String> getLinkingAntipatterns() {
 
-        return linkedAntipatterns;
+        return linkingAntipatterns;
     }
 
     public Set<AntipatternRelation> getRelations() {
 
         AntipatternTableHeading relationsHeading = (AntipatternTableHeading) antipatternHeadings.get(relationsHeadingName);
-        return relationsHeading.getRelations();
+
+        if (relationsHeading != null) {
+
+            return relationsHeading.getRelations();
+
+        } else {
+
+            return null;
+        }
+
     }
 
     public String getPath() {

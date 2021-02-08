@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -198,13 +199,19 @@ public class MarkdownGenerator {
      */
     public static void relationsExistenceCheck(Antipattern antipattern, Template template, Catalogue catalogue) {
 
-        for (AntipatternRelation relation : antipattern.getRelations()) {
+        Set<AntipatternRelation> relations = antipattern.getRelations();
 
-            if (!relation.isLinked() && catalogue.isAntipatternPresentedInCatalogue(relation.getAntipattern())) {
+        if (relations != null) {
 
-                String content = createAntipatternMarkdownContent(antipattern.getAntipatternHeadings(), template.getFieldList(), catalogue);
-                FileWriter.write(new File(Utils.createMarkdownFilename(antipattern)), content);
-                relation.setLinked(true);
+            for (AntipatternRelation relation : relations) {
+
+                if (!relation.isLinked() && catalogue.isAntipatternPresentedInCatalogue(relation.getAntipattern())) {
+
+                    String content = createAntipatternMarkdownContent(antipattern.getAntipatternHeadings(), template.getFieldList(), catalogue);
+                    FileWriter.write(new File(Utils.createMarkdownFilename(antipattern)), content);
+                    relation.setLinked(true);
+                    antipattern.setContent(content);
+                }
             }
         }
     }

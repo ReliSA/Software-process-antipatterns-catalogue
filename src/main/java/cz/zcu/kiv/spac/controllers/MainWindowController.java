@@ -288,7 +288,6 @@ public class MainWindowController {
     private void relationExistenceCheckAll(ActionEvent actionEvent) {
 
         List<String> notCompletedExistenceCheck = new ArrayList<>();
-
         for (Antipattern antipattern : antipatterns.values()) {
 
             notCompletedExistenceCheck.addAll(relationExistenceCheck(antipattern));
@@ -298,6 +297,8 @@ public class MainWindowController {
 
             printExistenceCheckError(notCompletedExistenceCheck);
         }
+
+        // TODO: print info alert about finishing existence check.
     }
 
     /**
@@ -501,10 +502,18 @@ public class MainWindowController {
             if (antipatternWindowController.isAntipatternUpdated()) {
 
                 Antipattern updatedAntipattern = antipatternWindowController.getTempAntipattern();
+
+                // Delete both-sided links if any relations was deleted.
+                Set<AntipatternRelation> deletedRelations = new LinkedHashSet<>(antipattern.getRelations());
+                deletedRelations.removeAll(updatedAntipattern.getRelations());
+                removeDeletedRelations(antipattern.getName(), deletedRelations);
+
+                // Set new values to current antipattern.
                 antipattern.setContent(updatedAntipattern.getContent().toString());
                 antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern, antipattern.getContent().toString()));
 
                 updateCatalogueWithLinkedAntipatterns(antipattern, updatedAntipattern);
+
                 notCompletedExistenceCheck = relationExistenceCheck(antipattern);
 
                 if (notCompletedExistenceCheck.size() > 0) {
@@ -528,6 +537,31 @@ public class MainWindowController {
     }
 
     /**
+     * Remove deleted relations (both-sided links) and write it to files immediately.
+     * @param updatedAntipatternName - Updated antipattern file name.
+     * @param deletedRelations - Deleted relations from updated antipattern.
+     */
+    private void removeDeletedRelations(String updatedAntipatternName, Set<AntipatternRelation> deletedRelations) {
+
+        for (AntipatternRelation deletedRelation : deletedRelations) {
+
+            Antipattern relatedAntipattern = antipatterns.get(deletedRelation.getAntipattern());
+
+            if (relatedAntipattern != null) {
+
+                // Create temporary relation for deleting current one in related antipattern.
+                AntipatternRelation tmpRelation = new AntipatternRelation(updatedAntipatternName, "");
+                relatedAntipattern.getRelations().remove(tmpRelation);
+
+                // Write change to file immediately -> existence check is after this method (when saving updated antipattern values).
+                String content = MarkdownGenerator.createAntipatternMarkdownContent(relatedAntipattern.getAntipatternHeadings(), template.getFieldList(), catalogue);
+                FileWriter.write(new File(Utils.createMarkdownFilename(relatedAntipattern)), content);
+                relatedAntipattern.setContent(content);
+            }
+        }
+    }
+
+    /**
      * Existence check for antipattern relations.
      * @param antipattern - Current antipattern.
      */
@@ -535,30 +569,92 @@ public class MainWindowController {
 
         List<String> notCompletedExistenceCheck = new ArrayList<>();
 
-        // Do relations existence check for current antipattern.
-        MarkdownGenerator.relationsExistenceCheck(antipattern, template, catalogue);
+        // If current antipattern linking to another antipattern, skip it.
+        if (antipattern.isLinking()) {
 
-        // Iterate through every relation of current antipattern and do the same existence check.
-        for (AntipatternRelation relation : antipattern.getRelations()) {
+            return notCompletedExistenceCheck;
+        }
 
-            Antipattern relatedAntipattern = antipatterns.get(relation.getAntipattern());
+        if (template.getHeadingDifferences(antipattern).size() == 0) {
 
-            if (relatedAntipattern != null && relatedAntipattern.isCreated() && !relatedAntipattern.isLinking()) {
+            Set<AntipatternRelation> relations = antipattern.getRelations();
 
-                // Antipattern must have same structure as template, otherwise do not add both-sided link.
-                if (template.getHeadingDifferences(relatedAntipattern).size() == 0) {
+            Set<AntipatternRelation> newRelations = new LinkedHashSet<>(relations);
 
-                    relatedAntipattern.getRelations().add(new AntipatternRelation(antipattern.getName(), relation.getRelation()));
-                    MarkdownGenerator.relationsExistenceCheck(relatedAntipattern, template, catalogue);
+            if (relations != null) {
 
-                } else {
+                // Iterate through every relation of current antipattern and do the same existence check.
+                for (AntipatternRelation relation : relations) {
 
-                    notCompletedExistenceCheck.add(relatedAntipattern.getName());
+                    Antipattern relatedAntipattern = antipatterns.get(relation.getAntipattern());
+
+                    if (relatedAntipattern != null) {
+
+                        // Check if antipattern is created and not linked to another antipattern.
+                        if (relatedAntipattern.isCreated() && !relatedAntipattern.isLinking()) {
+
+                            // Antipattern must have same structure as template, otherwise do not add both-sided link.
+                            if (template.getHeadingDifferences(relatedAntipattern).size() == 0) {
+
+                                relatedAntipattern.getRelations().add(new AntipatternRelation(antipattern.getName(), relation.getRelation()));
+                                MarkdownGenerator.relationsExistenceCheck(relatedAntipattern, template, catalogue);
+
+                                // Update all linking antipattern's content.
+                                updateLinkingAntipatternsContent(relatedAntipattern);
+
+                            } else {
+
+                                notCompletedExistenceCheck.add(relatedAntipattern.getName());
+                            }
+                        }
+
+                    } else {
+
+                        // TODO
+                        // If related antipattern is not in catalogue, remove relation.
+                        //newRelations.remove(relation);
+                    }
                 }
             }
+
+            // TODO
+            // Add all relations after existence check.
+            //antipattern.getRelations().clear();
+            //antipattern.getRelations().addAll(newRelations);
+
+            // Do relations existence check for current antipattern.
+            MarkdownGenerator.relationsExistenceCheck(antipattern, template, catalogue);
+
+            // Update all linking antipattern's content.
+            updateLinkingAntipatternsContent(antipattern);
+
+        } else {
+
+            notCompletedExistenceCheck.add(antipattern.getName());
         }
 
         return notCompletedExistenceCheck;
+    }
+
+    /**
+     * Update content of linking antipatterns.
+     * @param linkedAntipattern - Linked antipattern.
+     */
+    private void updateLinkingAntipatternsContent(Antipattern linkedAntipattern) {
+
+        List<String> linkedAntipatterns = linkedAntipattern.getLinkingAntipatterns();
+        if (linkedAntipatterns.size() > 0) {
+
+            for (String linkingAntipatternName : linkedAntipatterns) {
+
+                Antipattern linkingAntipattern = antipatterns.get(linkingAntipatternName);
+
+                if (linkingAntipattern != null) {
+
+                    linkingAntipattern.setContent(linkedAntipattern.getContent());
+                }
+            }
+        }
     }
 
     /**
@@ -569,21 +665,22 @@ public class MainWindowController {
 
         if (notCompletedExistenceCheck.size() > 0) {
 
-            String contentText = "Anti-patterns (";
+            StringBuilder contentText = new StringBuilder("Anti-patterns [");
 
             for (String badAntipattern : notCompletedExistenceCheck) {
 
-                contentText += badAntipattern + ", ";
+                contentText.append(badAntipattern).append(", ");
             }
 
             // Remove last comma.
-            contentText = contentText.substring(0, contentText.length() - 1);
+            contentText = new StringBuilder(contentText.substring(0, contentText.length() - 2));
 
-            contentText += ") does not match template. Both-sided links was not added for those anti-patterns. ";
+            contentText.append("] (").append(notCompletedExistenceCheck.size()).
+                    append(") does not match template. Both-sided links was not added for those anti-patterns. ");
 
             // Create an alert.
             Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Error while doing relation existence check.",
-                    contentText);
+                    contentText.toString(), 800);
         }
     }
 
@@ -594,11 +691,11 @@ public class MainWindowController {
      */
     private void updateCatalogueWithLinkedAntipatterns(Antipattern antipattern, Antipattern updatedAntipattern) {
 
-        List<String> addedLinkedAntipatterns = new ArrayList<>(updatedAntipattern.getLinkedAntipatterns());
-        addedLinkedAntipatterns.removeAll(antipattern.getLinkedAntipatterns());
+        List<String> addedLinkedAntipatterns = new ArrayList<>(updatedAntipattern.getLinkingAntipatterns());
+        addedLinkedAntipatterns.removeAll(antipattern.getLinkingAntipatterns());
 
-        List<String> deletedLinkedAntipatterns = new ArrayList<>(antipattern.getLinkedAntipatterns());
-        deletedLinkedAntipatterns.removeAll(updatedAntipattern.getLinkedAntipatterns());
+        List<String> deletedLinkedAntipatterns = new ArrayList<>(antipattern.getLinkingAntipatterns());
+        deletedLinkedAntipatterns.removeAll(updatedAntipattern.getLinkingAntipatterns());
 
         for (String linkedAntipatternString : addedLinkedAntipatterns) {
 
@@ -754,7 +851,7 @@ public class MainWindowController {
             catalogue.sortCatalogueInstance(firstLetter);
 
             // Create CatalogueRecords from 'Known as' field.
-            for (String linkedAntipatternString : newAntipattern.getLinkedAntipatterns()) {
+            for (String linkedAntipatternString : newAntipattern.getLinkingAntipatterns()) {
 
                 addAntipatternToMapAndCatalogue(linkedAntipatternString, newAntipattern);
             }
