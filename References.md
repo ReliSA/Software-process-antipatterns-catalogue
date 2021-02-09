@@ -27,7 +27,7 @@ _(Ordered alphabetically by the key.)_
 
 [ELO'16] Eloranta, V. P., Koskimies, K., & Mikkonen, T. (2016). Exploring ScrumBut — An empirical study of Scrum anti-patterns. *Information and Software Technology*, 74, 194-203.
 
-[HAR'16] Harvey, K. (2016, July) Feature Creep: What Causes It & How To Avoid It [online] https://www.chargify.com/blog/feature-creep/
+[HAR'16] Harvey, K. (2016, July) Feature Creep: What Causes It & How To Avoid It [online]. https://www.chargify.com/blog/feature-creep/
 
 [HEB'12] Hebig, R., Gabrysiak, G., & Giese, H. (2012, June). Towards patterns for MDE-related processes to detect and handle changeability risks. In *Proceedings of the International Conference on Software and System Process* (pp. 38-47). IEEE Press.
 
