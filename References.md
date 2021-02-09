@@ -23,7 +23,7 @@ _(Ordered alphabetically by the key.)_
 
 [CUN'13] Cunningham, W. (2013, June). Anti Patterns Catalog [online]. http://wiki.c2.com/?AntiPatternsCatalog.
 
-[ELO'13] Eloranta, V. P., Koskimies, K., Mikkonen, T., & Vuorinen, J. (2013, December). Scrum Anti-Patterns--An Empirical Study. In *Software Engineering Conference (APSEC), 2013 20th Asia-Pacific* (Vol. 1, pp. 503-510). IEEE.
+[ELO'13] Eloranta, V. P., Koskimies, K., Mikkonen, T., & Vuorinen, J. (2013, December). Scrum Anti-Patterns — An Empirical Study. In *Software Engineering Conference (APSEC), 2013 20th Asia-Pacific* (Vol. 1, pp. 503-510). IEEE.
 
 [ELO'16] Eloranta, V. P., Koskimies, K., & Mikkonen, T. (2016). Exploring ScrumBut—An empirical study of Scrum anti-patterns. *Information and Software Technology*, 74, 194-203.
 
