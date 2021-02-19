@@ -461,9 +461,19 @@ public class MainWindowController {
             // Create new stage.
             Stage stage = new Stage();
 
+
             // Load antipattern window template.
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_ANTIPATTERN_WINDOW)));
             Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/richtext/rich-text.css").toExternalForm());
+
+            // Set stage.
+            stage.setTitle(stageTitle);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
 
             // Create new antipattern window controller and set values.
             AntipatternWindowController antipatternWindowController;
@@ -474,13 +484,8 @@ public class MainWindowController {
             antipatternWindowController.setCatalogue(catalogue);
 
             // Create Form tab and init values in fields.
-            antipatternWindowController.loadAntipatternInfo();
+            antipatternWindowController.loadAntipatternInfo(stage);
 
-            // Set stage.
-            stage.setTitle(stageTitle);
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
             List<String> notCompletedExistenceCheck = new ArrayList<>();

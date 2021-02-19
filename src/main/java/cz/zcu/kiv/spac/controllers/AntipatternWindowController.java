@@ -16,6 +16,7 @@ import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.data.template.TemplateField;
+import cz.zcu.kiv.spac.richtext.RichTextArea;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
@@ -85,8 +86,7 @@ public class AntipatternWindowController {
     @FXML
     public void initialize() {
 
-        // Import css files.
-        tabFormPane.getStylesheets().add(Constants.RESOURCE_ANTIPATTERN_RELATION_CSS);
+        // Do nothing.
     }
 
     /**
@@ -214,8 +214,9 @@ public class AntipatternWindowController {
 
     /**
      * Create form and if any antipattern is updated, then fill fields with values.
+     * @param stage - Stage.
      */
-    void loadAntipatternInfo() {
+    void loadAntipatternInfo(Stage stage) {
 
         boolean disableAntipatternName = false;
         boolean antipatternNameFieldPassed = false;
@@ -307,26 +308,14 @@ public class AntipatternWindowController {
 
                 case TEXTAREA:
 
-
-                    // TODO: ADDITIONAL: HTMLEditor as Rich TextArea ?
-                    /*
-                    // https://stackoverflow.com/questions/10075841/how-to-hide-the-controls-of-htmleditor
-                    field = new HTMLEditor();
-                    HTMLEditor htmlEditorField = (HTMLEditor) field;
-
-                    setRegionBounds(htmlEditorField, templateFieldLabel);
-
-                    htmlEditorField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
-                    layoutY += Constants.TEXTAREA_HEIGHT;
-
-                    htmlEditorField.getStylesheets().add(Constants.RESOURCE_ANTIPATTERN_RELATION_CSS);
-                    */
-
-
                     // Create textarea.
-                    field = new TextArea();
-                    TextArea textAreaField = (TextArea) field;
+                    field = new RichTextArea(stage);
+                    RichTextArea textAreaField = (RichTextArea) field;
 
+                    // TODO: parse elements from heading and put them in richtext.
+                    // TODO: maybe it will be in markdown format -> i think better.
+
+                    /*
                     textAreaField.setText(templateField.getDefaultValue());
                     textAreaField.setPromptText(templateField.getPlaceholder());
 
@@ -335,19 +324,20 @@ public class AntipatternWindowController {
 
                         textAreaField.setText(((AntipatternTextHeading) heading).getValue());
                     }
-
-                    // Set line break.
-                    textAreaField.setWrapText(true);
+                     */
 
                     // Set bounds for field.
                     setRegionBounds(textAreaField, templateFieldLabel);
 
                     // Set maximum height for textarea.
                     textAreaField.setMaxHeight(Constants.TEXTAREA_HEIGHT);
+                    textAreaField.setMinHeight(Constants.TEXTAREA_HEIGHT);
 
                     // Add offset to Y layout for next element.
                     layoutY += Constants.TEXTAREA_HEIGHT;
 
+
+                    //RichTextArea textArea = new RichTextArea(this);
 
                     // Add textarea to tab.
                     childrens.add(field);

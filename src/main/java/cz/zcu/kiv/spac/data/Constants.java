@@ -17,7 +17,7 @@ public class Constants {
     public static final int INIT_Y_LOCATION = 20;
     public static final int TEXTFIELD_OFFSET_Y = 15;
     public static final int TABLE_OFFSET_Y = 10;
-    public static final int TEXTAREA_HEIGHT = 100;
+    public static final int TEXTAREA_HEIGHT = 200;
     public static final int TABLE_HEIGHT = 200;
     public static final int BUTTON_OFFSET = 20;
     public static final int TABLE_BUTTON_OFFSET = 10;
@@ -32,7 +32,6 @@ public class Constants {
 
     public static final String RESOURCE_PREVIEW_CSS = "/css/AntipatternPreview.css";
     public static final String RESOURCE_GIT_PREVIEW_CSS = "/css/GitAntipatternPreview.css";
-    public static final String RESOURCE_ANTIPATTERN_RELATION_CSS = "/css/AntipatternWindowStyles.css";
     public static final String RESOURCE_GIT_WINDOW_STYLES_CSS = "/css/GitWindowStyles.css";
 
     public static final String CATALOGUE_NAME = "../Antipatterns_catalogue.md";
