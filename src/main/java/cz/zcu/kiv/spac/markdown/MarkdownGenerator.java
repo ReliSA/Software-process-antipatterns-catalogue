@@ -315,6 +315,82 @@ public class MarkdownGenerator {
     }
 
     /**
+     * Convert segment text to markdown text and apply styles.
+     * @param text - Segment text.
+     * @param bold - True if text must be bold, false if not.
+     * @param italic - True if text must be italic, false if not.
+     * @param underline - True if text must be underlined, false if not.
+     * @param isImage - True if text is path to image, false if only segment text.
+     * @return Segment text in markdown.
+     */
+    public static String convertSegmentText(String text, boolean bold, boolean italic, boolean underline, boolean isImage) {
+
+        String markdownText = text;
+
+        if (isImage) {
+
+            String filename = Utils.getFilenameFromStringPath(text);
+            String filenameWithoutExtension = Utils.removeFilenameExtension(filename);
+
+            markdownText = "![" + filenameWithoutExtension + "](" + filename + ")";
+        }
+
+        markdownText = applyStyles(markdownText, bold, italic, underline);
+
+        return markdownText;
+    }
+
+    /**
+     * Generate markdown bullet level from indent.
+     * @param indent - Indent.
+     * @return Markdown bullet list level.
+     */
+    public static String createLevelFromIndent(int indent) {
+
+        StringBuilder sb = new StringBuilder();
+
+        // * 2 -> We need 2 spaces in markdown to generate another level.
+        for (int i = 0; i < (indent * 2); i++) {
+
+            sb.append(" ");
+        }
+
+        sb.append("- ");
+
+        return sb.toString();
+    }
+
+    /**
+     * Apply styles (bold, italic, underline) to text.
+     * @param text - Text.
+     * @param bold - True if text must be bold, false if not.
+     * @param italic - True if text must be italic, false if not.
+     * @param underline - True if text must be underlined, false if not.
+     * @return Text with styles.
+     */
+    private static String applyStyles(String text, boolean bold, boolean italic, boolean underline) {
+
+        String textWithStyles = text;
+
+        if (bold) {
+
+            textWithStyles = "**" + textWithStyles + "**";
+        }
+
+        if (italic) {
+
+            textWithStyles = "*" + textWithStyles + "*";
+        }
+
+        if (underline) {
+
+            textWithStyles = "<u>" + textWithStyles + "</u>";
+        }
+
+        return textWithStyles;
+    }
+
+    /**
      * Get markdown content for nonexisting antipattern.
      * @param antipatternName - Name of nonexisting antipattern.
      * @return Markdown content.

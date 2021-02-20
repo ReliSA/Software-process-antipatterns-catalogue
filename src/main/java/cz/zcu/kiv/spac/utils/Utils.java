@@ -43,6 +43,16 @@ public class Utils {
     }
 
     /**
+     * Get filename without extension.
+     * @param filename - Filename with extension.
+     * @return Filename without extension.
+     */
+    public static String removeFilenameExtension(String filename) {
+
+        return FilenameUtils.removeExtension(filename);
+    }
+
+    /**
      * Format antipattern filename into antipattern name for comparing.
      * @param filename - Antipattern name as filename.
      * @return Formatted antipattern name.

@@ -339,7 +339,11 @@ public class MarkdownParser {
 
         // You can re-use parser and renderer instances
         Node document = parser.parse(markdownContent);
-        return HTMLGenerator.generateHTMLContentFromMarkdown(options, document);
+        String htmlContent = HTMLGenerator.generateHTMLContentFromMarkdown(options, document);
+
+        // TODO: find image (by pattern + matcher + regex) and replace it (it could be in default format ![name](relative_path) )
+        // TODO: and replace it with <img src="relative_path.extension" width="??" height="??">
+        return htmlContent;
     }
 
     /**

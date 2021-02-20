@@ -631,7 +631,7 @@ public class AntipatternWindowController {
 
                     case TEXTAREA:
 
-                        heading = new AntipatternTextHeading(((TextArea) node).getText());
+                        heading = new AntipatternTextHeading(((RichTextArea) node).getText());
                         heading.setType(AntipatternHeadingType.TEXT);
                         break;
 

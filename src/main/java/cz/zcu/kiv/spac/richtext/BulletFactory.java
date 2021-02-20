@@ -1,3 +1,9 @@
+/*
+ * Created 2014 by Tomas Mikula.
+ *
+ * The author dedicates this file to the public domain.
+ */
+
 package cz.zcu.kiv.spac.richtext;
 
 import java.util.function.IntFunction;
@@ -19,6 +25,9 @@ import javafx.scene.text.FontPosture;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.reactfx.util.Either;
 
+/**
+ *
+ */
 public class BulletFactory implements IntFunction<Node>
 {
     private GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle> area;

@@ -1,19 +1,22 @@
+/*
+ * Created 2014 by Tomas Mikula.
+ *
+ * The author dedicates this file to the public domain.
+ */
+
 package cz.zcu.kiv.spac.richtext;
 
 import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
 import static org.fxmisc.richtext.model.TwoDimensional.Bias.Forward;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import javafx.collections.ObservableList;
+import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import javafx.scene.control.*;
-import org.fxmisc.flowless.VirtualFlow;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.StyledTextArea;
@@ -25,10 +28,8 @@ import org.fxmisc.richtext.model.SegmentOps;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
-import org.reactfx.Observable;
 import org.reactfx.SuspendableNo;
 import org.reactfx.collection.LiveList;
-import org.reactfx.util.Either;
 
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -37,9 +38,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.reactfx.util.Either;
 
-import javax.swing.text.Segment;
-
+/**
+ * Class representing rich textarea.
+ * It must extends VBox, or it cannot be used as a element in javafx pane.
+ * Reused from https://github.com/FXMisc/RichTextFX/blob/master/richtextfx-demos/src/main/java/org/fxmisc/richtext/demo/richtext/RichTextDemo.java.
+ */
 public class RichTextArea extends VBox {
 
     private final TextOps<String, TextStyle> styledTextOps = SegmentOps.styledTextOps();
@@ -237,22 +242,22 @@ public class RichTextArea extends VBox {
 
     private void decreaseIndent() {
 
-        parseContent();
         updateParagraphStyleInSelection(ParStyle::decreaseIndent);
     }
 
-    private void parseContent() {
+    public String getText() {
 
-        // TODO: získání hodnot už mám, teď to mrdnout do nějakýho objektu který se vrátí z týhle metody.
-        // TODO: možná to rovnou přetransformovat do markdownu.
+        StringBuilder sb = new StringBuilder();
 
         // Paragraph -> single line.
         // Segment -> Single text with properties or image.
         // Segment as text -> "temporary <b>text</b>" -> 2 segments, where first contains "temporary" and second contains
         // "text" with bold style. <b></b> is just for representing bold in this comment.
-        LiveList<Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle>> paragraphs = area.getContent().getParagraphs();
+        Iterator<Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle>> it = area.getContent().getParagraphs().iterator();
 
-        for (Paragraph paragraph : paragraphs) {
+        while (it.hasNext()) {
+
+            Paragraph paragraph = it.next();
 
             // Get segments in paragraph and paragraph style.
             List segments = paragraph.getStyledSegments();
@@ -261,6 +266,16 @@ public class RichTextArea extends VBox {
             // Get paragraph indent.
             Optional<Indent> indent = paragraphStyle.indent;
 
+            // Get indent.
+            int iIndent = indent.isEmpty() ? 0 : indent.get().level;
+
+            // Apply indent.
+            if (iIndent > 0) {
+
+                sb.append(MarkdownGenerator.createLevelFromIndent(iIndent));
+            }
+
+            // Parse paragraph segments.
             for (Object oSegment : segments) {
 
                 StyledSegment styledSegment = (StyledSegment) oSegment;
@@ -273,19 +288,36 @@ public class RichTextArea extends VBox {
 
                 // Parse image if there is any.
                 Either segment = (Either) styledSegment.getSegment();
-                String imagePath = imagesPath.get(segment);
 
-                System.out.println();
+                String text = "";
+
+                boolean isImage = false;
+
+                // Check if segment is in image map -> get full path to image.
+                if (imagesPath.containsKey(segment)) {
+
+                    text = imagesPath.get(segment);
+                    isImage = true;
+
+                } else {
+
+                    // Otherwise get normal text from segment.
+                    text = segment.getLeft().toString();
+                }
+
+                // Get markdown content.
+                sb.append(MarkdownGenerator.convertSegmentText(text, bold.isPresent(), italic.isPresent(), underline.isPresent(), isImage));
             }
 
-            System.out.println();
+            // Add line breakers.
+            if (it.hasNext()) {
+
+                sb.append(Constants.LINE_BREAKER_CRLF);
+                sb.append(Constants.LINE_BREAKER_CRLF);
+            }
         }
 
-        // V každym paragraphu může být víc segmentů
-        // Par[;
-        // StyledSegment(segment=left(cd ) style=12,Serif,0x000000ff),
-        // StyledSegment(segment=right(RealLinkedImage[path=C:/Users/danisik/Desktop/OP/newProject/Software-process-antipatterns-catalogue/catalogue/Collective_Procrastination_-_burndown_example.png]) style=)
-        // ]
+        return sb.toString();
     }
 
     private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {
