@@ -283,8 +283,28 @@ public class RichTextArea extends VBox {
 
                 // Bold / Italic / Underline properties.
                 Optional<Boolean> bold = textStyle.bold;
+                boolean isBold = false;
+
+                if (bold.isPresent()) {
+
+                    isBold = bold.get();
+                }
+
                 Optional<Boolean> italic = textStyle.italic;
+                boolean isItalic = false;
+
+                if (italic.isPresent()) {
+
+                    isItalic = italic.get();
+                }
+
                 Optional<Boolean> underline = textStyle.underline;
+                boolean isUnderline = false;
+
+                if (underline.isPresent()) {
+
+                    isUnderline = underline.get();
+                }
 
                 // Parse image if there is any.
                 Either segment = (Either) styledSegment.getSegment();
@@ -306,7 +326,7 @@ public class RichTextArea extends VBox {
                 }
 
                 // Get markdown content.
-                sb.append(MarkdownGenerator.convertSegmentText(text, bold.isPresent(), italic.isPresent(), underline.isPresent(), isImage));
+                sb.append(MarkdownGenerator.convertSegmentText(text, isBold, isItalic, isUnderline, isImage));
             }
 
             // Add line breakers.
