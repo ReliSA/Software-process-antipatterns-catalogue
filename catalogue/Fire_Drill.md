@@ -24,12 +24,12 @@ Waterfall(ish) projects, especially when project oversight is loose and/or manag
 
 ## Symptoms and Consequences
 
- - rock-edge burndown (especially when viewing implementation tasks only)
  - long period at project start where activities connected to requirements, analysis and planning prevale, and design and implementation activities are rare
  - only analytical or documentational artefacts for a long time
- - relatively short period towards project end with sudden increase in development efforts 
+ - relatively short period towards project end with sudden increase in development efforts (i.e. rock-edge burndown, especially when viewing implementation tasks only)
  - little testing/QA and project progress tracking activities during development period
- - final product with poor code quality, many open bug reports, poor or patchy documentation 
+ - final product with poor code quality, many open bug reports, poor or patchy documentation
+ - if quality is not compromised, project schedule or scope compromised (i.e., either delayed delivery or descoping occurs)
  - stark contrast between interlevel communication in project hierarchy (management - developers) during the first period (close to silence) and after realizating the problem (panic and loud noise)
 
 ## Causes
