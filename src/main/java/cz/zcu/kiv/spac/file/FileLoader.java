@@ -129,8 +129,7 @@ public class FileLoader {
 
         String branchName = "";
         String repositoryUrl = "";
-        String username = "";
-        String password = "";
+        String personalAccessToken = "";
 
         // Get username and password from properties file.
         File propertiesFile = new File(propertiesFilePath);
@@ -142,8 +141,7 @@ public class FileLoader {
             try {
 
                 properties.load(new FileInputStream(propertiesFilePath));
-                username = properties.getProperty("username");
-                password = properties.getProperty("password");
+                personalAccessToken = properties.getProperty("personalaccesstoken");
                 branchName = properties.getProperty("branch");
                 repositoryUrl = properties.getProperty("repository");
 
@@ -156,7 +154,7 @@ public class FileLoader {
         }
 
         log.info("Git attributes was loaded successfully.");
-        return new CustomGitObject(branchName, repositoryUrl, username, password);
+        return new CustomGitObject(branchName, repositoryUrl, personalAccessToken);
     }
 
     /**
@@ -252,6 +250,7 @@ public class FileLoader {
             linkingAntipattern.setContent(linkedAntipattern.getContent());
 
             linkingAntipattern.setLinking(true);
+            linkingAntipattern.setLinkedAntipatternName(linkedAntipatternName);
 
             // Add name of linking antipattern to list of linked antipatterns.
             linkedAntipattern.addLinkedAntipattern(antipatternName);

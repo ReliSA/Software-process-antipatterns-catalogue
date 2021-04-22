@@ -5,5 +5,5 @@ package cz.zcu.kiv.spac.enums;
  */
 public enum AntipatternHeadingType {
     TEXT,
-    TABLE
+    TABLE,
 }

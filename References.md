@@ -3,55 +3,58 @@
 
 _(Ordered alphabetically by the key.)_
 
-[AMB'12] Ambler, S. W. (2012). The "Broken Iron Triangle" Software Development Anti-pattern [online]. http://www.ambysoft.com/essays/brokenTriangle.html.
+[AMB'12] Ambler, Scott W. (2012). The ""Broken Iron Triangle"" Software Development Anti-pattern [online]. http://www.ambysoft.com/essays/brokentriangle.html. accessed november 14th, 2018
 
-[AMB'14] Ambler, S. W. (2014). Common Role Anti-Patterns in Online Discussion Forums [online]. http://www.ambysoft.com/essays/discussionListAntiPatterns.html.
+[AMB'14] Ambler, Scott W. (2014). Common Role Anti-Patterns in Online Discussion Forums [online]. http://www.ambysoft.com/essays/discussionlistantipatterns.html. accessed november 14th, 2018
 
-[AMB'14-2] Ambler, S. W. (2014). The "Change Prevention Process" Anti-Pattern [online]. http://www.ambysoft.com/essays/changePrevention.html.
+[AMB'14-2] Ambler, Scott W. (2014). The ""Change Prevention Proces"" Anti-Pattern [online]. http://www.ambysoft.com/essays/changeprevention.html. accessed november 14th, 2018
 
-[AYD'15] Aydinli, D. (2015). Software project management anti-patterns in innovation projects.
+[AYD'15] Aydinli, Dilem (2015). Software project management anti-patterns in innovation projects. University of Tampere
 
-[AYD'16] Aydinli, D., Berki, E., Poranen, T., & Stamelos, I. (2016, October). Management anti-patterns in IT innovation projects. In *Proceedings of the 20th International Academic Mindtrek Conference* (pp. 1-10). ACM. 
+[AYD'16] Aydinli, Dilem and Berki, Eleni and Poranen, Timo and Stamelos, Ioannis (2016). Management anti-patterns in IT innovation projects. *Proceedings of the 20th International Academic Mindtrek Conference* ACM
 
-[BRO'00] Brown, W. J., McCormick, H. W., & Thomas, S. W. (2000). *Anti-Patterns Project Management*. John Wiley & Sons, Inc..
+[BRO'00] Brown, William J. and McCormick, Hays W. and Thomas, Scott W. (2000). Anti-patterns project management. 
 
-[BRO'98] Brown, W. H., Malveau, R. C., McCormick, H. W., & Mowbray, T. J. (1998). *AntiPatterns: refactoring software, architectures, and projects in crisis*. John Wiley & Sons, Inc..
+[BRO'98] Brown, William H. and Malveau, Raphael C. and McCormick, Hays W. and Mowbray, Thomas J. (1998). AntiPatterns: refactoring software, architectures, and projects in crisis. 
 
-[COP'04] Coplien, J. O., & Harrison, N. B. (2004). Organizational patterns of agile software development. Prentice-Hall, Inc..
+[COP'04] Coplien, James O and Harrison, Neil B (2004). Organizational patterns of agile software development. 
 
-[CUN'10] Cunningham, W. (2010, August). Management Anti Pattern Road Map [online]. http://wiki.c2.com/?ManagementAntiPatternRoadMap.
+[CUN'10] Cunningham, Ward (2010). Management Anti Pattern Road Map [online]. http://wiki.c2.com/?managementantipatternroadmap. accessed november 14th, 2018
 
-[CUN'13] Cunningham, W. (2013, June). Anti Patterns Catalog [online]. http://wiki.c2.com/?AntiPatternsCatalog.
+[CUN'13] Cunningham, Ward (2013). Anti Patterns Catalog [online]. http://wiki.c2.com/?antipatternscatalog. accessed november 14th, 2018
 
-[ELO'13] Eloranta, V. P., Koskimies, K., Mikkonen, T., & Vuorinen, J. (2013, December). Scrum Anti-Patterns--An Empirical Study. In *Software Engineering Conference (APSEC), 2013 20th Asia-Pacific* (Vol. 1, pp. 503-510). IEEE.
+[ELO'13] Eloranta, Veli-Pekka and Koskimies, Kai and Mikkonen, Tommi and Vuorinen, Jyri (2013). Scrum Anti-Patterns -- An Empirical Study. *Software Engineering Conference (APSEC), 2013 20th Asia-Pacific* (Vol. 1, pp. 503-510). IEEE
 
-[ELO'16] Eloranta, V. P., Koskimies, K., & Mikkonen, T. (2016). Exploring ScrumBut—An empirical study of Scrum anti-patterns. *Information and Software Technology*, 74, 194-203.
+[ELO'16] Eloranta, Veli-Pekka and Koskimies, Kai and Mikkonen, Tommi (2016). Exploring ScrumBut -— An empirical study of Scrum anti-patterns. *Information and Software Technology*, 74, 194-203. Elsevier
 
-[HAR'16] Harvey, K. (2016, July) Feature Creep: What Causes It & How To Avoid It [online] \https://www.chargify.com/blog/feature-creep/
+[HAR'16] Harvey, Kate (2016). Feature Creep: What Causes It & How To Avoid It [online]. https://www.chargify.com/blog/feature-creep/. accessed november 14th, 2018
 
-[HEB'12] Hebig, R., Gabrysiak, G., & Giese, H. (2012, June). Towards patterns for MDE-related processes to detect and handle changeability risks. In *Proceedings of the International Conference on Software and System Process* (pp. 38-47). IEEE Press.
+[HEB'12] Hebig, Regina and Gabrysiak, Gregor and Giese, Holger (2012). Towards patterns for MDE-related processes to detect and handle changeability risks. *Proceedings of the International Conference on Software and System Process* IEEE Press
 
-[KUR'04] Kuranuki, Y., & Hiranabe, K. (2004, June). Antipractices: Antipatterns for XP practices. In *Agile Development Conference, 2004* (pp. 83-86). IEEE.
+[KUR'04] Kuranuki, Yoshihito and Hiranabe, Kenji (2004). Antipractices: Antipatterns for XP practices. *Agile Development Conference, 2004* IEEE
 
-[LAP'05] Laplante, P. A., & Neill, C. J. (2005). *Antipatterns: identification, refactoring, and management*. CRC Press.
+[LAP'05] Laplante, Phillip A. and Neill, Colin J. (2005). Antipatterns: Identification, Refactoring, and Management. 
 
-[LIV'08] Livejournal (2008). Antipatterns [online]. http://thespleen.livejournal.com/109833.html.
+[LIV'08] Livejournal (2008). Antipatterns [online]. https://thespleen.livejournal.com/109833.html. accessed november 14th, 2018
 
-[MAL'06] Malik, N. (2006, January). Project Management AntiPattern – PMs who write specs [online]. https://blogs.msdn.microsoft.com/nickmalik/2006/01/03/project-management-antipattern-pms-who-write-specs/
+[MAL'06] Malik, Nick (2006). Project Management AntiPattern -- PMs who write specs [online]. https://blogs.msdn.microsoft.com/nickmalik/2006/01/03/project-management-antipattern-pms-who-write-specs/. accessed november 14th, 2018
 
-[MAL'06-2] Malik, N. (2006, January). Project Management Antipattern 2: Pardon My Dust [online]. https://blogs.msdn.microsoft.com/nickmalik/2006/01/19/project-management-antipattern-2-pardon-my-dust/.
+[MAL'16] Malik, Nick (2016). Project Management Antipattern 2: Pardon My Dust [online]. https://blogs.msdn.microsoft.com/nickmalik/2006/01/19/project-management-antipattern-2-pardon-my-dust/. accessed november 14th, 2018
 
-[NEI] Neill, C. J. Management Antipatterns – how NOT to manage teams [online]. http://www.personal.psu.edu/cjn6/Personal/Effective%20Teams.htm.
+[NEI'18] Neill, Colin J. (2018). Effective Teams | Management Antipatterns -- how NOT to manage teams [online]. http://www.personal.psu.edu/cjn6/personal/effective\%20teams.htm. accessed november 14th, 2018
 
-[RAP'12] Raptopoulou, C., Berki, E., Poranen, T., Stamelos, I., & Aggelis, L. (2012). Management anti-patterns in Finnish software industry. In *Proceedings of the Software Quality Management* (pp. 173-187).
+[RAP'12] Raptopoulou, Charikleia and Berki, Eleni and Poranen, Timo and Stamelos, Ioannis and Aggelis, Lefteris (2012). Management anti-patterns in finnish software industry. *Proceedings of the SQM/INSPIRE 2012 Conference* School of Information Sciences of the University of Tampere and the BCS
 
-[SOU'18] SourceMaking.com (2018). AntiPatterns [online]. https://sourcemaking.com/antipatterns.
+[SOU'18] Sourcemaking.com (2018). AntiPatterns [online]. https://sourcemaking.com/antipatterns. accessed november 14th, 2018
 
-[SIL'15] Silva, P. D., Moreno Sánchez-Capuchino, A. M., & Peters, L. (2015). Software project management: learning from our mistakes. *IEEE Software*, 32(3), 12-15.
+[SIL'15] Silva, Pedro and Moreno, Ana M and Peters, Lawrence (2015). Software Project Management: Learning from Our Mistakes. *IEEE Software*, 32(3), 40-43. IEEE
 
-[STA'10] Stamelos, I. (2010). Software project management anti-patterns. *Journal of Systems and Software*, 83(1), 52-59.
+[STA'10] Stamelos, Ioannis (2010). Software project management anti-patterns. *Journal of Systems and Software*, 83(1), 52-59. Elsevier
 
-[TAM'17] Tamburri, Damian A.; Palomba, Fabio; Serebrenik, Alexander; Zaidman, Andy (2017): Discovering Community Types in Open-Source: A Systematic Approach and Its Evaluation. (unpublished)
+[TAM'18] Tamburri, Damian A. and Palomba, Fabio and Serebrenik, Alexander and Zaidman, Andy (2018). Discovering Community Patterns in Open-Source: A Systematic Approach and Its Evaluation. *Empirical Software Engineering*, 23, 1-49. Springer
 
-[WIK'13] Wikipedia (2013, June). Anti-pattern [online]. https://en.wikipedia.org/wiki/Anti-pattern.
+[WIK'18] Wikipedia (2018). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018
 
+[WIK'18-2] Wikipedia (2018). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018
+
+[WIK'21] Wikipedia (2021). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018

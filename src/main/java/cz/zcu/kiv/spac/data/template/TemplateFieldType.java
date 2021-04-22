@@ -6,5 +6,6 @@ package cz.zcu.kiv.spac.data.template;
 public enum TemplateFieldType {
     TEXTFIELD,
     TEXTAREA,
-    TABLE;
+    TABLE,
+    SELECT
 }

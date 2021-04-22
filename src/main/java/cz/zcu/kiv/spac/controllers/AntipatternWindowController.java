@@ -4,10 +4,12 @@ import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
+import cz.zcu.kiv.spac.data.antipattern.AntipatternRelationTable;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
+import cz.zcu.kiv.spac.data.reference.References;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
@@ -35,6 +37,8 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
+import org.controlsfx.control.CheckComboBox;
+import org.reactfx.util.LL;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -66,6 +70,10 @@ public class AntipatternWindowController {
     private Antipattern tempAntipattern;
     private Template template;
     private Catalogue catalogue;
+    private Map<String, Antipattern> antipatterns;
+    private References references;
+
+    private List<String> updatedAntipatterns = new ArrayList<>();
 
     private boolean antipatternUpdated = false;
     private boolean antipatternCreated = false;
@@ -258,7 +266,7 @@ public class AntipatternWindowController {
 
             if (antipattern != null) {
 
-                heading = antipattern.getAntipatternHeading(templateField.getName(), templateField.isRequired());
+                heading = antipattern.getAntipatternHeading(templateField.getName());
             }
 
             // Create specific field by its type.
@@ -306,25 +314,143 @@ public class AntipatternWindowController {
 
                     break;
 
+                case SELECT:
+
+                    field = new TextArea();
+                    TextArea textArea = (TextArea) field;
+                    CheckComboBox<String> cb = new CheckComboBox(FXCollections.observableArrayList(references.getReferenceMap().keySet()));
+
+                    // Create select box
+                    cb.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+                        public void onChanged(ListChangeListener.Change<? extends String> c) {
+
+                            StringBuilder references = new StringBuilder();
+
+                            Iterator<String> iterator = cb.getCheckModel().getCheckedItems().iterator();
+
+                            // Append all selected references to textarea.
+                            while (iterator.hasNext()) {
+
+                                references.append(iterator.next());
+
+                                if (iterator.hasNext()) {
+
+                                    references.append(", ");
+                                }
+                            }
+
+                            textArea.setText(references.toString());
+                        }
+                    });
+
+                    setRegionBounds(cb, templateFieldLabel);
+
+                    cb.setMaxWidth(Constants.CHOICE_BOX_WIDTH);
+                    cb.setMinWidth(Constants.CHOICE_BOX_WIDTH);
+                    cb.setPrefWidth(Constants.CHOICE_BOX_WIDTH);
+
+                    // Add info button with references info.
+                    Button infoButton = createButton("i", cb.getLayoutX() + Constants.CHOICE_BOX_WIDTH + Constants.INFO_BUTTON_X_OFFSET, layoutY - (Constants.BUTTON_OFFSET / 2));
+
+                    infoButton.setMaxWidth(Constants.INFO_BUTTON_WIDTH);
+                    infoButton.setMaxHeight(Constants.INFO_BUTTON_WIDTH);
+
+                    // Click event for add button.
+                    infoButton.setOnAction((event) -> {
+
+                        StringBuilder context = new StringBuilder();
+
+                        List<String> referencesInfo = references.getListForInfobox();
+                        Iterator<String> it = referencesInfo.iterator();
+
+                        while (it.hasNext()) {
+
+                            String referenceInfo = it.next();
+
+                            context.append(referenceInfo);
+
+                            if (it.hasNext()) {
+
+                                context.append("\n");
+                            }
+                        }
+
+                        Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME, "References info", context.toString(), Constants.ALERT_WINDOW_LONGER_WIDTH);
+                    });
+
+                    layoutY += Constants.TEXTFIELD_OFFSET_Y;
+
+                    childrens.add(cb);
+                    childrens.add(infoButton);
+
+                    // Create text area.
+                    textArea.setText(templateField.getDefaultValue());
+
+                    // Get value from antipattern heading.
+                    if (heading != null) {
+
+                        // Get all references in antipattern.
+                        List<String> usedReferences = MarkdownGenerator.parseUsedReferences(((AntipatternTextHeading) heading).getValue());
+                        Iterator<String> it = usedReferences.iterator();
+
+                        // Get all references.
+                        Set<String> allReferences = references.getReferenceMap().keySet();
+
+                        StringBuilder content = new StringBuilder();
+
+                        // Iterate through every reference, append reference to final text and try to select reference in combobox.
+                        while (it.hasNext()) {
+
+                            String usedReference = it.next();
+
+                            content.append(usedReference);
+
+                            if (it.hasNext()) {
+
+                                content.append(", ");
+                            }
+
+                            if (allReferences.contains(usedReference)) {
+
+                                cb.getCheckModel().check(usedReference);
+                            }
+                        }
+
+                        textArea.setText(content.toString());
+                    }
+
+                    textArea.setEditable(false);
+
+                    // Set bounds for field.
+                    setRegionBounds(textArea, templateFieldLabel);
+
+                    textArea.setLayoutY(textArea.getLayoutY() + Constants.CHOICE_BOX_OFFSET_Y);
+
+                    // Set maximum height for textarea.
+                    textArea.setMaxHeight(Constants.TEXTAREA_HEIGHT);
+                    textArea.setMinHeight(Constants.TEXTAREA_HEIGHT);
+
+                    // Add offset to Y layout for next element.
+                    layoutY += Constants.TEXTAREA_HEIGHT + Constants.CHOICE_BOX_OFFSET_Y;
+
+                    // Add textarea to tab.
+                    childrens.add(field);
+
+                    break;
+
                 case TEXTAREA:
 
                     // Create textarea.
                     field = new RichTextArea(stage);
                     RichTextArea textAreaField = (RichTextArea) field;
 
-                    // TODO: parse elements from heading and put them in richtext.
-                    // TODO: maybe it will be in markdown format -> i think better.
-
-                    /*
-                    textAreaField.setText(templateField.getDefaultValue());
-                    textAreaField.setPromptText(templateField.getPlaceholder());
+                    textAreaField.setContent(templateField.getDefaultValue());
 
                     // Get value from antipattern heading.
                     if (heading != null) {
 
-                        textAreaField.setText(((AntipatternTextHeading) heading).getValue());
+                        textAreaField.setContent(((AntipatternTextHeading) heading).getValue());
                     }
-                     */
 
                     // Set bounds for field.
                     setRegionBounds(textAreaField, templateFieldLabel);
@@ -335,9 +461,6 @@ public class AntipatternWindowController {
 
                     // Add offset to Y layout for next element.
                     layoutY += Constants.TEXTAREA_HEIGHT;
-
-
-                    //RichTextArea textArea = new RichTextArea(this);
 
                     // Add textarea to tab.
                     childrens.add(field);
@@ -357,16 +480,16 @@ public class AntipatternWindowController {
                     setRegionBounds(tableViewField, templateFieldLabel);
 
                     // Add columns to table specified in template.
-                    tableViewField.getColumns().addAll(prepareTableColumns((TableField) templateField, tableViewField, tableViewField.getMinWidth()));
+                    tableViewField.getColumns().addAll(prepareTableColumns((TableField) templateField, tableViewField.getMinWidth()));
 
                     // Editable table.
                     tableViewField.setEditable(true);
 
                     // Add observable for antipattern name for relation.
-                    ObservableList<AntipatternRelation> tableItemsPrepare =
-                            FXCollections.observableArrayList(relation -> new Observable[] {relation.getAntipatternProperty(), relation.getRelationProperty()});
+                    ObservableList<AntipatternRelationTable> tableItemsPrepare =
+                            FXCollections.observableArrayList(relation -> new Observable[] {relation.antipatternProperty(), relation.relationProperty(), relation.rrelationProperty()});
 
-                    tableItemsPrepare.addListener((ListChangeListener.Change<? extends AntipatternRelation> c) -> {
+                    tableItemsPrepare.addListener((ListChangeListener.Change<? extends AntipatternRelationTable> c) -> {
 
                         while(c.next()) {
 
@@ -395,7 +518,7 @@ public class AntipatternWindowController {
                     addRowButton.setOnAction((event) -> {
 
                         // TODO: MAYBE IN FUTURE: Not good, because if someone add another column for table, then it will fail.
-                        AntipatternRelation antipatternRelation = new AntipatternRelation();
+                        AntipatternRelationTable antipatternRelationsTable = new AntipatternRelationTable();
 
                         // Iterate through every column in template field.
                         for (TableColumnField column : ((TableField) templateField).getColumns()) {
@@ -403,20 +526,20 @@ public class AntipatternWindowController {
                             // Get factory value for column.
                             String valueFactory = prepareColumnValueFactory(column.getText());
 
-                            StringProperty property = antipatternRelation.getProperty(valueFactory);
+                            StringProperty property = antipatternRelationsTable.getProperty(valueFactory);
 
                             if (property != null) {
 
                                 property.setValue(column.getDefaultValue());
-                                tableViewField.getItems().add(antipatternRelation);
 
                             } else {
 
                                 System.out.println("Error while adding new row in antipattern relation.");
                             }
                         }
-                    });
 
+                        tableViewField.getItems().add(antipatternRelationsTable);
+                    });
 
                     // Add add button to tab.
                     childrens.add(addRowButton);
@@ -437,7 +560,7 @@ public class AntipatternWindowController {
                         // Remove all selected items by his index in table.
                         for (Integer selectedRowIndex : selectedItems) {
 
-                            AntipatternRelation relation = (AntipatternRelation) tableItems.get(selectedRowIndex);
+                            AntipatternRelationTable relation = (AntipatternRelationTable) tableItems.get(selectedRowIndex);
                             tempTableItems.remove(relation);
                         }
 
@@ -455,7 +578,42 @@ public class AntipatternWindowController {
 
                         AntipatternTableHeading tableHeading = (AntipatternTableHeading) heading;
 
-                        tableViewField.getItems().addAll(tableHeading.getRelations());
+                        Set<AntipatternRelationTable> relations = new LinkedHashSet<>();
+
+                        // Iterate through every relation.
+                        for (AntipatternRelation relation : tableHeading.getRelations()) {
+
+                            String relatedAntipatternRelationString = "";
+
+                            // If current antipattern is not null, then try to update every related antipattern relation.
+                            if (antipattern != null) {
+
+                                // Get related Antipattern if exists.
+                                Antipattern relatedAntipattern = antipatterns.get(MarkdownParser.parseAntipatternFromTableRecord(relation.getAntipattern()));
+
+                                if (relatedAntipattern != null) {
+
+                                    // Get relations from related antipattern.
+                                    Set<AntipatternRelation> relatedAntipatternRelations = relatedAntipattern.getRelations();
+
+                                    // Iterate through every relation.
+                                    for (AntipatternRelation relatedAntipatternRelation : relatedAntipatternRelations) {
+
+                                        // Get relation between current antipattern and related antipattern and get relation from related antipattern.
+                                        String relatedAntipatternName = MarkdownParser.parseAntipatternFromTableRecord(relatedAntipatternRelation.getAntipattern());
+                                        if (relatedAntipatternName.equals(antipattern.getName())) {
+
+                                            relatedAntipatternRelationString = relatedAntipatternRelation.getRelation();
+                                        }
+                                    }
+                                }
+                            }
+
+                            relations.add(new AntipatternRelationTable(relation.getAntipattern(), relation.getRelation(), relatedAntipatternRelationString));
+
+                        }
+
+                        tableViewField.getItems().addAll(relations);
                     }
 
                     // Add table to tab.
@@ -486,7 +644,7 @@ public class AntipatternWindowController {
      */
     private void checkDuplicate(ObservableList list, ListChangeListener.Change c) {
 
-        AntipatternRelation relation = (AntipatternRelation) c.getList().get(c.getFrom());
+        AntipatternRelationTable relation = (AntipatternRelationTable) c.getList().get(c.getFrom());
 
         if (Collections.frequency(list, relation) > 1) {
 
@@ -502,54 +660,72 @@ public class AntipatternWindowController {
      * @param tableViewWidth - Width of table view.
      * @return List of table columns.
      */
-    private List<TableColumn> prepareTableColumns(TableField tableField, TableView tableView, Double tableViewWidth) {
+    private List<TableColumn> prepareTableColumns(TableField tableField, Double tableViewWidth) {
 
         List<TableColumn> columns = new ArrayList<>();
+        Double width = tableViewWidth / (tableField.getColumns().size() + 1);
+
+        // Get factory value for column.
+        String valueFactory = "";
 
         // Iterate through every column in template field.
         for (TableColumnField column : tableField.getColumns()) {
 
-            // Get factory value for column.
-            String valueFactory = prepareColumnValueFactory(column.getText());
-
-            // Create new table column.
-            TableColumn<AntipatternRelation, String> tableColumn = new TableColumn<>(column.getText());
-
-            // Set table column width.
-            tableColumn.setPrefWidth((tableViewWidth / tableField.getColumns().size()));
-
-            // Set cell as textfield.
-            tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            // Set cell value as antipattern relation.
-            tableColumn.setCellValueFactory(new PropertyValueFactory<>(valueFactory));
-
-            // Set value of antipattern relation property (like antipattern name, relation with antipattern).
-            tableColumn.setOnEditCommit(event -> {
-
-                // Get updated antipattern.
-                AntipatternRelation row = event.getRowValue();
-
-                try {
-
-                    // Set new value for updated antipattern property.
-                    BeanUtils.setProperty(row, valueFactory, event.getNewValue());
-
-                } catch (InvocationTargetException | IllegalAccessException e) {
-
-                    log.warn("Cannot save value '" + event.getNewValue() + "' to column '" + column + "'");
-                }
-            });
-
-            // Not resizable.
-            tableColumn.setResizable(false);
-
-            // Columns not reorderable.
-            tableColumn.setReorderable(false);
-
-            columns.add(tableColumn);
+            valueFactory = prepareColumnValueFactory(column.getText());
+            columns.add(prepareTableColumn(column.getText(), valueFactory, width));
         }
 
+        valueFactory = prepareColumnValueFactory("rrelation");
+
+        // Add third column for related antipattern relation.
+        columns.add(prepareTableColumn("Related Anti-pattern relation", valueFactory, width));
+
         return columns;
+    }
+
+    /**
+     * Prepare single table column.
+     * @param text - Column text.
+     * @param width - Column width.
+     * @return Table column object.
+     */
+    private TableColumn prepareTableColumn(String text, String valueFactory, Double width) {
+
+        // Create new table column.
+        TableColumn<AntipatternRelationTable, String> tableColumn = new TableColumn<>(text);
+
+        // Set table column width.
+        tableColumn.setPrefWidth(width);
+
+        // Set cell as textfield.
+        tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        // Set cell value as antipattern relation.
+        tableColumn.setCellValueFactory(new PropertyValueFactory<>(valueFactory));
+
+        // Set value of antipattern relation property (like antipattern name, relation with antipattern).
+        tableColumn.setOnEditCommit(event -> {
+
+            // Get updated antipattern.
+            AntipatternRelationTable row = event.getRowValue();
+
+            try {
+
+                // Set new value for updated antipattern property.
+                BeanUtils.setProperty(row, valueFactory, event.getNewValue());
+
+            } catch (InvocationTargetException | IllegalAccessException e) {
+
+                log.warn("Cannot save value '" + event.getNewValue() + "' to column '" + text + "'");
+            }
+        });
+
+        // Not resizable.
+        tableColumn.setResizable(false);
+
+        // Columns not reorderable.
+        tableColumn.setReorderable(false);
+
+        return tableColumn;
     }
 
     /**
@@ -604,6 +780,7 @@ public class AntipatternWindowController {
         // Get names of all fields in tab.
         List<String> fieldNameList = template.getFieldNameList();
 
+        String antipatternName = "";
         boolean firstHeadingAdded = false;
         boolean knownAsAdded = false;
 
@@ -629,6 +806,35 @@ public class AntipatternWindowController {
                         heading.setType(AntipatternHeadingType.TEXT);
                         break;
 
+                    case SELECT:
+
+                        String allReferencesString = ((TextArea) node).getText();
+
+                        // Get all references from antipattern.
+                        List<String> allReferences = Arrays.asList(allReferencesString.split(","));
+                        Iterator<String> it = allReferences.iterator();
+
+                        StringBuilder headingText = new StringBuilder();
+
+                        // Convert [shortcut] to [[shortcut]](../References.md).
+                        while (it.hasNext()) {
+
+                            String reference = it.next();
+                            reference = reference.replace(" ", "");
+                            reference = "[" + reference + "](../" + Constants.REFERENCES_NAME + ")";
+
+                            headingText.append(reference);
+
+                            if (it.hasNext()) {
+
+                                headingText.append(", ");
+                            }
+                        }
+
+                        heading = new AntipatternTextHeading(headingText.toString());
+                        heading.setType(AntipatternHeadingType.TEXT);
+                        break;
+
                     case TEXTAREA:
 
                         heading = new AntipatternTextHeading(((RichTextArea) node).getText());
@@ -639,11 +845,55 @@ public class AntipatternWindowController {
 
                         TableView table = (TableView) node;
 
-                        ObservableList<AntipatternRelation> relations = table.getItems();
-                        Set<AntipatternRelation> relationsSet = new LinkedHashSet<>();
+                        ObservableList<AntipatternRelationTable> relations = table.getItems();
+                        Set<AntipatternRelationTable> relationsSet = new LinkedHashSet<>();
                         relationsSet.addAll(relations);
 
-                        heading = new AntipatternTableHeading(relationsSet);
+                        Set<AntipatternRelation> antipatternRelations = new LinkedHashSet<>();
+
+                        for (AntipatternRelationTable relation : relationsSet) {
+
+                            Antipattern relatedAntipattern = antipatterns.get(relation.getAntipattern());
+
+                            // Add both-side link with specific texts.
+                            if (relatedAntipattern != null) {
+
+                                if (relatedAntipattern.isLinking() == true) {
+
+                                    String text = "Anti-pattern '" + relatedAntipattern.getName() + "' is mentioned in relations, " +
+                                            "but it is only alias for anti-pattern '" + relatedAntipattern.getLinkedAntipatternName() + "'.";
+
+                                    log.warn(text);
+
+                                    Utils.showAlertWindow(Alert.AlertType.WARNING, Constants.APP_NAME, "Creating / Updating anti-pattern", text);
+                                    return false;
+                                }
+
+                                String antipatternNameMarkdownFormat = "[" + antipatternName + "](" + Constants.CATALOGUE_FOLDER + "/" + antipatternName.replaceAll(" ", "_") + ".md)";
+
+                                Set<AntipatternRelation> relationSet = relatedAntipattern.getRelations();
+
+                                boolean contains = false;
+                                for (AntipatternRelation antipatternRelation : relationSet) {
+
+                                    // Check if relation match same format as current antipattern name.
+                                    if (antipatternRelation.getAntipattern().equals(antipatternNameMarkdownFormat)) {
+
+                                         // If yes, update relation for current antipattern in related antipattern.
+                                        antipatternRelation.setRelation(relation.getRrelation());
+                                        contains = true;
+                                    }
+
+                                    updatedAntipatterns.add(relation.getAntipattern());
+                                }
+
+                                    if (!contains) relationSet.add(new AntipatternRelation(antipatternName, relation.getRrelation()));
+                            }
+
+                            antipatternRelations.add(new AntipatternRelation(relation.getAntipattern(), relation.getRelation()));
+                        }
+
+                        heading = new AntipatternTableHeading(antipatternRelations);
                         heading.setType(AntipatternHeadingType.TABLE);
                         break;
 
@@ -682,6 +932,7 @@ public class AntipatternWindowController {
                             // First heading is always antipattern name.
                             firstHeadingAdded = true;
                             tempAntipattern.setName(textHeading.getValue());
+                            antipatternName = textHeading.getValue();
 
                         } else if (!knownAsAdded) {
 
@@ -724,23 +975,9 @@ public class AntipatternWindowController {
                     // Check Table.
                     TableView table = (TableView) node;
 
-                    // If table does not contain any antipattern relation, then show alert.
-                    if (!previewed && field.isRequired() && (table.getItems() == null || table.getItems().size() == 0)) {
-
-                        log.warn("Field '" + field.getText() + "' does not contains any record!");
-
-                        Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
-                                "No records in table!",
-                                "Field '" + field.getText() + "' does not contains any record!");
-
-                        return false;
-
-                    } else {
-
-                        // Add new heading to antipattern.
-                        tempAntipattern.addAntipatternHeading(headingName, heading);
-                        tempAntipattern.setRelationsHeadingName(headingName);
-                    }
+                    // Add new heading to antipattern.
+                    tempAntipattern.addAntipatternHeading(headingName, heading);
+                    tempAntipattern.setRelationsHeadingName(headingName);
                 }
             }
         }
@@ -811,5 +1048,20 @@ public class AntipatternWindowController {
     public void setCatalogue(Catalogue catalogue) {
 
         this.catalogue = catalogue;
+    }
+
+    public void setAntipatterns(Map<String, Antipattern> antipatterns) {
+
+        this.antipatterns = antipatterns;
+    }
+
+    public List<String> getUpdatedAntipatterns() {
+
+        return updatedAntipatterns;
+    }
+
+    public void setReferences(References references) {
+
+        this.references = references;
     }
 }

@@ -1,0 +1,1 @@
+mvn clean package && xcopy target\AntipatternCatalogue-1.0.jar AntipatternCatalogue.jar /Y /I

@@ -13,11 +13,11 @@
 			<field name="variations"		text="Variations" 					field="textarea" 	required="no"	default_value=""	placeholder="Other variations of anti-pattern"/>
 			<field name="examples" 			text="Example(s)" 					field="textarea" 	required="no"	default_value=""	placeholder="Examples"/>
 			<field name="related" 			text="Related Anti-patterns" 		field="table" 		required="yes"	default_value=""	placeholder="">
-				<column text="Anti-pattern" default_value="Anti-pattern name"/>
-				<column text="Relation" 	default_value="Relation"/>
+				<column text="Anti-pattern" 					default_value="Anti-pattern name"/>
+				<column text="Relation" 						default_value="Relation"/>
 			</field>
 			<field name="notes" 			text="Notes" 						field="textarea" 	required="no"	default_value=""	placeholder="Additional notes for this anti-pattern"/>
-			<field name="sources" 			text="Sources" 						field="textarea" 	required="yes"	default_value=""	placeholder="Sources for this anti-pattern"/>
+			<field name="sources" 			text="Sources" 						field="select" 		required="yes"	default_value=""	placeholder="Sources for this anti-pattern"/>
 		</fields>
 	</antipattern>
 </configuration>

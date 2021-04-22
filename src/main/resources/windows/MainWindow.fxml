@@ -23,7 +23,10 @@
               <Menu mnemonicParsing="false" text="File">
                 <items>
                   <MenuItem mnemonicParsing="false" onAction="#menuNewAPAction" text="New Anti-pattern" />
-                  <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuGenerateReferencesAction" text="Generate References" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuAddReferenceAction" text="Add Reference" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuRelationExistenceCheckAllAction" text="Existence check for anti-patterns" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
                 </items>
               </Menu>
               <Menu mnemonicParsing="false" text="Git">

@@ -1,9 +1,3 @@
-/*
- * Created 2014 by Tomas Mikula.
- *
- * The author dedicates this file to the public domain.
- */
-
 package cz.zcu.kiv.spac.richtext;
 
 import static org.fxmisc.richtext.model.TwoDimensional.Bias.Backward;
@@ -14,8 +8,14 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import com.vladsch.flexmark.ast.*;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.collection.iteration.ReversiblePeekingIterable;
+import com.vladsch.flexmark.util.data.MutableDataHolder;
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.html.HTMLGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
+import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import javafx.scene.control.*;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.GenericStyledArea;
@@ -29,7 +29,6 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
 import org.reactfx.SuspendableNo;
-import org.reactfx.collection.LiveList;
 
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -82,7 +81,8 @@ public class RichTextArea extends VBox {
         Button boldBtn = createButton("bold", this::toggleBold, "Bold");
         Button italicBtn = createButton("italic", this::toggleItalic, "Italic");
         Button underlineBtn = createButton("underline", this::toggleUnderline, "Underline");
-        Button insertImageBtn = createButton("insertimage", this::insertImage, "Insert Image");
+        Button insertImageBtn
+                = createButton("insertimage", this::createImage, "Insert Image");
         Button increaseIndentBtn = createButton("increaseIndent", this::increaseIndent, "Increase indent");
         Button decreaseIndentBtn = createButton("decreaseIndent", this::decreaseIndent, "Decrease indent");
 
@@ -109,10 +109,6 @@ public class RichTextArea extends VBox {
                     italic = style.italic.orElse(false);
                     underline = style.underline.orElse(false);
                 }
-
-                int startPar = area.offsetToPosition(selection.getStart(), Forward).getMajor();
-                int endPar = area.offsetToPosition(selection.getEnd(), Backward).getMajor();
-                List<Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle>> pars = area.getParagraphs().subList(startPar, endPar + 1);
 
                 updatingToolbar.suspendWhile(() -> {
 
@@ -155,10 +151,16 @@ public class RichTextArea extends VBox {
             }
         });
 
+        /**
         ToolBar toolBar1 = new ToolBar(
                 boldBtn, italicBtn, underlineBtn, new Separator(Orientation.VERTICAL),
                 increaseIndentBtn, decreaseIndentBtn, new Separator(Orientation.VERTICAL),
                 insertImageBtn);
+         **/
+
+        ToolBar toolBar1 = new ToolBar(
+                boldBtn, italicBtn, underlineBtn, new Separator(Orientation.VERTICAL),
+                increaseIndentBtn, decreaseIndentBtn, new Separator(Orientation.VERTICAL));
 
         VirtualizedScrollPane<GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle>> vsPane = new VirtualizedScrollPane<>(area);
 
@@ -209,7 +211,7 @@ public class RichTextArea extends VBox {
     /**
      * Action listener which inserts a new image at the current caret position.
      */
-    private void insertImage() {
+    private void createImage() {
 
         String initialDir = System.getProperty("user.dir");
         FileChooser fileChooser = new FileChooser();
@@ -220,19 +222,31 @@ public class RichTextArea extends VBox {
             String imagePath = selectedFile.getAbsolutePath();
             imagePath = imagePath.replace('\\',  '/');
 
-            // Create new image segment from image.
-            Either segment = Either.right(new RealLinkedImage(imagePath));
-
-            // Create ReadOnlyStyledDocument for displaying it in rich textarea.
-            ReadOnlyStyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> ros =
-                    ReadOnlyStyledDocument.fromSegment(segment, ParStyle.EMPTY, TextStyle.EMPTY, area.getSegOps());
-
-            // Also put this segment to map for extracting image path.
-            // Maybe it can be done by parsing something, but i'm not sure it is possible (see parsing content).
-            imagesPath.put(segment, imagePath);
+            ReadOnlyStyledDocument ros = createImage(imagePath);
             area.replaceSelection(ros);
-
         }
+    }
+
+    /**
+     * Create image object.
+     * @param path - Path to image.
+     * @return Object representing image.
+     */
+    private ReadOnlyStyledDocument createImage(String path) {
+
+        // Create new image segment from image.
+        Either segment = Either.right(new RealLinkedImage(path));
+
+        // Create ReadOnlyStyledDocument for displaying it in rich textarea.
+        // TODO: GenericEditableStyledDocument, ReadOnlyStyledDocument, SimpleEditableStyledDocument -> try all
+        ReadOnlyStyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> ros =
+                ReadOnlyStyledDocument.fromSegment(segment, ParStyle.EMPTY, TextStyle.EMPTY, area.getSegOps());
+
+        // Also put this segment to map for extracting image path.
+        // Maybe it can be done by parsing something, but i'm not sure it is possible (see parsing content).
+        imagesPath.put(segment, path);
+
+        return ros;
     }
 
     private void increaseIndent() {
@@ -245,6 +259,374 @@ public class RichTextArea extends VBox {
         updateParagraphStyleInSelection(ParStyle::decreaseIndent);
     }
 
+    /**
+     * Parse markdown text and extract all elements, then put them in area.
+     * @param markdownText - Content in markdown.
+     */
+    public void setContent(String markdownText) {
+
+        MutableDataHolder options = MarkdownParser.getDataOptions();
+
+        Parser parser = Parser.builder(options).build();
+
+        // You can re-use parser and renderer instances
+        com.vladsch.flexmark.util.ast.Node document = parser.parse(markdownText);
+
+        // If catalogue does not have any field, then return null.
+        if (!document.hasChildren()) {
+
+            this.area.appendText(markdownText);
+            return;
+        }
+
+        String htmlText = HTMLGenerator.generateHTMLContentFromMarkdown(options, document);
+
+        org.commonmark.parser.Parser commonParser = org.commonmark.parser.Parser.builder().build();
+        org.commonmark.node.Node commonDocument = commonParser.parse(markdownText);
+
+        parseRichTextContentNode(document.getChildren(), 0);
+    }
+
+    /**
+     * Parse flexmark document and fill area with content.
+     * @param childrens - Child elements.
+     */
+    private void parseRichTextContentNode(ReversiblePeekingIterable<com.vladsch.flexmark.util.ast.Node> childrens, int indent) {
+
+        Iterator<com.vladsch.flexmark.util.ast.Node> it = childrens.iterator();
+
+        // Iterate through every child.
+        while (it.hasNext()) {
+
+            com.vladsch.flexmark.util.ast.Node node = it.next();
+
+            // BulletList.
+            if (node.getClass() == BulletList.class) {
+
+                BulletList list = (BulletList) node;
+
+                if (list.getOpeningMarker() == '-') {
+
+                    parseRichTextContentNode(node.getChildren(), indent + 1);
+
+                } else {
+
+                    parseRichTextContentNode(node.getChildren(), indent);
+                }
+
+                // BulletList item.
+            } else if (node.getClass() == BulletListItem.class) {
+
+                parseRichTextContentNode(node.getChildren(), indent);
+
+                // Paragraph.
+            } else if (node.getClass() == com.vladsch.flexmark.ast.Paragraph.class) {
+
+                com.vladsch.flexmark.ast.Paragraph paragraph = (com.vladsch.flexmark.ast.Paragraph) node;
+
+                Iterator<com.vladsch.flexmark.util.ast.Node> itData = paragraph.getChildIterator();
+
+                boolean useUnderline = false;
+                boolean nextUsed = false;
+
+                com.vladsch.flexmark.util.ast.Node dataNode = null;
+
+                while (itData.hasNext()) {
+
+                    if (!nextUsed){
+
+                        dataNode = itData.next();
+
+                    } else {
+
+                        nextUsed = false;
+                    }
+
+                    // Underline.
+                    if (dataNode.getClass() == HtmlInline.class) {
+
+                        useUnderline = !useUnderline;
+
+                        // Bold text.
+                    } else if (dataNode.getClass() == StrongEmphasis.class) {
+
+                        appendStrongEmphasis(dataNode, useUnderline);
+
+                        // Classic / italic text.
+                    } else if (dataNode.getClass() == Emphasis.class) {
+
+                        appendEmphasis(dataNode, useUnderline);
+
+                        // Image.
+                    } else if (dataNode.getClass() == Image.class) {
+
+                        appendImage(dataNode);
+
+                        // Classic text..
+                    } else if (dataNode.getClass() == Text.class) {
+
+                        appendText(dataNode, useUnderline, false, false);
+
+                        // Line breaker.
+                    } else if (dataNode.getClass() == SoftLineBreak.class) {
+
+                        appendLineBreak(dataNode);
+                        indent = 0;
+
+                        // Link.
+                    } else if (dataNode.getClass() == Link.class) {
+
+                        appendLink(dataNode, useUnderline);
+
+                    } else {
+
+                        System.out.println("Unsupported class");
+                        continue;
+                    }
+
+                    // Set indent.
+                    ParStyle style = area.getContent().getParagraph(area.getCurrentParagraph()).getParagraphStyle();
+                    style = style.updateIndent(new Indent(indent));
+                    area.getContent().setParagraphStyle(area.getCurrentParagraph(), style);
+                }
+            }
+
+            if (it.hasNext()) {
+
+                area.appendText(Constants.LINE_BREAKER_CRLF);
+            }
+        }
+    }
+
+    /**
+     * Append image to area.
+     * @param dataNode - Node.
+     * @param useUnderline - True if text must be underlined, false if not.
+     */
+    private void appendEmphasis(com.vladsch.flexmark.util.ast.Node dataNode, boolean useUnderline) {
+
+        appendEmphasis(dataNode, useUnderline, false);
+    }
+
+    /**
+     * Append image to area.
+     * @param dataNode - Node.
+     * @param useUnderline - True if text must be underlined, false if not.
+     * @param useBold - True if text bust be bold, false if not.
+     */
+    private void appendEmphasis(com.vladsch.flexmark.util.ast.Node dataNode, boolean useUnderline, boolean useBold) {
+
+        Emphasis emphasis = (Emphasis) dataNode;
+        boolean useItalic = false;
+
+        // Check if use italic.
+        if ((emphasis.getOpeningMarker().toString().equals("*") && emphasis.getClosingMarker().toString().equals("*")) ||
+                (emphasis.getOpeningMarker().toString().equals("_") && emphasis.getClosingMarker().toString().equals("_"))) {
+
+            useItalic = true;
+        }
+
+        // Append elements.
+        if (emphasis.hasChildren()) {
+
+            Iterator<com.vladsch.flexmark.util.ast.Node> emphasisChildrensIt = emphasis.getChildIterator();
+
+            boolean useUnderlineEmphasis = useUnderline;
+
+            while (emphasisChildrensIt.hasNext()) {
+
+                com.vladsch.flexmark.util.ast.Node emphasisDataNode = emphasisChildrensIt.next();
+
+                // Strong emphasis.
+                if (emphasisDataNode.getClass() == StrongEmphasis.class) {
+
+                    appendStrongEmphasis(emphasisDataNode, useUnderlineEmphasis, useItalic);
+
+                    // Link.
+                } else if (emphasisDataNode.getClass() == Link.class) {
+
+                    appendLink(emphasisDataNode, useUnderlineEmphasis, useItalic, useBold);
+
+                    // Text.
+                } else if (emphasisDataNode.getClass() == Text.class) {
+
+                    appendText(emphasisDataNode, useUnderlineEmphasis, useItalic, useBold);
+
+                    // Underline.
+                } else if (emphasisDataNode.getClass() == HtmlInline.class) {
+
+                    useUnderlineEmphasis = !useUnderlineEmphasis;
+
+                } else {
+
+                    System.out.println("Unsupported class in emphasis.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Append image to area.
+     * @param dataNode - Node.
+     */
+    private void appendImage(com.vladsch.flexmark.util.ast.Node dataNode) {
+
+        // Image text + url
+        Image image = (Image) dataNode;
+        ReadOnlyStyledDocument ros = createImage(image.getUrl().toString());
+
+        // TODO: nefunguje insert obrázků
+        //area.append(ros);
+        IndexRange range = area.getParagraphSelection(area.getCurrentParagraph() - 1);
+
+        //area.replace(range.getStart(), range.getEnd(), ros);
+    }
+
+    /**
+     * Append classic text to area.
+     * @param dataNode - Node.
+     * @param useUnderline - True if text must be underlined, false if not.
+     * @param useItalic - True if use italic, false if not.
+     * @param useBold - True if text bust be bold, false if not.
+     */
+    private void appendText(com.vladsch.flexmark.util.ast.Node dataNode, boolean useUnderline, boolean useItalic, boolean useBold) {
+
+        TextStyle style = setDefaultTextStyles();
+
+        if (useItalic) {
+
+            style = style.updateItalic(true);
+        }
+
+        if (useUnderline) {
+
+            style = style.updateUnderline(true);
+        }
+
+        if (useBold) {
+
+            style = style.updateBold(true);
+        }
+
+        Text text = (Text) dataNode;
+        Either segment = Either.left(text.getChars().toString());
+        area.append(segment, style);
+    }
+
+    /**
+     * Append line break to area.
+     * @param dataNode - Node.
+     */
+    private void appendLineBreak(com.vladsch.flexmark.util.ast.Node dataNode) {
+
+        SoftLineBreak softLineBreak = (SoftLineBreak) dataNode;
+        area.appendText(softLineBreak.getChars().toString());
+    }
+
+    /**
+     * Append strong emphasis to area.
+     * @param dataNode - Node.
+     * @param useUnderline - True if text must be underlined, false if not.
+     */
+    private void appendStrongEmphasis(com.vladsch.flexmark.util.ast.Node dataNode, boolean useUnderline) {
+
+        appendStrongEmphasis(dataNode, useUnderline, false);
+    }
+
+    /**
+     * Append strong emphasis to area.
+     * @param dataNode - Node.
+     * @param useUnderline - True if text must be underlined, false if not.
+     * @param useItalic - True if use italic, false if not.
+     */
+    private void appendStrongEmphasis(com.vladsch.flexmark.util.ast.Node dataNode, boolean useUnderline, boolean useItalic) {
+
+        StrongEmphasis strongEmphasis = (StrongEmphasis) dataNode;
+
+        // Append elements.
+        if (strongEmphasis.hasChildren()) {
+
+            Iterator<com.vladsch.flexmark.util.ast.Node> emphasisChildrensIt = strongEmphasis.getChildIterator();
+
+            boolean useUnderlineEmphasis = useUnderline;
+
+            while (emphasisChildrensIt.hasNext()) {
+
+                com.vladsch.flexmark.util.ast.Node emphasisDataNode = emphasisChildrensIt.next();
+
+                // Strong emphasis.
+                if (emphasisDataNode.getClass() == Emphasis.class) {
+
+                    appendEmphasis(emphasisDataNode, useUnderlineEmphasis, true);
+
+                    // Link.
+                } else if (emphasisDataNode.getClass() == Link.class) {
+
+                    appendLink(emphasisDataNode, useUnderlineEmphasis, useItalic, true);
+
+                    // Text.
+                } else if (emphasisDataNode.getClass() == Text.class) {
+
+                    appendText(emphasisDataNode, useUnderlineEmphasis, useItalic, true);
+
+                    // Underline.
+                } else if (emphasisDataNode.getClass() == HtmlInline.class) {
+
+                    useUnderlineEmphasis = !useUnderlineEmphasis;
+
+                } else {
+
+                    System.out.println("Unsupported class in Strong emphasis.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Append link to area.
+     * @param dataNode - Node.
+     * @param useUnderline - True if text must be underlined, false if not.
+     * @param useItalic - True if use italic, false if not.
+     * @param useBold - True if text bust be bold, false if not.
+     */
+    private void appendLink(com.vladsch.flexmark.util.ast.Node dataNode, boolean useUnderline, boolean useItalic, boolean useBold) {
+
+        TextStyle style = setDefaultTextStyles();
+
+        if (useUnderline) {
+
+            style = style.updateUnderline(true);
+        }
+
+        if (useItalic) {
+
+            style = style.updateItalic(true);
+        }
+
+        if (useBold) {
+
+            style = style.updateBold(true);
+        }
+
+        Link link = (Link) dataNode;
+        Either segment = Either.left(link.getText().toString());
+        area.append(segment, style);
+    }
+
+    /**
+     * Append link to area.
+     * @param dataNode - Node.
+     * @param useUnderline - True if text must be underlined, false if not.
+     */
+    private void appendLink(com.vladsch.flexmark.util.ast.Node dataNode, boolean useUnderline) {
+
+        appendLink(dataNode, useUnderline, false, false);
+    }
+
+    /**
+     * Parse content from rich textarea in markdown format.
+     * @return Content from rich textarea in markdown format.
+     */
     public String getText() {
 
         StringBuilder sb = new StringBuilder();
@@ -254,6 +636,8 @@ public class RichTextArea extends VBox {
         // Segment as text -> "temporary <b>text</b>" -> 2 segments, where first contains "temporary" and second contains
         // "text" with bold style. <b></b> is just for representing bold in this comment.
         Iterator<Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle>> it = area.getContent().getParagraphs().iterator();
+
+        boolean bulletListBefore = false;
 
         while (it.hasNext()) {
 
@@ -273,7 +657,15 @@ public class RichTextArea extends VBox {
             if (iIndent > 0) {
 
                 sb.append(MarkdownGenerator.createLevelFromIndent(iIndent));
+
+            } else {
+
+                if (bulletListBefore) {
+
+                    sb.append(Constants.LINE_BREAKER_CRLF);
+                }
             }
+
 
             // Parse paragraph segments.
             for (Object oSegment : segments) {
@@ -333,7 +725,15 @@ public class RichTextArea extends VBox {
             if (it.hasNext()) {
 
                 sb.append(Constants.LINE_BREAKER_CRLF);
-                sb.append(Constants.LINE_BREAKER_CRLF);
+            }
+
+            if (iIndent > 0) {
+
+                bulletListBefore = true;
+
+            } else {
+
+                bulletListBefore = false;
             }
         }
 
@@ -360,5 +760,14 @@ public class RichTextArea extends VBox {
             Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle> paragraph = area.getParagraph(i);
             area.setParagraphStyle(i, updater.apply(paragraph.getParagraphStyle()));
         }
+    }
+
+    /**
+     * Prepare text style with predefined styles.
+     * @return
+     */
+    private TextStyle setDefaultTextStyles() {
+
+        return new TextStyle().updateFontSize(12).updateFontFamily("Serif").updateTextColor(Color.BLACK);
     }
 }

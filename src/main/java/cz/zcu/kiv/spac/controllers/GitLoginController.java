@@ -14,16 +14,12 @@ import org.apache.log4j.Logger;
 public class GitLoginController {
 
     @FXML
-    private TextField txtfieldUsername;
+    private TextField txtfieldPAT;
 
     @FXML
     private Button btnLogin;
 
-    @FXML
-    private PasswordField pfieldPassword;
-
-    private String username;
-    private String password;
+    private String personalAccessToken;
 
 
     // Logger.
@@ -51,10 +47,9 @@ public class GitLoginController {
     @FXML
     private void btnGitLoginAction(ActionEvent actionEvent) {
 
-        username = txtfieldUsername.getText();
-        password = pfieldPassword.getText();
+        personalAccessToken = txtfieldPAT.getText();
 
-        if (!username.equals("") && !password.equals("")) {
+        if (!personalAccessToken.equals("")) {
 
             Stage stage = (Stage) btnLogin.getScene().getWindow();
             stage.close();
@@ -62,31 +57,20 @@ public class GitLoginController {
         } else {
 
             Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Git authentication window.",
-                    "Username or password is not set!");
+                    "Personal access token is not set!");
         }
     }
 
 
-    public String getUsername() {
+    public String getPersonalAccessToken() {
 
-        return username;
+        return personalAccessToken;
     }
 
-    public void setUsername(String username) {
+    public void setPersonalAccessToken(String personalAccessToken) {
 
-        this.username = username;
+        this.personalAccessToken = personalAccessToken;
 
-        txtfieldUsername.setText(username);
-    }
-
-    public String getPassword() {
-
-        return password;
-    }
-
-    public void setPassword(String password) {
-
-        this.password = password;
-        pfieldPassword.setText(password);
+        txtfieldPAT.setText(personalAccessToken);
     }
 }

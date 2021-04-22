@@ -7,6 +7,10 @@
 ## A
 [Absentee Manager](catalogue/Absentee_Manager.md)
 
+[Absetn](catalogue/Absetn.md)
+
+[Absetn2](catalogue/Absetn2.md)
+
 All You Have Is a Hammer
 
 [An Athena](catalogue/An_Athena.md)
@@ -395,9 +399,9 @@ The Feud
 
 The Grand Old Duke Of York
 
-The Quick Fix
-
 The Process Is The Deliverable
+
+The Quick Fix
 
 They Understood Me
 
@@ -418,6 +422,8 @@ True Believer
 Turf Wars
 
 Typecasting
+
+[tset](catalogue/tset.md)
 
 ## U
 Ultimate Weapon

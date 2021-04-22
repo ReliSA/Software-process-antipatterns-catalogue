@@ -8,6 +8,8 @@ import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.data.reference.Reference;
+import cz.zcu.kiv.spac.data.reference.References;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
@@ -17,11 +19,13 @@ import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.jbibtex.BibTeXEntry;
+import org.jbibtex.BibTeXObject;
+import org.jbibtex.Key;
+import org.jbibtex.Value;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +33,9 @@ import java.util.regex.Pattern;
  * Markdown formatter.
  */
 public class MarkdownGenerator {
+
+    private static final String LEFT_BRACKET = "{";
+    private static final String RIGHT_BRACKET = "}";
 
     /**
      * Format markdown table.
@@ -101,7 +108,6 @@ public class MarkdownGenerator {
      */
     public static String createAntipatternMarkdownContent(Map<String, AntipatternHeading> headings, List<TemplateField> fieldList, Catalogue catalogue) {
 
-        // TODO: ADDITIONAL: Tasklist not implemented yet.
         StringBuilder sb = new StringBuilder();
 
         // Add path to antipattern name.
@@ -349,10 +355,15 @@ public class MarkdownGenerator {
 
         StringBuilder sb = new StringBuilder();
 
-        // * 2 -> We need 2 spaces in markdown to generate another level.
-        for (int i = 0; i < (indent * 2); i++) {
+        for (int i = 0; i < indent; i++) {
 
             sb.append(" ");
+
+            // First level must have only 1 white space between text.
+            if (i > 0) {
+
+                sb.append(" ");
+            }
         }
 
         sb.append("- ");
@@ -379,7 +390,7 @@ public class MarkdownGenerator {
 
         if (italic) {
 
-            textWithStyles = "*" + textWithStyles + "*";
+            textWithStyles = "_" + textWithStyles + "_";
         }
 
         if (underline) {
@@ -407,5 +418,272 @@ public class MarkdownGenerator {
         sb.append("This antipattern was not yet created, only mentioned in antipattern catalogue.");
 
         return sb.toString();
+    }
+
+    /**
+     * Convert Map<Key, Value> to Map<String, String> for bibtex fields.
+     * @param fields - Bibtex fields.
+     * @return Map from bibtex fields containing only strings.
+     */
+    private static Map<String, String> parseFields(Map<Key, Value> fields) {
+
+        Map<String, String> newFields = new HashMap<>();
+
+        for (Key field : fields.keySet()) {
+
+            String fieldValue = field.getValue();
+
+            Value value = fields.get(field);
+
+            newFields.put(fieldValue, value.toUserString());
+        }
+
+        return newFields;
+    }
+
+    /**
+     * Replace or delete some characters from string.
+     * @param str - String.
+     * @return String with changes.
+     */
+    private static String prepareString(String str) {
+
+        return str.replace(LEFT_BRACKET, "").replace(RIGHT_BRACKET, "").replace("`", "\"").replace("'", "\"");
+    }
+
+    /**
+     * Prepare pages in string - replace.
+     * @param pages - Pages in string.
+     * @return Replaced - in pages string.
+     */
+    private static String preparePagesString(String pages) {
+
+        return pages.replace("--", "-");
+    }
+
+    /**
+     * Generate markdown for References from bibtex file content.
+     * @param objects - List of bibtex entries.
+     * @return References in object
+     */
+    public static References generateReferencesFromBibtex(List<BibTeXObject> objects) {
+
+        Map<String, Reference> referenceMap = new HashMap<>();
+
+        StringBuilder markdownText = new StringBuilder(
+                        "[Home](README.md) > References\n" +
+                        "# References\n" +
+                        "\n" +
+                        "_(Ordered alphabetically by the key.)_\n" +
+                        "\n");
+
+        List<String> shortcuts = new ArrayList<>();
+
+        Iterator<BibTeXObject> itObject = objects.iterator();
+
+        // Iterate through every reference.
+        while (itObject.hasNext()) {
+
+            Reference reference = new Reference();
+
+            BibTeXObject object = itObject.next();
+
+            String strRecord = "";
+            BibTeXEntry entry = (BibTeXEntry) object;
+            Map<Key, Value> fields = entry.getFields();
+
+            String shortcut = "";
+
+            Map<String, String> stringFields = parseFields(fields);
+
+            // Get author.
+            if (stringFields.containsKey("author")) {
+
+                String author = prepareString(stringFields.get("author"));
+                shortcut = author.substring(0, 3).toUpperCase();
+                strRecord = author;
+
+                // Set reference author.
+                reference.setAuthor(author);
+            }
+
+            // Get year.
+            if (stringFields.containsKey("year")) {
+
+                String year = prepareString(stringFields.get("year"));
+                shortcut = shortcut + "'" + year.substring(2).toUpperCase();
+
+                strRecord += " (" + year + ")";
+            }
+
+            // Add dot after author and year.
+            strRecord += ". ";
+
+            // Get title.
+            if (stringFields.containsKey("title")) {
+
+                String title = prepareString(stringFields.get("title"));
+
+                strRecord += title;
+
+                // Set reference title.
+                reference.setTitle(title);
+            }
+
+            // Get published.
+            if (stringFields.containsKey("howpublished")) {
+
+                String howpublished = prepareString(stringFields.get("howpublished"));
+
+                strRecord += " [" + howpublished.toLowerCase() + "]";
+            }
+
+            // Add dot after title and published.
+            strRecord += ". ";
+
+            // Get note.
+            if (stringFields.containsKey("note")) {
+
+                String note = prepareString(stringFields.get("note"));
+
+                strRecord += note.toLowerCase();
+
+            // Get school.
+            } else if (stringFields.containsKey("school")) {
+
+                String school = prepareString(stringFields.get("school"));
+
+                strRecord += school;
+
+            // Get journal.
+            } else if (stringFields.containsKey("journal")) {
+
+                String journal = prepareString(stringFields.get("journal"));
+
+                strRecord += "*" + journal + "*";
+
+                // Get volume.
+                if (stringFields.containsKey("volume")) {
+
+                    String volume = prepareString(stringFields.get("volume"));
+                    strRecord += ", " + volume;
+
+                    // Get number.
+                    if (stringFields.containsKey("number")) {
+
+                        String number = prepareString(stringFields.get("number"));
+                        strRecord += "(" + number + ")";
+                    }
+                }
+
+                // Get pages.
+                if (stringFields.containsKey("pages")) {
+
+                    String pages = preparePagesString(prepareString(stringFields.get("pages")));
+
+                    strRecord += ", " + pages;
+                }
+
+                strRecord += ".";
+
+                // Get publisher.
+                if (stringFields.containsKey("publisher")) {
+
+                    String publisher = prepareString(stringFields.get("publisher"));
+                    strRecord += " " + publisher;
+                }
+
+            } else if (stringFields.containsKey("booktitle")) {
+
+                String booktitle = prepareString(stringFields.get("booktitle"));
+
+                strRecord += "*" + booktitle + "*";
+
+                // Get volume.
+                if (stringFields.containsKey("volume")) {
+
+                    String volume = prepareString(stringFields.get("volume"));
+                    strRecord += " (Vol. " + volume;
+
+                    // Get number.
+                    if (stringFields.containsKey("number")) {
+
+                        String number = prepareString(stringFields.get("number"));
+                        strRecord += "(" + number + ")";
+                    }
+
+                    // Get pages.
+                    if (stringFields.containsKey("pages")) {
+
+                        String pages = preparePagesString(prepareString(stringFields.get("pages")));
+
+                        strRecord += ", pp. " + pages;
+                    }
+
+                    strRecord += ").";
+                }
+
+                // Get publisher.
+                if (stringFields.containsKey("publisher")) {
+
+                    String publisher = prepareString(stringFields.get("publisher"));
+                    strRecord += " " + publisher;
+                }
+            }
+
+            String tmpShortcut = shortcut;
+            int index = 1;
+
+            // Check if current shortcut is already presented.
+            while(shortcuts.contains(tmpShortcut)) {
+
+                index++;
+                tmpShortcut = shortcut + "-" + index;
+            }
+
+            // Add newly created shortcut to list of shortcuts.
+            shortcuts.add(tmpShortcut);
+            shortcut = "[" + tmpShortcut + "]";
+
+            strRecord = shortcut + " " + strRecord;
+
+            // Set reference shortcut.
+            reference.setShortcut(shortcut);
+
+            // Add reference to list.
+            referenceMap.put(shortcut, reference);
+
+            // Add current reference to final markdown text.
+            markdownText.append(strRecord);
+
+            if (itObject.hasNext()) {
+
+                markdownText.append("\n");
+                markdownText.append("\n");
+            }
+        }
+
+        return new References(markdownText.toString(), referenceMap);
+    }
+
+    /**
+     * Parse all references used in antipattern and create a list from them.
+     * @param antipatternReferencesInMarkdown - References in antipattern in markdown.
+     * @return List of references names.
+     */
+    public static List<String> parseUsedReferences(String antipatternReferencesInMarkdown) {
+
+        List<String> usedReferences = new ArrayList<>();
+
+        String patternString = "\\[([^\\]\\[\\r\\n]*)\\]";
+        Pattern pattern = Pattern.compile(patternString);
+
+        Matcher matcher = pattern.matcher(antipatternReferencesInMarkdown);
+
+        while (matcher.find()) {
+            usedReferences.add(matcher.group(0));
+        }
+
+        return  usedReferences;
     }
 }

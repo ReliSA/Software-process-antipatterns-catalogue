@@ -15,17 +15,17 @@ public class Indent
 
     Indent( int level )
     {
-        if ( level > 0 ) this.level = level;
+        this.level = level;
     }
 
     Indent increase()
     {
-    	  return new Indent( level+1 );
+    	  return new Indent( level + 1 );
     }
 
     Indent decrease()
     {
-    	  return new Indent( level-1 );
+    	  return new Indent( level - 1 );
     }
 
     int getLevel() { return level; }

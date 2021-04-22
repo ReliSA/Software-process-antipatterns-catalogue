@@ -19,6 +19,7 @@ public class Antipattern {
 
     private boolean created;
     private boolean linking;
+    private String linkedAntipatternName;
 
     private Map<String, AntipatternHeading> antipatternHeadings;
     private String relationsHeadingName;
@@ -40,6 +41,7 @@ public class Antipattern {
         this.linkingAntipatterns = new ArrayList<>();
 
         relationsHeadingName = "";
+        linkedAntipatternName = "";
 
         if (path.equals("")) {
 
@@ -78,12 +80,7 @@ public class Antipattern {
         return antipatternHeadings;
     }
 
-    public AntipatternHeading getAntipatternHeading(String headingName, boolean isRequired) {
-
-        if (!isRequired) {
-
-            headingName += Constants.TEMPLATE_FIELD_OPTIONAL_STRING;
-        }
+    public AntipatternHeading getAntipatternHeading(String headingName) {
 
         if (antipatternHeadings.containsKey(headingName)) {
 
@@ -189,5 +186,15 @@ public class Antipattern {
     public String getRelationsHeadingName() {
 
         return this.relationsHeadingName;
+    }
+
+    public String getLinkedAntipatternName() {
+
+        return linkedAntipatternName;
+    }
+
+    public void setLinkedAntipatternName(String linkedAntipatternName) {
+
+        this.linkedAntipatternName = linkedAntipatternName;
     }
 }

@@ -1,28 +1,21 @@
 package cz.zcu.kiv.spac.data.antipattern;
 
-import javafx.beans.Observable;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 /**
  * Class representing antipattern relation, which is used in 'Related Anti-patterns' table.
  */
 public class AntipatternRelation {
 
     private boolean linked;
-    private StringProperty antipattern;
-    private StringProperty relation;
+    private String antipattern;
+    private String relation;
 
     /**
      * Constructor.
      */
     public AntipatternRelation() {
 
-        antipattern = new SimpleStringProperty(this, "antipattern");
-        relation = new SimpleStringProperty(this, "relation");
-
-        antipattern.setValue("");
-        relation.setValue("");
+        antipattern = "";
+        relation = "";
     }
 
     /**
@@ -32,41 +25,23 @@ public class AntipatternRelation {
      */
     public AntipatternRelation(String antipattern, String relation) {
 
-        this();
-        this.relation.setValue(relation);
-        this.linked = false;
-
-        setAntipattern(antipattern);
+        this.antipattern = antipattern;
+        this.relation = relation;
     }
 
     public String getRelation() {
 
-        return relation.getValue();
+        return relation;
     }
 
     public String getAntipattern() {
 
-        return antipattern.getValue();
+        return antipattern;
     }
 
     public void setRelation(String relation) {
 
-        this.relation.setValue(relation);
-    }
-
-    public StringProperty getProperty(String valueFactory) {
-
-        if (this.antipattern.getName().equals(valueFactory)) {
-
-            return this.antipattern;
-        }
-
-        if (this.relation.getName().equals(valueFactory)) {
-
-            return this.relation;
-        }
-
-        return null;
+        this.relation = relation;
     }
 
     public void setAntipattern(String antipattern) {
@@ -83,7 +58,7 @@ public class AntipatternRelation {
             value = antipattern;
         }
 
-        this.antipattern.setValue(value);
+        this.antipattern = value;
     }
 
     public boolean isLinked() {
@@ -128,15 +103,5 @@ public class AntipatternRelation {
         }
 
         return true;
-    }
-
-    public StringProperty getAntipatternProperty() {
-
-        return this.antipattern;
-    }
-
-    public StringProperty getRelationProperty() {
-
-        return this.relation;
     }
 }

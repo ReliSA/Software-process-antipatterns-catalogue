@@ -22,18 +22,12 @@ public class AntipatternsCatalogue extends Application {
 
     public static void main(String[] args) {
 
-        // TODO: Could not find or load main class java.cz.zcu.kiv.spac.AntipatternsCatalogue
-        // TODO: https://stackoverflow.com/questions/56622327/error-could-not-find-or-load-main-class-application-main-javafx
-
         configureLogger();
         launch(args);
     }
 
     @Override
     public void start(Stage stage) {
-
-        // TODO: test jar root dir.
-        //System.out.println(Utils.getRootDir());
 
         log.info("Starting Antipattern Catalogue.");
 
@@ -48,6 +42,7 @@ public class AntipatternsCatalogue extends Application {
 
         } catch (Exception e) {
 
+            e.printStackTrace();
             log.error("Invalid MainWindowController scene.");
             System.exit(1);
         }

@@ -213,7 +213,8 @@ public class GitWindowController {
 
             // push to remote:
             PushCommand pushCommand = customGitObject.getGit().push();
-            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(customGitObject.getUsername(), customGitObject.getPassword()));
+
+            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(customGitObject.getPersonalAccessToken(), ""));
             // you can add more settings here if needed
             pushCommand.call();
 
@@ -229,11 +230,11 @@ public class GitWindowController {
 
         } catch (Exception e) {
 
-            log.warn("Invalid credentials!");
+            log.warn("Invalid personal access token!");
 
             Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME,
                     "Push to git",
-                    "Invalid credentials!");
+                    "Invalid personal access token!");
 
             openGitLoginWindow();
         }
@@ -274,7 +275,7 @@ public class GitWindowController {
             ObjectId oldHead = repository.resolve("HEAD^{tree}");
 
             PullCommand pullCommand = customGitObject.getGit().pull();
-            pullCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(customGitObject.getUsername(), customGitObject.getPassword()));
+            pullCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(customGitObject.getPersonalAccessToken(), ""));
             pullCommand.call();
 
             ObjectId head = repository.resolve("HEAD^{tree}");
@@ -485,8 +486,7 @@ public class GitWindowController {
             // Create new antipattern window controller and set values.
             GitLoginController gitLoginController;
             gitLoginController = loader.getController();
-            gitLoginController.setUsername(customGitObject.getUsername());
-            gitLoginController.setPassword(customGitObject.getPassword());
+            gitLoginController.setPersonalAccessToken(customGitObject.getPersonalAccessToken());
 
             // Set stage.
             stage.setTitle(stageTitle);
@@ -495,13 +495,11 @@ public class GitWindowController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            String loginUsername = gitLoginController.getUsername();
-            String loginPassword = gitLoginController.getPassword();
+            String loginPersonalAccessToken = gitLoginController.getPersonalAccessToken();
 
-            if (!loginUsername.equals("") && !loginPassword.equals("")) {
+            if (!loginPersonalAccessToken.equals("")) {
 
-                customGitObject.setUsername(loginUsername);
-                customGitObject.setPassword(loginPassword);
+                customGitObject.setPersonalAccessToken(loginPersonalAccessToken);
             }
 
 

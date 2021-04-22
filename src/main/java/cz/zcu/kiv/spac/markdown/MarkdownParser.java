@@ -9,9 +9,12 @@ import com.vladsch.flexmark.ext.tables.TableBody;
 import com.vladsch.flexmark.ext.tables.TableHead;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.BlankLine;
 import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.collection.iteration.ReversiblePeekingIterable;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
@@ -22,9 +25,17 @@ import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.html.HTMLGenerator;
+import cz.zcu.kiv.spac.richtext.BulletFactory;
+import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.reactfx.util.LL;
 
+import java.io.File;
+import java.net.URL;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class for parsing markdowns.
@@ -106,13 +117,25 @@ public class MarkdownParser {
                         headingName = headingText;
                     }
 
+                    Node nextNode = node.getNext();
+
+                    while(true) {
+
+                        if (nextNode == null || nextNode.getClass() != BlankLine.class) {
+
+                            break;
+                        }
+
+                        nextNode = nextNode.getNext();
+                    }
+
                     // Create new heading type.
-                    if (node.getNext() == null || node.getNext().getClass() == Paragraph.class
-                            || node.getNext().getClass() == Heading.class || node.getNext().getClass() == BulletList.class) {
+                    if (nextNode == null || nextNode.getClass() == Paragraph.class
+                            || nextNode.getClass() == Heading.class || nextNode.getClass() == BulletList.class) {
 
                         heading = new AntipatternTextHeading(headingContent.toString());
 
-                    } else if (node.getNext().getClass() == TableBlock.class) {
+                    } else if (nextNode.getClass() == TableBlock.class) {
 
                         heading = new AntipatternTableHeading();
                     }
@@ -128,9 +151,12 @@ public class MarkdownParser {
                 // Add new heading to map of headings.
                 headings.put(headingName, heading);
 
-                // TODO: ADDITIONAL: parse bullet list ! -> add it to antipattern text heading.
+            } else if ((node.getClass() == Paragraph.class || node.getClass() == BulletList.class || node.getClass() == BlankLine.class) && parsingHeading) {
 
-            } else if ((node.getClass() == Paragraph.class || node.getClass() == BulletList.class) && parsingHeading) {
+                if (heading.getClass() != AntipatternTextHeading.class) {
+
+                    continue;
+                }
 
                 // If node is paragraph, then it means we are working with antipattern text heading.
                 AntipatternTextHeading textHeading = (AntipatternTextHeading) heading;
@@ -189,10 +215,93 @@ public class MarkdownParser {
                     log.warn("Table in antipattern '" + antipatternName + "' is not in valid format!");
                 }
             }
-
         }
 
+        /*
+        for (AntipatternHeading antipatternHeading : headings.values()) {
+
+            if (antipatternHeading.getType() == AntipatternHeadingType.TEXT) {
+
+                AntipatternTextHeading textHeading = (AntipatternTextHeading) antipatternHeading;
+
+                String headingValue = textHeading.getValue();
+
+                if (headingValue.startsWith(Constants.LINE_BREAKER_CRLF)) {
+
+                    headingValue = headingValue.substring(Constants.LINE_BREAKER_CRLF.length());
+                }
+
+                if (headingValue.endsWith(Constants.LINE_BREAKER_CRLF + "\r")) {
+
+                    headingValue = headingValue.substring(0, headingValue.length() - 1 - Constants.LINE_BREAKER_CRLF.length());
+                }
+
+                textHeading.setValue(headingValue);
+            }
+        }
+         */
+
         return headings;
+    }
+
+    /**
+     * Get references shortcuts from reference file.
+     * @param referencesMarkdownText - References content in markdown.
+     * @return List of references.
+     */
+    public static List<String> parseReferencesShortcuts(String referencesMarkdownText) {
+
+        List<String> referencesShortcuts = new ArrayList<>();
+
+        // Check if content is here.
+        if (referencesMarkdownText == null) {
+
+            return referencesShortcuts;
+        }
+
+        // Get lines from markdown content.
+        List<String> lines = Utils.parseStringByLines(referencesMarkdownText);
+
+        // Iterate through every line.
+        for (String line : lines) {
+
+            if (!line.isEmpty()) {
+
+                // Shortcuts has format - [shortcut].
+                if (line.contains("[") && line.contains("]")) {
+
+                    int indexFirst = line.indexOf("[");
+                    int indexLast = line.indexOf("]");
+
+                    String shortcut = line.substring(indexFirst, indexLast + 1);
+
+                    // Make sure that link to home is not included in shortcuts, because it has the same format.
+                    if (!shortcut.toLowerCase().contains("home")) {
+
+                        referencesShortcuts.add(shortcut);
+                    }
+                }
+            }
+        }
+
+        return referencesShortcuts;
+    }
+
+    /**
+     * Get name of antipattern from markdown table record format.
+     * @param tableRecord - [AntipatternName](PathToAntipattern)
+     * @return Parsed name of antipattern if it was link to antipattern, otherwise return same text.
+     */
+    public static String parseAntipatternFromTableRecord(String tableRecord) {
+
+        if (tableRecord.matches("^\\[.*\\]\\(.*\\)$")) {
+
+            return tableRecord.substring(tableRecord.indexOf("[") + 1, tableRecord.indexOf("]"));
+
+        } else {
+
+            return tableRecord;
+        }
     }
 
     /**
@@ -340,9 +449,70 @@ public class MarkdownParser {
         // You can re-use parser and renderer instances
         Node document = parser.parse(markdownContent);
         String htmlContent = HTMLGenerator.generateHTMLContentFromMarkdown(options, document);
+        htmlContent = convertImagePathsToURI(htmlContent);
 
-        // TODO: find image (by pattern + matcher + regex) and replace it (it could be in default format ![name](relative_path) )
-        // TODO: and replace it with <img src="relative_path.extension" width="??" height="??">
+        return htmlContent;
+    }
+
+    /**
+     * Convert image paths to URI to display image in html.
+     * @param htmlContent - Html content.
+     * @return Converted image paths in html content.
+     */
+    private String convertImagePathsToURI(String htmlContent) {
+
+        List<String> imagesInHtml = new ArrayList<>();
+        Map<String, String> srcAttributes = new HashMap<>();
+
+        Pattern pattern = Pattern.compile("<img src=\\\"(.*)\\\" alt=\\\"(.*)\\\"( *)\\/>");
+        Matcher matcher = pattern.matcher(htmlContent);
+
+        // <img src="bro.png" alt="bro" />
+        while (matcher.find()) {
+
+            imagesInHtml.add(matcher.group());
+        }
+
+        pattern = Pattern.compile("src=\\\"(.*)\\.(png|jpg|jpeg|tiff|tif|bmp|gif|eps|raw|cr2|nef|orf|sr2)\\\"");
+        matcher = pattern.matcher(htmlContent);
+
+        // src="bro.png"
+        while (matcher.find()) {
+
+            // src="bro.png"
+            String srcAttribute = matcher.group();
+
+            // bro.png
+            String imagePath = srcAttribute.substring(0, srcAttribute.length() - 1).replace("src=\"", "");
+
+            // Get full path of image.
+            imagePath = Utils.getRootDir() + "/" + Constants.CATALOGUE_FOLDER + "/" + imagePath;
+
+            File imageFile = new File(imagePath);
+
+            if (imageFile != null) {
+
+                // Add html src attribute.
+                imagePath = "src=\"" + imageFile.toURI()  + "\"";
+
+            } else {
+
+                // Add html src attribute.
+                imagePath = "src=\"" + imagePath + "\"";
+                log.warn("Image '" + imagePath + "' was not loaded, because it did not exists on this path.");
+            }
+
+            srcAttributes.put(srcAttribute, imagePath);
+        }
+
+        // Replace all old image html tags with new one (where image paths is represented as URI).
+        for (String srcAttributeBefore : srcAttributes.keySet()) {
+
+            String srcAttributeWithUrlPath = srcAttributes.get(srcAttributeBefore);
+
+            htmlContent = htmlContent.replaceAll(srcAttributeBefore, srcAttributeWithUrlPath);
+        }
+
         return htmlContent;
     }
 
@@ -350,13 +520,17 @@ public class MarkdownParser {
      * Get data options for Markdown parser and HTML renderer
      * @return Data options.
      */
-    private static MutableDataHolder getDataOptions() {
+    public static MutableDataHolder getDataOptions() {
 
         MutableDataHolder options = new MutableDataSet();
-        options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(),
+        options = options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(),
                 StrikethroughExtension.create(),
                 AutolinkExtension.create(),
                 TaskListExtension.create()));
+
+        //options = options.set(Parser.BLANK_LINES_IN_AST, true);
+        //options = options.set(Parser.LISTS_LOOSE_WHEN_BLANK_LINE_FOLLOWS_ITEM_PARAGRAPH, true);
+        options = options.set(Parser.INDENTED_CODE_NO_TRAILING_BLANK_LINES, false);
 
         return options;
     }

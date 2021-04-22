@@ -30,8 +30,7 @@ public class CustomGitObject {
     private String branchName;
     private String repositoryUrl;
     private String repositoryName;
-    private String username;
-    private String password;
+    private String personalAccessToken;
 
     // Logger.
     private static Logger log = Logger.getLogger(GitWindowController.class);
@@ -40,15 +39,13 @@ public class CustomGitObject {
      * Constructor.
      * @param branchName - Name of git branch.
      * @param repositoryUrl - Git Repository url.
-     * @param username  - Username for git.
-     * @param password - Password for git.
+     * @param personalAccessToken  - Access token for git.
      */
-    public CustomGitObject(String branchName, String repositoryUrl, String username, String password) {
+    public CustomGitObject(String branchName, String repositoryUrl, String personalAccessToken) {
 
         this.branchName = branchName;
         this.repositoryUrl = repositoryUrl;
-        this.username = username;
-        this.password = password;
+        this.personalAccessToken = personalAccessToken;
 
         // Get repository name.
         String[] splittedUrl = repositoryUrl.split("/");
@@ -183,24 +180,14 @@ public class CustomGitObject {
         return repositoryUrl;
     }
 
-    public String getUsername() {
+    public String getPersonalAccessToken() {
 
-        return username;
+        return personalAccessToken;
     }
 
-    public void setUsername(String username) {
+    public void setPersonalAccessToken(String personalAccessToken) {
 
-        this.username = username;
-    }
-
-    public String getPassword() {
-
-        return password;
-    }
-
-    public void setPassword(String password) {
-
-        this.password = password;
+        this.personalAccessToken = personalAccessToken;
     }
 
     public String getRepositoryName() {

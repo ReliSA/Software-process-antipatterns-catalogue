@@ -129,7 +129,7 @@ public class Template {
 
                     } else {
 
-                        AntipatternHeading heading = antipattern.getAntipatternHeading(templateField.getName(), true);
+                        AntipatternHeading heading = antipattern.getAntipatternHeading(templateField.getName());
 
                         TemplateFieldType templateFieldType = templateField.getType();
 

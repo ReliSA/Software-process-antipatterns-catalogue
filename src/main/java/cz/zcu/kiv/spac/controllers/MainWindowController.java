@@ -1,10 +1,12 @@
 package cz.zcu.kiv.spac.controllers;
 
+import cz.zcu.kiv.spac.bibtex.BibtexParser;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.data.reference.References;
 import cz.zcu.kiv.spac.enums.AntipatternFilterChoices;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.file.FileWriter;
@@ -25,6 +27,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import org.jbibtex.BibTeXDatabase;
 
 import java.io.File;
 import java.util.*;
@@ -58,6 +61,7 @@ public class MainWindowController {
     private Catalogue catalogue;
     private AntipatternFilterChoices selectedAPFilterChoice;
     private Antipattern selectedAntipattern;
+    private References references;
 
     // Logger.
     private static Logger log = Logger.getLogger(MainWindowController.class);
@@ -136,6 +140,9 @@ public class MainWindowController {
         fillAntipatternList();
 
         btnEditAP.setDisable(true);
+
+        BibTeXDatabase database = BibtexParser.parseBibTeX(new File(Utils.getRootDir() + "/" + Constants.BIBTEX_REFERENCES_NAME));
+        this.references = MarkdownGenerator.generateReferencesFromBibtex(database.getObjects());
     }
 
     /**
@@ -274,7 +281,7 @@ public class MainWindowController {
         String content = "";
         content += "Branch: " + customGitObject.getBranchName() + "\n\n";
         content += "Repository URL: " + customGitObject.getRepositoryUrl() + "\n\n";
-        content += "Username: " + customGitObject.getUsername();
+        content += "Personal Access token: " + customGitObject.getPersonalAccessToken();
 
         Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME, "Git configuration parameters",
                 content, 600);
@@ -285,7 +292,7 @@ public class MainWindowController {
      * @param actionEvent - Action event.
      */
     @FXML
-    private void relationExistenceCheckAll(ActionEvent actionEvent) {
+    private void menuRelationExistenceCheckAllAction(ActionEvent actionEvent) {
 
         List<String> notCompletedExistenceCheck = new ArrayList<>();
         for (Antipattern antipattern : antipatterns.values()) {
@@ -298,7 +305,96 @@ public class MainWindowController {
             printExistenceCheckError(notCompletedExistenceCheck);
         }
 
-        // TODO: print info alert about finishing existence check.
+        Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME, "Existence check", "Existence check for all antipatterns was successfully executed.");
+    }
+
+    /**
+     * Menu action for generate references option.
+     * @param actionEvent - event.
+     */
+    @FXML
+    private void menuGenerateReferencesAction(ActionEvent actionEvent) {
+
+        BibTeXDatabase database = BibtexParser.parseBibTeX(new File(Utils.getRootDir() + "/" + Constants.BIBTEX_REFERENCES_NAME));
+        References references = MarkdownGenerator.generateReferencesFromBibtex(database.getObjects());
+        this.references = references;
+
+        generateReferencesFile();
+    }
+
+    /**
+     * Menu action for adding new reference.
+     * @param actionEvent - Action event.
+     */
+    @FXML
+    private void menuAddReferenceAction(ActionEvent actionEvent) {
+
+        try {
+
+            String stageTitle = Constants.APP_NAME;
+
+            // Load antipattern window template.
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_NEW_REFERENCE_WINDOW)));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+
+            // Create new antipattern window controller and set values.
+            NewReferenceWindowController newReferenceWindowController;
+            newReferenceWindowController = loader.getController();
+
+            // Set stage.
+            stage.setTitle(stageTitle);
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            // If new reference was added to bibtex file, generate new References.md and update references object.
+            if (newReferenceWindowController.isReferenceAdded()) {
+
+                BibTeXDatabase database = BibtexParser.parseBibTeX(new File(Utils.getRootDir() + "/" + Constants.BIBTEX_REFERENCES_NAME));
+                this.references = MarkdownGenerator.generateReferencesFromBibtex(database.getObjects());
+
+                generateReferencesFile();
+            }
+
+        } catch (Exception e) {
+
+            log.error("Invalid NewReferenceWindow scene.");
+        }
+    }
+
+    /**
+     * Generate References.md file from newly loaded bibtex references.
+     */
+    private void generateReferencesFile() {
+
+        File referencesFile = new File(Utils.getRootDir() + "/" + Constants.REFERENCES_NAME);
+
+        if (!referencesFile.exists()) {
+
+            try {
+
+                boolean fileCreated = referencesFile.createNewFile();
+
+                if (!fileCreated) {
+
+                    log.warn("Cannot create new file with name: " + referencesFile.getAbsolutePath());
+                    return;
+
+                }
+
+            } catch (Exception e) {
+
+                log.warn("Cannot create new file with name: " + referencesFile.getAbsolutePath());
+                return;
+            }
+        }
+
+        FileWriter.write(referencesFile, references.getMarkdownFormat());
+        log.info("Generating References.md was successfuly completed.");
+        Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME, "Generating References.md", "Generating References.md was successfuly completed.");
     }
 
     /**
@@ -482,6 +578,8 @@ public class MainWindowController {
             antipatternWindowController.setTemplate(template);
             antipatternWindowController.setMarkdownParser(markdownParser);
             antipatternWindowController.setCatalogue(catalogue);
+            antipatternWindowController.setAntipatterns(antipatterns);
+            antipatternWindowController.setReferences(references);
 
             // Create Form tab and init values in fields.
             antipatternWindowController.loadAntipatternInfo(stage);
@@ -516,6 +614,14 @@ public class MainWindowController {
                 // Set new values to current antipattern.
                 antipattern.setContent(updatedAntipattern.getContent().toString());
                 antipattern.setAntipatternHeadings(markdownParser.parseHeadings(antipattern, antipattern.getContent().toString()));
+
+                for (String antipatternWithUpdatedRelation : antipatternWindowController.getUpdatedAntipatterns()) {
+
+                    Antipattern antipatternWithUpdatedRelations = antipatterns.get(antipatternWithUpdatedRelation);
+                    String markdownContent = MarkdownGenerator.createAntipatternMarkdownContent(antipatternWithUpdatedRelations.getAntipatternHeadings(), template.getFieldList(), catalogue);
+
+                    FileWriter.write(new File(Utils.getRootDir() + "/" + antipatternWithUpdatedRelations.getPath()), markdownContent);
+                }
 
                 updateCatalogueWithLinkedAntipatterns(antipattern, updatedAntipattern);
 
@@ -615,17 +721,15 @@ public class MainWindowController {
 
                     } else {
 
-                        // TODO
                         // If related antipattern is not in catalogue, remove relation.
-                        //newRelations.remove(relation);
+                        newRelations.remove(relation);
                     }
                 }
             }
 
-            // TODO
             // Add all relations after existence check.
-            //antipattern.getRelations().clear();
-            //antipattern.getRelations().addAll(newRelations);
+            antipattern.getRelations().clear();
+            antipattern.getRelations().addAll(newRelations);
 
             // Do relations existence check for current antipattern.
             MarkdownGenerator.relationsExistenceCheck(antipattern, template, catalogue);
@@ -685,7 +789,7 @@ public class MainWindowController {
 
             // Create an alert.
             Utils.showAlertWindow(Alert.AlertType.ERROR, Constants.APP_NAME, "Error while doing relation existence check.",
-                    contentText.toString(), 800);
+                    contentText.toString(), Constants.ALERT_WINDOW_LONGER_WIDTH);
         }
     }
 
@@ -801,6 +905,8 @@ public class MainWindowController {
         // Firstly, create antipattern and add it to list of antipatterns (for future linking).
         Antipattern linkedAntipattern = new Antipattern(linkedAntipatternString, antipattern.getContent(), antipattern.getPath());
         linkedAntipattern.setLinking(true);
+        linkedAntipattern.setLinkedAntipatternName(antipattern.getName());
+
         antipatterns.put(linkedAntipattern.getFormattedName(), linkedAntipattern);
 
         // Then create catalogue record to push it to catalogue filel
