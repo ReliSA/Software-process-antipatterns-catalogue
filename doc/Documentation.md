@@ -61,6 +61,14 @@ Build steps:
    - The combobox contained a caption and the author of the reference in addition to the abbreviation
    - After clicking on the reference in the combobox, only an abbreviation was added to the textarea - you will probably need to create your own combobox
    - When loading references to an anti-pattern, correctly pre-choose the listed references.
+   
+### Git
+
+ 1. Do push immediately after commit
+ 2. Automaticall fetch after some time
+ 3. Managing commit conflicts
+ 4. Creating table columns via reflexes 
+ 
 
 
 

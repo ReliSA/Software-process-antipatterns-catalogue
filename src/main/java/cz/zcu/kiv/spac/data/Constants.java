@@ -41,11 +41,11 @@ public class Constants {
     public static final String RESOURCE_GIT_WINDOW_STYLES_CSS = "/css/GitWindowStyles.css";
 
     public static final String CATALOGUE_NAME = "../Antipatterns_catalogue.md";
-    public static final String PROPERTIES_NAME = "git.properties";
+    public static final String PROPERTIES_NAME = "app/git.properties";
     public static final String README_NAME = "../README.md";
     public static final String CATALOGUE_FOLDER = "catalogue";
-    public static final String CONFIGURATION_NAME = "config.xml";
-    public static final String BIBTEX_REFERENCES_NAME = "references.bib";
+    public static final String CONFIGURATION_NAME = "app/config.xml";
+    public static final String BIBTEX_REFERENCES_NAME = "app/references.bib";
     public static final String REFERENCES_NAME = "References.md";
     public static final String CATALOGUE_FILE = "Antipatterns_catalogue" + FILES_EXTENSION;
     public static final String TEMPLATE_FILE = "template" + FILES_EXTENSION;
