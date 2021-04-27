@@ -1,3 +1,6 @@
 .idea
 AntipatternCatalogue.iml
+build/target
 target
+build/dependency-reduced-pom.xml
+app/AntipatternCatalogue.jar
