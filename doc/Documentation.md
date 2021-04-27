@@ -39,7 +39,7 @@ Licenses for all those libraries are writed in file **research_licenses.txt**.
 For building application, you need Maven.
 
 Build steps:
- 1. Run **build.bat**, which will build project and copy target jar to main folder.
+ 1. Run **build/build.bat**, which will build project and copy target jar to **app** folder.
 
 ## Proposals for the future
 
@@ -85,7 +85,7 @@ Run steps are included too
  
 ## Run steps
 
-Files needed before starting application:
+Files needed before starting application in **app** folder:
  - Antipatterns_catalogue.md
  - config.xml
  - git.properties - Set PAT, branch name and repository url
@@ -124,6 +124,18 @@ There are 3 parameters:
  
 Important info - please execute **ignore_gitproperties.bat** file, so that **git.properties** 
 will not be updated in git.
+
+### How to generate PAT (Personal access token)
+
+ 1. Go to your profile settings
+ 2. Go to "Developer settings"
+ 3. Click on "Personal access tokens"
+ 4. Generate new token
+ 5. Authorize
+ 6. Write something in note
+ 7. In select scopes, select: **repo**, **user**
+ 8. Click on "Generate token"
+ 9. Copy generated token and save it to **git.properties** file. Make sure you saved it immediately, because token will be hidden for the rest of your life and cannot be shown in future.
 
 ## Application windows
 
