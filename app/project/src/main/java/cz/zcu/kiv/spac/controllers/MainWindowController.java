@@ -371,7 +371,7 @@ public class MainWindowController {
      */
     private void generateReferencesFile() {
 
-        File referencesFile = new File(Utils.getAntipatternFolderPath() + Constants.REFERENCES_NAME);
+        File referencesFile = new File(Utils.getRootDir() + "/" + Constants.REFERENCES_NAME);
 
         if (!referencesFile.exists()) {
 
