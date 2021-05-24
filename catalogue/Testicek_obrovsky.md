@@ -9,7 +9,8 @@ n/a
 
 ## Summary
 
-blabla
+Strasne dlouhy text ktery se stejne potom hned smaze ale presto tu musi byt aby se to cely otestovalo, protoze to chceme mit uplne vsechno v poradku
+
 
 ## Context
 
@@ -29,6 +30,7 @@ n/a
 ## Causes
 
 n/a
+
 
 
 ## (Refactored) Solution

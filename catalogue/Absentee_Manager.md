@@ -7,9 +7,11 @@
 
 n/a na a
 
+
 ## Summary
 
-A manager who engages in avoidance behavior or is invisible for long time periods.
+- A manager who engages in avoidance behavior or is invisible for long time periods.
+**alfa**_**beta**_
 
 
 ## Context
@@ -39,12 +41,10 @@ s
 
 ## Variations (Optional)
 
-aa
 
 
 ## Example(s) (Optional)
 
-bb
 
 
 ## Related Anti-patterns
@@ -52,6 +52,8 @@ bb
 |Anti-pattern|Relation|
 |---|---|
 |aa|bb
+|[Absetn](catalogue/Absetn.md)|New
+|[Absetn2](catalogue/Absetn2.md)|Relation
 
 
 ## Notes (Optional)
@@ -60,5 +62,5 @@ bb
 
 ## Sources
 
-[[LAP'05]](../References.md)
+[[NEI'18]](../References.md), [[AMB'14-2]](../References.md), [[HAR'16]](../References.md), [[CUN'13]](../References.md), [[LAP'05]](../References.md)
 

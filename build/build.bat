@@ -1,1 +1,0 @@
-mvn clean package && xcopy "target\AntipatternCatalogue-1.0.jar" "..\app\AntipatternCatalogue.jar" /Y /I
