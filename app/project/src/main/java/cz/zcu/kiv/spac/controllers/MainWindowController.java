@@ -643,7 +643,6 @@ public class MainWindowController {
 
         } catch (Exception e) {
 
-            e.printStackTrace();
             log.error("Invalid AntipatternWindowController scene.");
         }
     }
