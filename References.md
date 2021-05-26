@@ -25,7 +25,7 @@ _(Ordered alphabetically by the key.)_
 
 [ELO'13] Eloranta, Veli-Pekka and Koskimies, Kai and Mikkonen, Tommi and Vuorinen, Jyri (2013). Scrum Anti-Patterns -- An Empirical Study. *Software Engineering Conference (APSEC), 2013 20th Asia-Pacific* (Vol. 1, pp. 503-510). IEEE
 
-[ELO'16] Eloranta, Veli-Pekka and Koskimies, Kai and Mikkonen, Tommi (2016). Exploring ScrumBut -— An empirical study of Scrum anti-patterns. *Information and Software Technology*, 74, 194-203. Elsevier
+[ELO'16] Eloranta, Veli-Pekka and Koskimies, Kai and Mikkonen, Tommi (2016). Exploring ScrumBut -â€” An empirical study of Scrum anti-patterns. *Information and Software Technology*, 74, 194-203. Elsevier
 
 [HAR'16] Harvey, Kate (2016). Feature Creep: What Causes It & How To Avoid It [online]. https://www.chargify.com/blog/feature-creep/. accessed november 14th, 2018
 

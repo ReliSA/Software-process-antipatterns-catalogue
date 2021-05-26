@@ -52,7 +52,7 @@ s
 |Anti-pattern|Relation|
 |---|---|
 |aa|bb
-|[Absetn](catalogue/Absetn.md)|New
+|[Absetn](catalogue/Absetn.md)|Absentee Manager -> Absetn
 |[Absetn2](catalogue/Absetn2.md)|Relation
 
 

@@ -47,6 +47,14 @@ Build steps:
 
 ## Proposals for the future
 
+### Optimalization 
+
+- Some windows are loading with not optimal speed.
+
+### Running application
+
+- Running script is quite hard-coded (probably) with all paths and --add-opens.
+
 ### Rich TextArea
 
  - Fix inserting image from code - can't load images manually, it only works via the button after creating rich textarea

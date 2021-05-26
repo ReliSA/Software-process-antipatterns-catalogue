@@ -104,9 +104,14 @@ public class HTMLGenerator {
 
         } else {
 
-            htmlContent.append("<h1>No content for preview</h1>");
+            htmlContent.append(getNoContentForPreviewText());
         }
 
         return htmlContent.toString();
+    }
+
+    public static String getNoContentForPreviewText() {
+
+        return "<h1>No content for preview</h1>";
     }
 }

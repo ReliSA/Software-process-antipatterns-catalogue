@@ -190,7 +190,16 @@ public class GitWindowController {
 
         ListViewItemWithStringAndCheckBox selectedItem = (ListViewItemWithStringAndCheckBox) item;
 
-        wviewChanges.getEngine().loadContent(HTMLGenerator.createHTMLFileContent(changedFiles.get(selectedItem.getFilename())));
+        try {
+
+            List<PreviewFileContentLine> contentLines = changedFiles.get(selectedItem.getFilename());
+            String html = HTMLGenerator.createHTMLFileContent(contentLines);
+            wviewChanges.getEngine().loadContent(html);
+
+        } catch (Exception e) {
+
+            wviewChanges.getEngine().loadContent(HTMLGenerator.getNoContentForPreviewText());
+        }
     }
 
     /**

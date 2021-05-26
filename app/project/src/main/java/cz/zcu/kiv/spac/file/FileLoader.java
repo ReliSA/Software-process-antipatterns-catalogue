@@ -23,7 +23,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -271,8 +273,8 @@ public class FileLoader {
 
         try {
 
-            File file = new File(path);
-            return Files.readString(file.toPath());
+            byte[] encoded = Files.readAllBytes(Paths.get(path));
+            return new String(encoded, StandardCharsets.UTF_8);
 
         } catch (IOException e) {
 

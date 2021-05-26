@@ -3,6 +3,7 @@
 
 [Template](catalogue/template.md) for new anti-pattern contents.
 
+
 ## A
 [Absentee Manager](catalogue/Absentee_Manager.md)
 
@@ -160,8 +161,6 @@ Fungible Project Manager
 ## G
 Geographically Distributed Development
 
-[GitPullAntipattern](catalogue/GitPullAntipattern.md)
-
 Give Me Estimates Now
 
 [Glass Case Plan](catalogue/Glass_Case_Plan.md)
@@ -269,8 +268,6 @@ Mythical Man Month
 ## N
 [Net Negative Producing Programmer](catalogue/Net_Negative_Producing_Programmer.md)
 
-[NewlyAddedAntipattern](catalogue/NewlyAddedAntipattern.md)
-
 [Nine Pregnant Women](catalogue/Nine_Pregnant_Women.md)
 
 Ninety-Ninety Rule
@@ -327,8 +324,6 @@ Proletariat Hero
 
 ## R
 Radio-Silence
-
-[RazDvaTri](catalogue/RazDvaTri.md)
 
 Requirement Creep
 
@@ -394,9 +389,9 @@ The Feud
 
 The Grand Old Duke Of York
 
-The Process Is The Deliverable
-
 The Quick Fix
+
+The Process Is The Deliverable
 
 They Understood Me
 
@@ -417,8 +412,6 @@ True Believer
 Turf Wars
 
 Typecasting
-
-[tset](catalogue/tset.md)
 
 ## U
 Ultimate Weapon

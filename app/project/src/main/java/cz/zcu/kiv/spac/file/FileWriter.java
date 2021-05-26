@@ -3,9 +3,8 @@ package cz.zcu.kiv.spac.file;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Class contains static methods for writing content to files.
@@ -25,10 +24,10 @@ public class FileWriter {
 
         try {
 
-            PrintWriter writer;
-            writer = new PrintWriter(file);
-            writer.println(content);
-            writer.close();
+            Writer out = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(file), StandardCharsets.UTF_8));
+            out.write(content + "\n");
+            out.close();
             return true;
 
         } catch (IOException ex) {
