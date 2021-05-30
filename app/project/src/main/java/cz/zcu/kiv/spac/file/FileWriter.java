@@ -1,10 +1,13 @@
 package cz.zcu.kiv.spac.file;
 
+import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Class contains static methods for writing content to files.
@@ -34,6 +37,23 @@ public class FileWriter {
 
             log.error("Error while writing content to file '" + file.getName() + "'");
             return false;
+        }
+    }
+
+    /**
+     * Write personall access token to file.
+     * @param personalAccessToken - PAT.
+     */
+    public static void writePAT(String personalAccessToken) {
+
+        Properties properties = new Properties();
+        try(OutputStream outputStream = new FileOutputStream(Utils.getRootDir() + "/" + Constants.PROPERTIES_NAME)){
+
+            properties.setProperty("personalaccesstoken", personalAccessToken);
+            properties.store(outputStream, null);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

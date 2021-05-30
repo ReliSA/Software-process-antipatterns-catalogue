@@ -2,6 +2,7 @@ package cz.zcu.kiv.spac.data.git;
 
 import cz.zcu.kiv.spac.controllers.GitWindowController;
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -192,6 +193,8 @@ public class CustomGitObject {
     public void setPersonalAccessToken(String personalAccessToken) {
 
         this.personalAccessToken = personalAccessToken;
+
+        FileWriter.writePAT(personalAccessToken);
     }
 
     public String getRepositoryName() {
