@@ -194,7 +194,7 @@ public class CustomGitObject {
 
         this.personalAccessToken = personalAccessToken;
 
-        FileWriter.writePAT(personalAccessToken);
+        FileWriter.writePAT(personalAccessToken, branchName, repositoryUrl);
     }
 
     public String getRepositoryName() {

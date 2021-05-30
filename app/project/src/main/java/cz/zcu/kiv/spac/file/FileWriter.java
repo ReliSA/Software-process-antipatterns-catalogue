@@ -43,13 +43,17 @@ public class FileWriter {
     /**
      * Write personall access token to file.
      * @param personalAccessToken - PAT.
+     * @param branch - branch name.
+     * @param repository - Repository URL.
      */
-    public static void writePAT(String personalAccessToken) {
+    public static void writePAT(String personalAccessToken, String branch, String repository) {
 
         Properties properties = new Properties();
         try(OutputStream outputStream = new FileOutputStream(Utils.getRootDir() + "/" + Constants.PROPERTIES_NAME)){
 
             properties.setProperty("personalaccesstoken", personalAccessToken);
+            properties.setProperty("branch", branch);
+            properties.setProperty("repository", repository);
             properties.store(outputStream, null);
 
         } catch (IOException e) {
