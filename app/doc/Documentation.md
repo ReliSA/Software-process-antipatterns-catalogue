@@ -47,11 +47,17 @@ Licenses for all those libraries are writed in file **app/research_licenses.txt*
 
 For building application, you need Maven.
 
-Run **app/build/build.bat**, which will build project and copy target jar to root folder.
+Run **app/build/build.bat**, which will build project and copy target jar to **app** folder.
 
 ## Git
 
-
+ - At the start of application, git object is created and branch name + repository URL is set
+ - In GitWindowController:
+   - Fetch button will execute Fetch Command and shows how many commits are current repository ahead and behind. Fetch is also executed at the start of GitWindow.
+   - Pull button will execute Pull Command from HEAD of repository using Personal Access Token.
+   - Push button will execute Push Command to push all commits using Personal Access Token.
+   - Commit button will execute Add command, which add all selected files in list to new commit and add message + description.   
+   
 
 ## Proposals for the future
 
