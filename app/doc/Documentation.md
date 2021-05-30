@@ -9,6 +9,11 @@ This documentation is for and only this application, not for catalogue as such.
 In program documentation will be described some important functionality and proposals for the future.
 Build steps are included too.
 
+## Technologies
+
+ - Java
+ - JavaFX 11
+ 
 ## Packages
 
 There are several packages:
@@ -42,8 +47,11 @@ Licenses for all those libraries are writed in file **app/research_licenses.txt*
 
 For building application, you need Maven.
 
-Build steps:
- 1. Run **app/build/build.bat**, which will build project and copy target jar to root folder.
+Run **app/build/build.bat**, which will build project and copy target jar to root folder.
+
+## Git
+
+
 
 ## Proposals for the future
 
