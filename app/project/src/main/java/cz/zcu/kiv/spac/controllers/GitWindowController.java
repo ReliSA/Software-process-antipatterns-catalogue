@@ -157,6 +157,15 @@ public class GitWindowController {
             return;
         }
 
+        if (summary == null || summary.length() == 0) {
+
+            Utils.showAlertWindow(Alert.AlertType.WARNING, Constants.APP_NAME,
+                    "Creating commit",
+                    "Summary is required !");
+
+            return;
+        }
+
         try {
 
             addCommand.call();

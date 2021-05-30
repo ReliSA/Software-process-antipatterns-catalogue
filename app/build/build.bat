@@ -1,3 +1,3 @@
 cd ..
 cd project
-mvn clean compile assembly:single && xcopy "target\AntipatternCatalogue.jar" "..\AntipatternCatalogue.jar" /Y /I && cd .. && cd build
+mvn clean compile assembly:single && xcopy /Q /Y "target\AntipatternCatalogue.jar" "..\AntipatternCatalogue.jar"* && cd .. && cd build

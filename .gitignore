@@ -4,3 +4,4 @@ build/target
 target
 project/target
 build/dependency-reduced-pom.xml
+AntipatternCatalogue.jar
