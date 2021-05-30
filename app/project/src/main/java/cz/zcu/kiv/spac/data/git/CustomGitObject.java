@@ -12,6 +12,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
@@ -70,13 +71,14 @@ public class CustomGitObject {
 
         try {
 
-            // TODO: maybe check url repository from customGitObject and compare it with repository set in .git folder.
             git = Git.open(new File(Utils.getRootDir() + "/" + Constants.GIT_FOLDER));
-            //git.checkout().setName(branchName).call();
+            URIish urIish = new URIish().setRawPath(repositoryUrl);
+            git.remoteSetUrl().setRemoteUri(urIish).call();
+            git.checkout().setName(branchName).call();
 
         } catch (Exception e) {
 
-            log.error(e.getMessage());
+            log.error("Fail to log into repository: " + e.getMessage());
             git = null;
         }
     }
