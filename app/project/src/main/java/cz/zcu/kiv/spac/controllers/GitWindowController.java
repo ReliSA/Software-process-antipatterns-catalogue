@@ -621,63 +621,71 @@ public class GitWindowController {
                 String oldContent = filesFromPreviousCommit.get(filename);
                 String newContent = FileLoader.loadFileContent(newContentPath);
 
-                // Get different lines.
-                List<String> lines = Utils.parseStringByLines(Utils.getFilesDifference(oldContent, newContent));
-                List<PreviewFileContentLine> contentLines = new ArrayList<>();
+                if (oldContent != null && newContent != null) {
 
-                int infoOldIndex = 0;
-                int infoNewIndex = 0;
+                    // Get different lines.
+                    List<String> lines = Utils.parseStringByLines(Utils.getFilesDifference(oldContent, newContent));
+                    List<PreviewFileContentLine> contentLines = new ArrayList<>();
 
-                // Iterate through every diff line and assign his line index and type.
-                for (String line : lines) {
+                    int infoOldIndex = 0;
+                    int infoNewIndex = 0;
 
-                    PreviewFileContentLineType type;
+                    // Iterate through every diff line and assign his line index and type.
+                    for (String line : lines) {
 
-                    int lineIndex = 0;
+                        PreviewFileContentLineType type;
 
-                    switch (line.charAt(0)) {
+                        int lineIndex = 0;
 
-                        case '-':
+                        switch (line.charAt(0)) {
 
-                            type = PreviewFileContentLineType.DELETED;
-                            lineIndex = infoOldIndex;
-                            infoOldIndex++;
-                            break;
+                            case '-':
 
-                        case '+':
+                                type = PreviewFileContentLineType.DELETED;
+                                lineIndex = infoOldIndex;
+                                infoOldIndex++;
+                                break;
 
-                            type = PreviewFileContentLineType.ADDED;
-                            lineIndex = infoNewIndex;
-                            infoNewIndex++;
-                            break;
+                            case '+':
 
-                        case ' ':
+                                type = PreviewFileContentLineType.ADDED;
+                                lineIndex = infoNewIndex;
+                                infoNewIndex++;
+                                break;
 
-                            type = PreviewFileContentLineType.NOT_MODIFIED;
-                            lineIndex = infoNewIndex;
-                            infoOldIndex++;
-                            infoNewIndex++;
-                            break;
+                            case ' ':
 
-                        default:
+                                type = PreviewFileContentLineType.NOT_MODIFIED;
+                                lineIndex = infoNewIndex;
+                                infoOldIndex++;
+                                infoNewIndex++;
+                                break;
 
-                            type = PreviewFileContentLineType.DIFF_INFO;
+                            default:
 
-                            // If current line is diff info.
-                            if (line.contains("@")) {
+                                type = PreviewFileContentLineType.DIFF_INFO;
 
-                                List<String> indexes = getIndexesFromDiff(line);
+                                // If current line is diff info.
+                                if (line.contains("@")) {
 
-                                // Do Math.abs, because old file index contains '-'.
-                                infoOldIndex = Math.abs(Integer.parseInt(indexes.get(0)));
-                                infoNewIndex = Integer.parseInt(indexes.get(1));
-                            }
-                            break;
+                                    List<String> indexes = getIndexesFromDiff(line);
+
+                                    // Do Math.abs, because old file index contains '-'.
+                                    infoOldIndex = Math.abs(Integer.parseInt(indexes.get(0)));
+                                    infoNewIndex = Integer.parseInt(indexes.get(1));
+                                }
+                                break;
+                        }
+                        contentLines.add(new PreviewFileContentLine(line, type, lineIndex));
                     }
-                    contentLines.add(new PreviewFileContentLine(line, type, lineIndex));
+
+                    changedFiles.put(fullPathFilename, contentLines);
+
+                } else {
+
+                    changedFiles.put(fullPathFilename, null);
                 }
 
-                changedFiles.put(fullPathFilename, contentLines);
             }
         }
     }
