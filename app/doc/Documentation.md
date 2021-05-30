@@ -47,7 +47,13 @@ Licenses for all those libraries are writed in file **app/research_licenses.txt*
 
 For building application, you need Maven.
 
+### Build for Windows
+
 Run **app/build/build.bat**, which will build project and copy target jar to **app** folder.
+
+### Build for Linux
+
+Run **app/build/build.sh**, which will build project and copy target jar to **app** folder.
 
 ## Git
 
@@ -124,8 +130,13 @@ Files needed before starting application in **app** folder:
 Before you start your application first time, please run **app/ignore_gitproperties.bat** 
 to disable **git.properties** file from updating to git. 
 
-Run steps:
- 1. Run **app/run.bat**  
+### Run on Windows
+
+Run **app/run.bat**  
+ 
+### Run on Linux
+
+Run **app/run.sh**  
 
 ## Configuration
 
