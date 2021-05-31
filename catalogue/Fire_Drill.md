@@ -12,20 +12,41 @@ Requirements and Analysis phases prolonged and consuming disproportionate amount
 
 ## Context
 
+Waterfall(ish) projects, especially when project oversight is loose and/or management is not driven by outcome.
+
 ## Unbalanced Forces
 
+ - need (desire) to have specifications perfect
+ - management consumed by internal (political) issues
+ - actual development of a high-quality product takes time
+ - quality objectives formally stated and high
+ - strict deadlines for delivery
+
 ## Symptoms and Consequences
- - rock-edge burndown (especially when viewing implementation tasks only)
- - long period at project start where activities connected to requirements, analysis and planning prevale, and design and implementation activities are rare
+
+ - long period at project start where activities connected to requirements, analysis and planning prevail, and design and implementation activities are rare
  - only analytical or documentational artefacts for a long time
- - relatively short period towards project end with sudden increase in development efforts 
+ - relatively short period towards project end with sudden increase in development efforts (i.e. rock-edge burndown, especially when viewing implementation tasks only)
  - little testing/QA and project progress tracking activities during development period
- - final product with poor code quality, many open bug reports, poor or patchy documentation 
+ - final product with poor code quality, many open bug reports, poor or patchy documentation
+ - if the previous trhee points do not apply, project schedule or scope is compromised (i.e., either delayed delivery or descoping occurs)
  - stark contrast between interlevel communication in project hierarchy (management - developers) during the first period (close to silence) and after realizating the problem (panic and loud noise)
 
 ## Causes
 
+ - management does not take seriously development effort (time) estimates
+ - management absorbed in "various technopolitical issues (...) prevent[ing] the development staff from making progress"
+ - team is happy to produce artefacts early in the project
+ - requirements are complex and their prioritization is not forced early on
+ - team overseeing the need to prioritize "working code over comprehensive documentation" 
+ - management wants to appear the project to be on track
+ - management believes it is more important to deliver complete functionality than good quality
+ - project tracking and oversight is loose, easily lulled inco complacency by easy-to-reach outcomes
+
 ## (Refactored) Solution
+
+ - force the team to start delivering (parts of) the "consumable solution" early, possibly alongside the analysis and planning artefacts, by instituting strong project tracking and oversight related to actual outcomes
+ - it helps to follow an iterative process, architecture-driven development, and have a well-performing product owner 
 
 ## Variations (optional) 
 
@@ -41,4 +62,4 @@ Requirements and Analysis phases prolonged and consuming disproportionate amount
 ## Notes (optional)
 
 ## Sources
-[[SIL'15]](../References.md), [[SOU'18]](../References.md), [[BRO'98]](../References.md)
+[[SIL'15]](../References.md), [[SOU'18]](../References.md) [Fire Drill](https://sourcemaking.com/antipatterns/fire-drill), [[BRO'98]](../References.md)

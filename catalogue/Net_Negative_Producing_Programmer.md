@@ -16,7 +16,9 @@ Person who contributes more trouble than benefits.
 
 ## Symptoms and Consequences
  
- - TODO
+ - the NNPP produces a higher number of defects in the work product, compared to other team members
+ - the NNPP takes overly long to remedy the defects (s)he introduced, compared to other team members
+ - the nominal productivity of NNPP (e.g. LOC written per time period) is at least average or better, compared to other team members
 
 ## Causes
 
@@ -37,4 +39,6 @@ Person who contributes more trouble than benefits.
 ## Notes (optional) 
 
 ## Sources
-TODO
+
+* [CUN'10](../References.md) -- see the [description on C2 wiki](https://wiki.c2.com/?NetNegativeProducingProgrammer)
+* http://www.pyxisinc.com/NNPP_Article.pdf -- the original article discussing the anti-pattern in detail, referenced from \[CUN'10\]
