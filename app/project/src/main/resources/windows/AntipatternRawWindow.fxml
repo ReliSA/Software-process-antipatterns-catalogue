@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="742.0" prefWidth="1078.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.AntipatternRawWindowController">
+  <children>
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="884.0" prefWidth="1161.0" VBox.vgrow="ALWAYS">
+         <children>
+            <TextArea fx:id="txtAreaRawAntipatternContent" layoutX="14.0" layoutY="58.0" prefHeight="768.0" prefWidth="699.0" />
+            <ListView fx:id="listDifferences" layoutX="722.0" layoutY="58.0" prefHeight="359.0" prefWidth="431.0" />
+            <Label layoutX="224.0" layoutY="14.0" text="Raw Antipattern Content">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnBack" layoutX="14.0" layoutY="840.0" mnemonicParsing="false" onAction="#closeAntipatternRawWindow" prefHeight="35.0" prefWidth="79.0" text="Back" />
+            <Button fx:id="btnSave" layoutX="1068.0" layoutY="840.0" mnemonicParsing="false" onAction="#saveRawAntipattern" prefHeight="35.0" prefWidth="79.0" text="Save" />
+            <Label layoutX="884.0" layoutY="14.0" text="Differences">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="865.0" layoutY="427.0" text="Template fields">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <ListView fx:id="listTemplateFields" layoutX="722.0" layoutY="466.0" prefHeight="359.0" prefWidth="431.0" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

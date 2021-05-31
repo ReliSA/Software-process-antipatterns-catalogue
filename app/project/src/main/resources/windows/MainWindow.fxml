@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<VBox prefHeight="825.0" prefWidth="1193.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
+  <children>
+      <AnchorPane minHeight="17.0" prefHeight="31.0" prefWidth="1193.0" styleClass="menu-bar">
+         <children>
+          <MenuBar layoutY="-1.0" prefHeight="17.0" prefWidth="116.0">
+            <menus>
+              <Menu mnemonicParsing="false" text="File">
+                <items>
+                  <MenuItem mnemonicParsing="false" onAction="#menuNewAPAction" text="New Anti-pattern" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuGenerateReferencesAction" text="Generate References" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuAddReferenceAction" text="Add Reference" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuRelationExistenceCheckAllAction" text="Existence check for anti-patterns" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
+                </items>
+              </Menu>
+              <Menu mnemonicParsing="false" text="Git">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#menuGitInfoAction" text="Info" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuGitManageAction" text="Manage" />
+                     </items>
+                  </Menu>
+            </menus>
+          </MenuBar>
+         </children>
+      </AnchorPane>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="809.0" prefWidth="1193.0" VBox.vgrow="ALWAYS">
+         <children>
+            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="669.0" prefWidth="363.0" />
+            <Label layoutX="132.0" layoutY="8.0" text="Anti-patterns">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <WebView fx:id="wviewAntipatternPreview" layoutX="386.0" layoutY="78.0" prefHeight="669.0" prefWidth="794.0" />
+            <Label layoutX="684.0" layoutY="8.0" text="Anti-pattern preview">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtFieldAPSearch" layoutX="112.0" layoutY="47.0" onKeyTyped="#filterAntipatterns" prefHeight="25.0" prefWidth="155.0" promptText="Anti-pattern name" />
+            <Label layoutX="50.0" layoutY="51.0" text="Search AP:" />
+            <Line endX="765.0" layoutX="415.0" layoutY="78.0" startX="-29.0" strokeWidth="0.1" />
+            <Line endX="1180.0" endY="747.5" startX="385.0" startY="747.2929077148438" strokeWidth="0.1" />
+            <Line endX="-39.5" endY="658.7929077148438" layoutX="425.0" layoutY="88.0" startX="-39.5" startY="-9.5" strokeWidth="0.2" />
+            <Line endX="745.0" endY="649.0" layoutX="435.0" layoutY="98.0" startX="745.0" startY="-20.0" strokeWidth="0.2" />
+            <ChoiceBox fx:id="selectAPFilter" layoutX="273.0" layoutY="47.0" prefHeight="25.0" prefWidth="104.0" />
+            <Button fx:id="btnEditAP" layoutX="1102.0" layoutY="758.0" mnemonicParsing="false" onAction="#btnEditAPAction" prefHeight="35.0" prefWidth="79.0" text="Edit AP" />
+            <Button fx:id="btnNewAP" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" onAction="#btnNewAPAction" prefHeight="25.0" prefWidth="30.0" text="+" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>

@@ -1,0 +1,71 @@
+td.line {
+
+    width: 88%;
+}
+
+td.line-added {
+
+    background-color: #e6ffed;
+}
+
+td.line-index-added {
+
+    background-color: #cdffd8;
+}
+
+td.line-deleted {
+
+    background-color: #ffeef0;
+}
+
+td.line-index-deleted {
+
+    background-color: #ffdce0;
+}
+
+td.line-diff-info {
+
+    background-color: #f1f8ff;
+}
+
+td.line-index-diff-info {
+
+    background-color: #dbedff;
+}
+
+table {
+
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+table, tr, th, td {
+
+    border: 1px solid black;
+}
+
+
+tr, th, td {
+
+    border: none;
+}
+
+th, td {
+
+    padding: 15px;
+}
+
+td.line-index {
+
+    text-align: right;
+    width: 6%;
+}
+
+span.line-symbol {
+
+    float: left;
+    width: 15px;
+
+}

@@ -1,11 +1,10 @@
 [Home](README.md) > Catalogue
-# Antipatterns Catalogue
+# Anti-patterns Catalogue
 
 [Template](catalogue/template.md) for new anti-pattern contents.
 
 
 ## A
-
 [Absentee Manager](catalogue/Absentee_Manager.md)
 
 All You Have Is a Hammer
@@ -351,7 +350,7 @@ Shoot The Messenger
 
 Silver Bullet
 
-Size Isn’t Everything - _see [Brooks' Law](catalogue/Brooks_Law.md)_
+[Size Isn’t Everything](catalogue/Brooks_Law.md)
 
 Smoke And Mirrors
 
@@ -400,7 +399,7 @@ Third-World Information Systems Troubles
 
 Three Headed Knight
 
-Throw It Over The Wall - _see [Thrown Over The Wall](catalogue/Thrown_Over_The_Wall.md)_
+[Throw It Over The Wall](catalogue/Thrown_Over_The_Wall.md)
 
 [Thrown Over The Wall](catalogue/Thrown_Over_The_Wall.md)
 
@@ -461,3 +460,5 @@ Yet Another Programmer
 Yet Another Thread Will Solve It
 
 You Aren’t Gonna Need It
+
+
