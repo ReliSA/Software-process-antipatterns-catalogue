@@ -15,8 +15,8 @@ Literature and online sources used to gather the anti-patterns.
 
 The original contents of the catalogue (as of 2019) is based on a review of academic, professional and grey literature sources to collect the currently known and defined software PM anti-patterns.  It uses a description template designed to support data-driven detection of anti-pattern occurrence, e.g. using our [SPADe toolset](https://github.com/ReliSA/SPADe). 
 
-To cite the catalogue in research literature, please use the following citation:
-
 For easier catalog management, we provide the application in this repository, including its complete [documentation](app/doc/Documentation.md). 
+
+To cite the catalogue in research literature, please use the following citation:
 
 > Brada, Premek, and Petr Picha. "Software process anti-patterns catalogue." In EuroPLop '19: Proceedings of the 24th European Conference on Pattern Languages of Programs. Association for Computing Machinery, July 2019, Pages 1–10. DOI: [10.1145/3361149.3361178](https://dl.acm.org/doi/abs/10.1145/3361149.3361178).
