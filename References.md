@@ -54,7 +54,3 @@ _(Ordered alphabetically by the key.)_
 [TAM'18] Tamburri, Damian A. and Palomba, Fabio and Serebrenik, Alexander and Zaidman, Andy (2018). Discovering Community Patterns in Open-Source: A Systematic Approach and Its Evaluation. *Empirical Software Engineering*, 23, 1-49. Springer
 
 [WIK'18] Wikipedia (2018). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018
-
-[WIK'18-2] Wikipedia (2018). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018
-
-[WIK'21] Wikipedia (2021). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018
