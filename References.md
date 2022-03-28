@@ -19,7 +19,7 @@ _(Ordered alphabetically by the key.)_
 
 [COP'04] Coplien, James O and Harrison, Neil B (2004). Organizational patterns of agile software development. 
 
-[CUN'10] Cunningham, Ward (2010). Management Anti Pattern Road Map [online]. http://wiki.c2.com/?managementantipatternroadmap. accessed november 14th, 2018
+[CUN'10] Cunningham, Ward (2010). Management Anti Pattern Road Map [online]. http://wiki.c2.com/?ManagementAntiPatternRoadMap. accessed november 14th, 2018
 
 [CUN'13] Cunningham, Ward (2013). Anti Patterns Catalog [online]. http://wiki.c2.com/?antipatternscatalog. accessed november 14th, 2018
 
