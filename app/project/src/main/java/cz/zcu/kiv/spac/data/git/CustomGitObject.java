@@ -1,6 +1,5 @@
 package cz.zcu.kiv.spac.data.git;
 
-import cz.zcu.kiv.spac.controllers.GitWindowController;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.utils.Utils;
@@ -13,7 +12,6 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
@@ -37,7 +35,7 @@ public class CustomGitObject {
     private String personalAccessToken;
 
     // Logger.
-    private static Logger log = LogManager.getLogger(GitWindowController.class);
+    private static Logger log = LogManager.getLogger(CustomGitObject.class);
 
     /**
      * Constructor.
@@ -73,8 +71,6 @@ public class CustomGitObject {
         try {
 
             git = Git.open(new File(Utils.getRootDir() + "/" + Constants.GIT_FOLDER));
-            URIish urIish = new URIish().setRawPath(repositoryUrl);
-            git.remoteSetUrl().setRemoteUri(urIish).call();
             git.checkout().setName(branchName).call();
 
         } catch (Exception e) {

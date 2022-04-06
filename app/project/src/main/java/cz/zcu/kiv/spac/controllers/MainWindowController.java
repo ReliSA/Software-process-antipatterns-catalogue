@@ -143,6 +143,13 @@ public class MainWindowController {
         btnEditAP.setDisable(true);
 
         BibTeXDatabase database = BibtexParser.parseBibTeX(new File(Utils.getRootDir() + "/" + Constants.BIBTEX_REFERENCES_NAME));
+
+        if (database == null) {
+
+            log.error("Bibtex file not found !");
+            System.exit(1);
+        }
+
         this.references = MarkdownGenerator.generateReferencesFromBibtex(database.getObjects());
     }
 

@@ -43,6 +43,20 @@ Used libraries in project:
 
 Licenses for all those libraries are writed in file **app/research_licenses.txt**.
 
+## IDE
+
+### Quick info for developers
+
+Please note, that git repository have unusual structure for project. In **src\main\java\cz\zcu\kiv\spac\data\Constants.java** is variable with name **PREFIX**. For development purpose, use prefix with "../".
+
+### VM Options
+
+We need VM options to successfully start program. VM options contains module-path and add-modules for javafx.
+
+```
+--module-path "..\javafx\lib" --add-modules=javafx.swing,javafx.graphics,javafx.fxml,javafx.media,javafx.web --add-reads javafx.graphics=ALL-UNNAMED --add-opens javafx.controls/com.sun.javafx.charts=ALL-UNNAMED --add-opens javafx.graphics/com.sun.javafx.iio=ALL-UNNAMED --add-opens javafx.graphics/com.sun.javafx.iio.common=ALL-UNNAMED --add-opens javafx.graphics/com.sun.javafx.css=ALL-UNNAMED --add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED
+```
+
 ## Build steps
 
 For building application, you need Maven.
@@ -247,3 +261,15 @@ If personal access token from **git.properties** file is invalid, it will open l
 Window contains list of changes and preview window, same as in github desktop application.
 
 ![gitWindow](img/gitWindow.png)
+
+## Additional info
+
+### Git error - Ref branch cannot be resolved
+
+This error can occur if user has not checkout branch in git.
+
+Steps:
+	 - Open command line in local git repo
+	 - Checkout branch you want to use in application - git checkout branch_name
+	 - Set branch_name in git.properties
+	 - Start application

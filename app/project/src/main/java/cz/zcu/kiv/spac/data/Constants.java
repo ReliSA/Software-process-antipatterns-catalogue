@@ -40,17 +40,23 @@ public class Constants {
     public static final String RESOURCE_GIT_PREVIEW_CSS = "/css/GitAntipatternPreview.css";
     public static final String RESOURCE_GIT_WINDOW_STYLES_CSS = "/css/GitWindowStyles.css";
 
+    // Prefix for development - use this when developing application.
+    public static final String PREFIX = "../";
+
+    // Prefix for release.
+    // public static final String PREFIX = "";
+
     public static final String CATALOGUE_NAME = "../Antipatterns_catalogue.md";
-    public static final String PROPERTIES_NAME = "git.properties";
+    public static final String PROPERTIES_NAME = PREFIX + "git.properties";
     public static final String README_NAME = "../README.md";
-    public static final String CATALOGUE_FOLDER_PREFIX = "../";
+    public static final String CATALOGUE_FOLDER_PREFIX = PREFIX + "../";
     public static final String CATALOGUE_FOLDER = "catalogue";
-    public static final String CONFIGURATION_NAME = "config.xml";
-    public static final String BIBTEX_REFERENCES_NAME = "references.bib";
-    public static final String REFERENCES_NAME = "../References.md";
-    public static final String CATALOGUE_FILE = "../Antipatterns_catalogue" + FILES_EXTENSION;
+    public static final String CONFIGURATION_NAME = PREFIX + "config.xml";
+    public static final String BIBTEX_REFERENCES_NAME = PREFIX + "references.bib";
+    public static final String REFERENCES_NAME = PREFIX + "../References.md";
+    public static final String CATALOGUE_FILE = PREFIX + "../Antipatterns_catalogue" + FILES_EXTENSION;
     public static final String TEMPLATE_FILE = "template" + FILES_EXTENSION;
-    public static final String GIT_FOLDER = "../.git";
+    public static final String GIT_FOLDER = PREFIX + "../.git";
 
     public static final String LINE_BREAKER_LF = "\n";
     public static final String LINE_BREAKER_CRLF = "\r\n";
