@@ -9,41 +9,47 @@ import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
+import cz.zcu.kiv.spac.data.reference.Reference;
 import cz.zcu.kiv.spac.data.reference.References;
-import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
-import cz.zcu.kiv.spac.file.FileWriter;
-import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
-import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
 import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.data.template.TemplateField;
+import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
+import cz.zcu.kiv.spac.file.FileWriter;
+import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
+import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.richtext.RichTextArea;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.CheckComboBox;
-import org.reactfx.util.LL;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Controller for antipattern window.
@@ -316,73 +322,32 @@ public class AntipatternWindowController {
                     break;
 
                 case SELECT:
-
                     field = new TextArea();
                     TextArea textArea = (TextArea) field;
-                    CheckComboBox<String> cb = new CheckComboBox(FXCollections.observableArrayList(references.getReferenceMap().keySet()));
-
-                    // Create select box
-                    cb.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-                        public void onChanged(ListChangeListener.Change<? extends String> c) {
-
-                            StringBuilder references = new StringBuilder();
-
-                            Iterator<String> iterator = cb.getCheckModel().getCheckedItems().iterator();
-
-                            // Append all selected references to textarea.
-                            while (iterator.hasNext()) {
-
-                                references.append(iterator.next());
-
-                                if (iterator.hasNext()) {
-
-                                    references.append(", ");
-                                }
-                            }
-
-                            textArea.setText(references.toString());
+                    Button btnManageReferences = new Button("Manage references");
+                    List<String> usedReferences = MarkdownGenerator.parseUsedReferences(((AntipatternTextHeading) heading).getValue());
+                    for(String ref : usedReferences) {
+                        references.getReferenceMap().get(ref).setSelected(true);
+                    }
+                    btnManageReferences.setOnAction(action -> {
+                        try {
+                            showManageReferencesWindow();
+                            textArea.setText(references.getReferenceMap().values().stream().filter(Reference::isSelected)
+                                    .map(Reference::getShortcut).collect(Collectors.joining(", ")));
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     });
 
-                    setRegionBounds(cb, templateFieldLabel);
+                    setRegionBounds(btnManageReferences, templateFieldLabel);
 
-                    cb.setMaxWidth(Constants.CHOICE_BOX_WIDTH);
-                    cb.setMinWidth(Constants.CHOICE_BOX_WIDTH);
-                    cb.setPrefWidth(Constants.CHOICE_BOX_WIDTH);
-
-                    // Add info button with references info.
-                    Button infoButton = createButton("i", cb.getLayoutX() + Constants.CHOICE_BOX_WIDTH + Constants.INFO_BUTTON_X_OFFSET, layoutY - (Constants.BUTTON_OFFSET / 2));
-
-                    infoButton.setMaxWidth(Constants.INFO_BUTTON_WIDTH);
-                    infoButton.setMaxHeight(Constants.INFO_BUTTON_WIDTH);
-
-                    // Click event for add button.
-                    infoButton.setOnAction((event) -> {
-
-                        StringBuilder context = new StringBuilder();
-
-                        List<String> referencesInfo = references.getListForInfobox();
-                        Iterator<String> it = referencesInfo.iterator();
-
-                        while (it.hasNext()) {
-
-                            String referenceInfo = it.next();
-
-                            context.append(referenceInfo);
-
-                            if (it.hasNext()) {
-
-                                context.append("\n");
-                            }
-                        }
-
-                        Utils.showAlertWindow(Alert.AlertType.INFORMATION, Constants.APP_NAME, "References info", context.toString(), Constants.ALERT_WINDOW_LONGER_WIDTH);
-                    });
+                    btnManageReferences.setMaxWidth(150);
+                    btnManageReferences.setMinWidth(150);
+                    btnManageReferences.setPrefWidth(150);
 
                     layoutY += Constants.TEXTFIELD_OFFSET_Y;
 
-                    childrens.add(cb);
-                    childrens.add(infoButton);
+                    childrens.add(btnManageReferences);
 
                     // Create text area.
                     textArea.setText(templateField.getDefaultValue());
@@ -391,7 +356,7 @@ public class AntipatternWindowController {
                     if (heading != null) {
 
                         // Get all references in antipattern.
-                        List<String> usedReferences = MarkdownGenerator.parseUsedReferences(((AntipatternTextHeading) heading).getValue());
+                        usedReferences = MarkdownGenerator.parseUsedReferences(((AntipatternTextHeading) heading).getValue());
                         Iterator<String> it = usedReferences.iterator();
 
                         // Get all references.
@@ -409,11 +374,6 @@ public class AntipatternWindowController {
                             if (it.hasNext()) {
 
                                 content.append(", ");
-                            }
-
-                            if (allReferences.contains(usedReference)) {
-
-                                cb.getCheckModel().check(usedReference);
                             }
                         }
 
@@ -638,6 +598,28 @@ public class AntipatternWindowController {
         }
     }
 
+    private void showManageReferencesWindow() throws IOException {
+        Stage stage = new Stage();
+        String title = "Manage references";
+
+        // Load antipattern window template.
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_REFERENCES_MANAGER_WINDOW)));
+        Parent root = loader.load();
+        ReferencesManagerWindowController controller = loader.getController();
+        controller.initReferences(references);
+
+        Scene scene = new Scene(root);
+
+        // Set stage.
+        stage.setTitle(title);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        stage.showAndWait();
+
+        this.references = controller.getReferences();
+    }
+
     /**
      * Check if list contains duplicate after adding new item to table / changing current.
      * @param list - List with items in table.
@@ -821,13 +803,17 @@ public class AntipatternWindowController {
 
                         StringBuilder headingText = new StringBuilder();
 
-                        // Convert [shortcut] to [[shortcut]](../References.md).
+                        // Convert [shortcut] to [[shortcut]](URL).
                         while (it.hasNext()) {
-
                             String reference = it.next();
+                            if (reference.trim().isEmpty()) {
+                                continue;
+                            }
                             reference = reference.replace(" ", "");
-                            reference = "[" + reference + "](../" + Constants.REFERENCES_NAME + ")";
-
+                            Reference ref = references.getReferenceMap().get(reference);
+                            if (ref.getUrl() != null && !ref.getUrl().isEmpty()) {
+                                reference = "[" + reference + "](" + references.getReferenceMap().get(reference).getUrl() + ")";
+                            }
                             headingText.append(reference);
 
                             if (it.hasNext()) {
