@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.web.WebView?>
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1320.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.GitWindowController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1320.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.GitWindowController">
    <children>
-      <AnchorPane fx:id="contentPane" prefHeight="668.0" prefWidth="1269.0">
+      <AnchorPane fx:id="contentPane" prefHeight="668.0" prefWidth="1269.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="btnCommit" layoutX="14.0" layoutY="619.0" mnemonicParsing="false" onAction="#btnCommitAction" prefHeight="35.0" prefWidth="462.0" text="Commit to" />
-            <TextField fx:id="txtfieldSummary" layoutX="14.0" layoutY="472.0" prefHeight="25.0" prefWidth="462.0" promptText="Summary (required)" />
-            <TextArea fx:id="txtareaDescription" layoutX="14.0" layoutY="506.0" prefHeight="102.0" prefWidth="462.0" promptText="Description" />
-            <ListView fx:id="listViewFileChanged" layoutX="14.0" layoutY="95.0" onMouseClicked="#previewFile" prefHeight="360.0" prefWidth="462.0" />
+            <Button fx:id="btnCommit" layoutX="14.0" layoutY="619.0" mnemonicParsing="false" onAction="#btnCommitAction" prefHeight="35.0" prefWidth="462.0" text="Commit and Push to" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+            <TextField fx:id="txtfieldSummary" layoutX="14.0" layoutY="472.0" prefHeight="25.0" prefWidth="462.0" promptText="Summary (required)" AnchorPane.bottomAnchor="171.0" AnchorPane.leftAnchor="14.0" />
+            <TextArea fx:id="txtareaDescription" layoutX="14.0" layoutY="506.0" prefHeight="102.0" prefWidth="462.0" promptText="Description" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="14.0" />
+            <ListView fx:id="listViewFileChanged" layoutX="14.0" layoutY="95.0" onMouseClicked="#previewFile" prefHeight="360.0" prefWidth="462.0" AnchorPane.bottomAnchor="213.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="95.0" />
             <Label layoutX="30.0" layoutY="14.0" text="Current repository">
                <font>
                   <Font size="14.0" />
@@ -54,21 +47,20 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <WebView fx:id="wviewChanges" layoutX="485.0" layoutY="71.0" prefHeight="585.0" prefWidth="826.0" />
-            <Button fx:id="buttonPush" layoutX="1102.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPush" prefHeight="35.0" prefWidth="74.0" text="Push" />
-            <Label fx:id="lblCommitsAhead" layoutX="1102.0" layoutY="10.0" text="↑">
+            <WebView fx:id="wviewChanges" layoutX="485.0" layoutY="71.0" minHeight="-1.0" minWidth="-1.0" prefHeight="585.0" prefWidth="826.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="485.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="71.0" />
+            <Label fx:id="lblCommitsAhead" layoutX="1299.0" layoutY="10.0" text="↑" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="lblCommitsBehind" layoutX="1232.0" layoutY="10.0" text="↓">
+            <Label fx:id="lblCommitsBehind" layoutX="1232.0" layoutY="10.0" text="↓" AnchorPane.rightAnchor="69.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
             <Button fx:id="buttonFetch" layoutX="784.0" layoutY="29.0" mnemonicParsing="false" onAction="#doFetch" prefHeight="35.0" prefWidth="74.0" text="Fetch" />
-            <Button fx:id="buttonPull" layoutX="1232.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPull" prefHeight="35.0" prefWidth="74.0" text="Pull" />
-            <CheckBox fx:id="chckboxSelectAll" layoutX="22.0" layoutY="72.0" mnemonicParsing="false" onAction="#selectAllFiles" />
+            <Button fx:id="buttonPull" layoutX="1232.0" layoutY="29.0" mnemonicParsing="false" onAction="#doPull" prefHeight="35.0" prefWidth="74.0" text="Pull" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="29.0" />
+            <CheckBox fx:id="chckboxSelectAll" layoutX="22.0" layoutY="72.0" mnemonicParsing="false" onAction="#selectAllFiles" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="72.0" />
          </children>
       </AnchorPane>
    </children>
