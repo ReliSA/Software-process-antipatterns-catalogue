@@ -10,11 +10,11 @@ import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.data.reference.Reference;
 import cz.zcu.kiv.spac.data.reference.References;
-import cz.zcu.kiv.spac.data.template.Template;
-import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
+import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.data.template.TemplateField;
+import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.utils.Utils;
 import org.apache.commons.io.FilenameUtils;
@@ -460,6 +460,25 @@ public class MarkdownGenerator {
         return pages.replace("--", "-");
     }
 
+    private static String extractURLFromNote(String note) {
+        String regex = "\\b((?:https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:, .;]*[-a-zA-Z0-9+&@#/%=~_|])";
+
+        // Compile the Regular Expression
+        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+
+        // Find the match between string and the regular expression
+        Matcher m = p.matcher(note);
+        String url = null;
+        if (m.find()) {
+            url = note.substring(m.start(), m.end());
+            int dotIndex = url.indexOf(". ");
+            int urlEnd = dotIndex > 0 ? dotIndex : url.length() - 1;
+            url = url.substring(0, Math.max(0, urlEnd));
+        }
+
+        return url;
+    }
+
     /**
      * Generate markdown for References from bibtex file content.
      * @param objects - List of bibtex entries.
@@ -544,6 +563,7 @@ public class MarkdownGenerator {
             if (stringFields.containsKey("note")) {
 
                 String note = prepareString(stringFields.get("note"));
+                reference.setUrl(extractURLFromNote(note));
 
                 strRecord += note.toLowerCase();
 
