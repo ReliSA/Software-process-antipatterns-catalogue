@@ -6,6 +6,8 @@ import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.data.git.CustomGitObject;
+import cz.zcu.kiv.spac.data.git.GitJobExecutor;
 import cz.zcu.kiv.spac.data.reference.References;
 import cz.zcu.kiv.spac.enums.AntipatternFilterChoices;
 import cz.zcu.kiv.spac.file.FileLoader;
@@ -38,6 +40,8 @@ import java.util.*;
  */
 public class MainWindowController {
 
+    private static final int FETCH_PERIOD_MINUTES = 20;
+
     // FXML elements.
     @FXML
     private ListView<String> listAntipatterns;
@@ -54,6 +58,9 @@ public class MainWindowController {
     @FXML
     private Button btnEditAP;
 
+    @FXML
+    private Label lblGitStatus;
+
     // App variables.
     private MarkdownParser markdownParser;
     private Template template;
@@ -63,6 +70,8 @@ public class MainWindowController {
     private AntipatternFilterChoices selectedAPFilterChoice;
     private Antipattern selectedAntipattern;
     private References references;
+
+    private Timer fetchTimer;
 
     // Logger.
     private static Logger log = LogManager.getLogger(MainWindowController.class);
@@ -85,6 +94,13 @@ public class MainWindowController {
 
             System.exit(1);
         }
+
+        // Auto pull on startup
+        String status = doPull();
+        lblGitStatus.setText(status);
+
+        // Start periodical fetch
+        fetchTimer = startFetch();
 
         // Create new markdown parser.
         markdownParser = new MarkdownParser(template);
@@ -151,6 +167,46 @@ public class MainWindowController {
         }
 
         this.references = MarkdownGenerator.generateReferencesFromBibtex(database.getObjects());
+    }
+
+    /**
+     * Do git pull on startup.
+     * @return Git pull status.
+     */
+    private String doPull() {
+        GitJobExecutor gitExecutor = new GitJobExecutor(customGitObject);
+        return gitExecutor.pull(false);
+    }
+
+    /**
+     * Start the periodical fetch timer.
+     */
+    private Timer startFetch() {
+        TimerTask pullTask = new TimerTask() {
+            @Override
+            public void run() {
+                GitJobExecutor gitJobExecutor = new GitJobExecutor(customGitObject);
+                try {
+                    gitJobExecutor.fetch();
+                } catch (Exception e) {
+                    cancel();
+                    log.warn("Error while fetching.");
+                }
+            }
+        };
+
+        Timer pullTimer = new Timer("Git pull timer");
+        long period = 1000L * 60 * FETCH_PERIOD_MINUTES;
+        pullTimer.scheduleAtFixedRate(pullTask, period, period);
+
+        return pullTimer;
+    }
+
+    /**
+     * Stop the periodical fetch timer.
+     */
+    public void stopFetch() {
+        fetchTimer.cancel();
     }
 
     /**
@@ -428,7 +484,7 @@ public class MainWindowController {
             // Set stage.
             stage.setTitle(stageTitle);
             stage.setScene(new Scene(root));
-            stage.setResizable(false);
+            stage.setResizable(true);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
