@@ -1,12 +1,15 @@
 package cz.zcu.kiv.spac.data.template;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * Class representing table column for table in configuration.
  */
 public class TableColumnField {
 
-    private String text;
-    private String defaultValue;
+    private StringProperty text;
+    private StringProperty defaultValue;
 
     /**
      * Constructor.
@@ -15,17 +18,31 @@ public class TableColumnField {
      */
     public TableColumnField(String text, String defaultValue) {
 
-        this.text = text;
-        this.defaultValue = defaultValue;
+        this.text = new SimpleStringProperty(text);
+        this.defaultValue = new SimpleStringProperty(defaultValue);
     }
 
     public String getText() {
+        return text.get();
+    }
 
+    public StringProperty textProperty() {
         return text;
     }
 
-    public String getDefaultValue() {
+    public void setText(String text) {
+        this.text.set(text);
+    }
 
+    public String getDefaultValue() {
+        return defaultValue.get();
+    }
+
+    public StringProperty defaultValueProperty() {
         return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue.set(defaultValue);
     }
 }

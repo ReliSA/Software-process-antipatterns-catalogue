@@ -1,6 +1,9 @@
 package cz.zcu.kiv.spac.data.template;
 
-import java.util.ArrayList;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+
 import java.util.List;
 
 /**
@@ -8,7 +11,7 @@ import java.util.List;
  */
 public class TableField extends TemplateField {
 
-    private List<TableColumnField> columns;
+    private ListProperty<TableColumnField> columns;
 
     /**
      * Constructor.
@@ -20,17 +23,22 @@ public class TableField extends TemplateField {
     public TableField(String name, String text, TemplateFieldType type, boolean required) {
 
         super(name, text, type, required, "", "");
-        columns = new ArrayList<>();
-    }
-
-    public void addColumn(TableColumnField column) {
-
-        this.columns.add(column);
+        columns = new SimpleListProperty<>(FXCollections.observableArrayList());
     }
 
     public List<TableColumnField> getColumns() {
-
-        return this.columns;
+        return columns.getValue();
     }
 
+    public void setColumns(List<TableColumnField> columns) {
+        this.columns.setAll(columns);
+    }
+
+    public ListProperty<TableColumnField> columnsProperty() {
+        return columns;
+    }
+
+    public void addColumn(TableColumnField column) {
+        this.columns.add(column);
+    }
 }

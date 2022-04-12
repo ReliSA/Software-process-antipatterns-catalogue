@@ -1,21 +1,20 @@
 package cz.zcu.kiv.spac.controllers;
 
 import cz.zcu.kiv.spac.bibtex.BibtexParser;
-import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
-import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
+import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.data.git.GitJobExecutor;
 import cz.zcu.kiv.spac.data.reference.References;
+import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.enums.AntipatternFilterChoices;
 import cz.zcu.kiv.spac.file.FileLoader;
 import cz.zcu.kiv.spac.file.FileWriter;
-import cz.zcu.kiv.spac.data.git.CustomGitObject;
 import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
-import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 import org.jbibtex.BibTeXDatabase;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -285,6 +285,43 @@ public class MainWindowController {
                 editAntipattern();
             }
         }
+    }
+
+    private void openTemplateMangerWindow() {
+        Stage stage = new Stage();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_TEMPLATE_MANAGER_WINDOW)));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/richtext/rich-text.css").toExternalForm());
+
+            // Set stage.
+            stage.setTitle("Template manager");
+            stage.setScene(scene);
+            stage.setResizable(true);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            TemplateManagerWindowController templateManagerWindowController = loader.getController();
+            templateManagerWindowController.initController(template);
+
+            stage.showAndWait();
+
+            template = templateManagerWindowController.getTemplate();
+            FileWriter.saveTemplate(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME, template);
+        } catch (IOException e) {
+            log.error("Invalid TemplateManagerWindow scene.");
+            e.printStackTrace();
+        }
+    }
+
+        /**
+     * Open template manager window.
+     */
+    @FXML
+    public void menuManageTemplateAction(ActionEvent actionEvent) {
+        openTemplateMangerWindow();
     }
 
     /**

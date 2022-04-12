@@ -36,6 +36,8 @@ public class Constants {
     public static final String RESOURCE_GIT_MANAGE_WINDOW = "/windows/GitWindow.fxml";
     public static final String RESOURCE_NEW_REFERENCE_WINDOW = "/windows/NewReferenceWindow.fxml";
     public static final String RESOURCE_REFERENCES_MANAGER_WINDOW = "/windows/ReferencesManagerWindow.fxml";
+    public static final String RESOURCE_TEMPLATE_MANAGER_WINDOW = "/windows/TemplateManagerWindow.fxml";
+    public static final String RESOURCE_NEW_TEMPLATE_FIELD_WINDOW = "/windows/TemplateFieldWindow.fxml";
 
     public static final String RESOURCE_PREVIEW_CSS = "/css/AntipatternPreview.css";
     public static final String RESOURCE_GIT_PREVIEW_CSS = "/css/GitAntipatternPreview.css";

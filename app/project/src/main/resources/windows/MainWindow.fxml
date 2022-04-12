@@ -26,6 +26,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#menuGenerateReferencesAction" text="Generate References" />
                         <MenuItem mnemonicParsing="false" onAction="#menuAddReferenceAction" text="Add Reference" />
                         <MenuItem mnemonicParsing="false" onAction="#menuRelationExistenceCheckAllAction" text="Existence check for anti-patterns" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuManageTemplateAction" text="Manage template" />
                         <MenuItem mnemonicParsing="false" onAction="#menuExitAction" text="Exit" />
                 </items>
               </Menu>

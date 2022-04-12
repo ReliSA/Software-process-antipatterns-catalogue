@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.TemplateManagerWindowController">
+    <children>
+        <HBox prefHeight="447.0" prefWidth="679.0" VBox.vgrow="ALWAYS">
+            <children>
+                <TableView fx:id="tvFields" editable="true" prefHeight="382.0" prefWidth="728.0" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets right="10.0" />
+                    </HBox.margin>
+                </TableView>
+                <VBox alignment="TOP_RIGHT" maxWidth="30.0" minWidth="30.0" prefHeight="200.0" prefWidth="30.0" spacing="10.0" HBox.hgrow="NEVER">
+                    <children>
+                        <Button fx:id="btnMoveUp" disable="true" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnMoveUpAction" prefHeight="30.0" prefWidth="30.0" VBox.vgrow="NEVER">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                            <graphic>
+                                <ImageView>
+                                    <Image url="@../img/up.png" />
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Move up" />
+                            </tooltip>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Button>
+                        <Button fx:id="btnMoveDown" disable="true" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnMoveDownAction" prefHeight="30.0" prefWidth="30.0" VBox.vgrow="NEVER">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                            <graphic>
+                                <ImageView>
+                                    <Image url="@../img/down.png" />
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Move down" />
+                            </tooltip>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Button>
+                        <Button fx:id="btnAdd" contentDisplay="CENTER" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnAddAction" prefHeight="30.0" prefWidth="30.0" VBox.vgrow="NEVER">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                            <graphic>
+                                <ImageView>
+                                    <Image url="@../img/add.png" />
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Add" />
+                            </tooltip>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Button>
+                        <Button fx:id="btnEdit" disable="true" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnEditAction" prefHeight="30.0" prefWidth="30.0" VBox.vgrow="NEVER">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                            <graphic>
+                                <ImageView>
+                                    <Image url="@../img/edit.png" />
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Edit" />
+                            </tooltip>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Button>
+                        <Button fx:id="btnRemove" disable="true" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnRemoveAction" prefHeight="30.0" prefWidth="30.0" VBox.vgrow="NEVER">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                            <graphic>
+                                <ImageView>
+                                    <Image url="@../img/remove.png" />
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Remove" />
+                            </tooltip>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Button>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+      <AnchorPane maxHeight="79.0" minHeight="35.0" prefHeight="35.0" prefWidth="200.0" VBox.vgrow="NEVER">
+         <children>
+            <Button fx:id="btnDone" layoutX="901.0" layoutY="4.0" mnemonicParsing="false" onAction="#btnDoneAction" prefHeight="35.0" prefWidth="79.0" text="Done" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </AnchorPane>
+    </children>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+</VBox>

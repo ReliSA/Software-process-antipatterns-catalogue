@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="450.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cz.zcu.kiv.spac.controllers.TemplateFieldWindowController">
+    <children>
+        <Label layoutX="14.0" layoutY="14.0" text="Name" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0"/>
+        <TextField fx:id="txtName" layoutX="130.0" layoutY="16.0" prefHeight="25.0" prefWidth="250.0" AnchorPane.leftAnchor="130.0"
+                   AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="16.0"/>
+        <Label layoutX="14.0" layoutY="41.0" text="Text" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="57.0"/>
+        <TextField fx:id="txtText" layoutX="136.0" layoutY="16.0" prefHeight="25.0" prefWidth="250.0" AnchorPane.leftAnchor="130.0"
+                   AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="53.0"/>
+        <Label layoutX="14.0" layoutY="68.0" text="Type" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="94.0"/>
+        <ComboBox fx:id="cmbType" layoutX="136.0" layoutY="90.0" prefHeight="25.0" prefWidth="170.0" AnchorPane.leftAnchor="130.0"
+                  AnchorPane.rightAnchor="110.0" AnchorPane.topAnchor="90.0"/>
+        <CheckBox fx:id="chckRequired" layoutX="311.0" layoutY="94.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="70.0"
+                  text="Required" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="94.0"/>
+        <Label layoutX="20.0" layoutY="127.0" text="Default value" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="131.0"/>
+        <TextField fx:id="txtDefaultValue" layoutX="130.0" layoutY="127.0" prefHeight="25.0" prefWidth="250.0" AnchorPane.leftAnchor="130.0"
+                   AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="127.0"/>
+        <Label layoutX="14.0" layoutY="149.0" text="Placeholder" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="168.0"/>
+        <TextField fx:id="txtPlaceholder" layoutX="130.0" layoutY="164.0" prefHeight="25.0" prefWidth="250.0" AnchorPane.leftAnchor="130.0"
+                   AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="164.0"/>
+        <Label layoutX="22.0" layoutY="208.0" text="Columns" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="205.0"/>
+        <TableView fx:id="tvColumns" layoutX="20.0" layoutY="205.0" prefHeight="113.0" prefWidth="320.0" AnchorPane.bottomAnchor="75.0"
+                   AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="232.0"/>
+        <Button fx:id="btnMoveUp" disable="true" layoutX="350.0" layoutY="232.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                minWidth="30.0" mnemonicParsing="false" onAction="#btnMoveUpAction" prefHeight="30.0" prefWidth="30.0"
+                AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="232.0">
+            <font>
+                <Font size="15.0"/>
+            </font>
+            <graphic>
+                <ImageView>
+                    <Image url="@../img/up.png"/>
+                </ImageView>
+            </graphic>
+            <tooltip>
+                <Tooltip text="Move up"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="btnMoveDown" disable="true" layoutX="350.0" layoutY="269.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                minWidth="30.0" mnemonicParsing="false" onAction="#btnMoveDownAction" prefHeight="30.0" prefWidth="30.0"
+                AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="270.0">
+            <font>
+                <Font size="15.0"/>
+            </font>
+            <graphic>
+                <ImageView>
+                    <Image url="@../img/down.png"/>
+                </ImageView>
+            </graphic>
+            <tooltip>
+                <Tooltip text="Move down"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="btnAdd" contentDisplay="CENTER" layoutX="350.0" layoutY="310.0" maxHeight="30.0" maxWidth="30.0"
+                minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnAddAction" prefHeight="30.0" prefWidth="30.0"
+                AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="308.0">
+            <font>
+                <Font size="15.0"/>
+            </font>
+            <graphic>
+                <ImageView>
+                    <Image url="@../img/add.png"/>
+                </ImageView>
+            </graphic>
+            <tooltip>
+                <Tooltip text="Add"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="btnRemove" disable="true" layoutX="350.0" layoutY="345.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                minWidth="30.0" mnemonicParsing="false" onAction="#btnRemoveAction" prefHeight="30.0" prefWidth="30.0"
+                AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="346.0">
+            <font>
+                <Font size="15.0"/>
+            </font>
+            <graphic>
+                <ImageView>
+                    <Image url="@../img/remove.png"/>
+                </ImageView>
+            </graphic>
+            <tooltip>
+                <Tooltip text="Remove"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="btnCancel" layoutX="20.0" layoutY="320.0" mnemonicParsing="false" onAction="#btnCancelAction" prefHeight="35.0"
+                prefWidth="79.0" text="Cancel" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"/>
+        <Button fx:id="btnSave" layoutX="328.0" layoutY="320.0" mnemonicParsing="false" onAction="#btnSaveAction" prefHeight="35.0"
+                prefWidth="79.0" text="Save" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
+    </children>
+</AnchorPane>

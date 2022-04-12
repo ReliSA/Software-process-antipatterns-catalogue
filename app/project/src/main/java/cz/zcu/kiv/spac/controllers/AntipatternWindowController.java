@@ -661,7 +661,9 @@ public class AntipatternWindowController {
         valueFactory = prepareColumnValueFactory("rrelation");
 
         // Add third column for related antipattern relation.
-        columns.add(prepareTableColumn("Related Anti-pattern relation", valueFactory, width));
+        if (tableField.getName().equals("related")) {
+            columns.add(prepareTableColumn("Related Anti-pattern relation", valueFactory, width));
+        }
 
         return columns;
     }
