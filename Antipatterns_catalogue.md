@@ -1,5 +1,5 @@
 [Home](README.md) > Catalogue
-# Anti-patterns Catalogue
+# SPACEd - Software Process Anti-pattern Catalogue Editor
 
 [Template](catalogue/template.md) for new anti-pattern contents.
 

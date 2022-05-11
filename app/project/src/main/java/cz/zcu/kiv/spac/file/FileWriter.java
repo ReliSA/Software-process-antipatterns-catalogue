@@ -1,6 +1,7 @@
 package cz.zcu.kiv.spac.file;
 
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
 import cz.zcu.kiv.spac.data.template.Template;
@@ -34,7 +35,8 @@ public class FileWriter {
 
     /**
      * Write content to file.
-     * @param file - File.
+     *
+     * @param file    - File.
      * @param content - Content.
      * @return True if writing into file was successful, false if not.
      */
@@ -57,14 +59,15 @@ public class FileWriter {
 
     /**
      * Write personall access token to file.
+     *
      * @param personalAccessToken - PAT.
-     * @param branch - branch name.
-     * @param repository - Repository URL.
+     * @param branch              - branch name.
+     * @param repository          - Repository URL.
      */
     public static void writePAT(String personalAccessToken, String branch, String repository) {
 
         Properties properties = new Properties();
-        try(OutputStream outputStream = new FileOutputStream(Utils.getRootDir() + "/" + Constants.PROPERTIES_NAME)){
+        try (OutputStream outputStream = new FileOutputStream(Utils.getRootDir() + "/" + Constants.PROPERTIES_NAME)) {
 
             properties.setProperty("personalaccesstoken", personalAccessToken);
             properties.setProperty("branch", branch);
@@ -76,9 +79,11 @@ public class FileWriter {
         }
     }
 
-    /** Save anti-pattern template.
+    /**
+     * Save anti-pattern template.
+     *
      * @param configurationPath Path to template.
-     * @param template Anti-pattern template.
+     * @param template          Anti-pattern template.
      */
     public static void saveTemplate(String configurationPath, Template template) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -114,6 +119,17 @@ public class FileWriter {
                 }
                 fieldsElement.appendChild(fieldElement);
             }
+
+            Element labelsElement = doc.createElement("labels");
+            configurationElement.appendChild(labelsElement);
+
+            for (AntipatternLabel label : template.getLabelList()) {
+                Element labelElement = doc.createElement("label");
+                labelElement.setAttribute("color", "#" + Utils.getColorRGBHexString(label.getColor()));
+                labelElement.setTextContent(label.getName());
+                labelsElement.appendChild(labelElement);
+            }
+
             DOMSource source = new DOMSource(doc);
 
             StreamResult file = new StreamResult(new File(configurationPath));

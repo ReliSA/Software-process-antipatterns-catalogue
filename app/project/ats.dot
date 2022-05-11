@@ -1,0 +1,24 @@
+graph ats {
+node1 [label="Absentee Manager"];
+node2 [label="All You Have Is a Hammer"];
+node3 [label="An Athena"];
+node4 [label="Analysis Paralysis"];
+node5 [label="Anybody Syndrome"];
+node6 [label="Appointed Team"];
+node7 [label="Architects Don't Code"];
+node8 [label="Architects Play Golf"];
+node9 [label="Bad Management By Metrics"];
+node10 [label="Band Aid"];
+node11 [label="Bicycle Shed"];
+node12 [label="Big Design Up Front"];
+node13 [label="Big Requirements Documentation"];
+node14 [label="Black-Cloud"];
+node15 [label="Blame Storming"];
+node16 [label="Blame The Messenger"];
+node17 [label="Dry Waterhole"];
+node18 [label="Glass Wall"];
+node3 -- node18;
+node3 -- node17;
+node4 -- node12;
+node8 -- node7;
+}

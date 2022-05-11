@@ -3,17 +3,15 @@ package cz.zcu.kiv.spac.file;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternContent;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
-import cz.zcu.kiv.spac.data.template.TemplateFieldType;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
+import cz.zcu.kiv.spac.data.template.*;
 import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
-import cz.zcu.kiv.spac.data.template.TableColumnField;
-import cz.zcu.kiv.spac.data.template.TableField;
-import cz.zcu.kiv.spac.data.template.Template;
-import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.utils.Utils;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.*;
@@ -61,51 +59,9 @@ public class FileLoader {
 
             // Create new template object.
             try {
-
-                List<TemplateField> fieldList = new ArrayList<>();
-
-                NodeList fields = doc.getElementsByTagName("field");
-
-                // Iterate through every template field in configuration.
-                for (int i = 0; i < fields.getLength(); i++) {
-
-                    Node fieldNode = fields.item(i);
-                    NamedNodeMap attributes = fieldNode.getAttributes();
-
-                    String name = attributes.getNamedItem("name").getTextContent();
-                    String text = attributes.getNamedItem("text").getTextContent();
-                    TemplateFieldType field = TemplateFieldType.valueOf(attributes.getNamedItem("field").getTextContent().toUpperCase());
-                    boolean required = attributes.getNamedItem("required").getTextContent().equals("yes");
-                    String defaultValue = attributes.getNamedItem("default_value").getTextContent();
-                    String placeholder = attributes.getNamedItem("placeholder").getTextContent();
-
-                    TemplateField templateField;
-
-                    // If current field is table, parse its columns and add it to list.
-                    if (field == TemplateFieldType.TABLE) {
-
-                        templateField = new TableField(name, text, field, required);
-
-                        NodeList columns = ((Element) fieldNode).getElementsByTagName("column");
-
-                        for (int j = 0; j < columns.getLength(); j++) {
-                            String columnName = columns.item(j).getAttributes().getNamedItem("text").getTextContent();
-                            String columnDefaultValue = columns.item(j).getAttributes().getNamedItem("default_value").getTextContent();
-
-                            ((TableField) templateField).addColumn(new TableColumnField(columnName, columnDefaultValue));
-                        }
-
-                    } else {
-
-                        // Otherwise create normal template field.
-                        templateField = new TemplateField(name, text, field, required, defaultValue, placeholder);
-                    }
-
-                    // Add field to list.
-                    fieldList.add(templateField);
-                }
-
-                template = new Template(fieldList);
+                List<TemplateField> fieldList = readFields(doc);
+                List<AntipatternLabel> labelList = readLabels(doc);
+                template = new Template(fieldList, labelList);
 
             } catch (Exception e) {
 
@@ -123,6 +79,75 @@ public class FileLoader {
         return template;
     }
 
+    private static List<TemplateField> readFields(Document doc) {
+        List<TemplateField> fieldList = new ArrayList<>();
+
+        NodeList fields = doc.getElementsByTagName("field");
+
+        // Iterate through every template field in configuration.
+        for (int i = 0; i < fields.getLength(); i++) {
+
+            Node fieldNode = fields.item(i);
+            NamedNodeMap attributes = fieldNode.getAttributes();
+
+            String name = attributes.getNamedItem("name").getTextContent();
+            String text = attributes.getNamedItem("text").getTextContent();
+            TemplateFieldType field = TemplateFieldType.valueOf(attributes.getNamedItem("field").getTextContent().toUpperCase());
+            boolean required = attributes.getNamedItem("required").getTextContent().equals("yes");
+            String defaultValue = attributes.getNamedItem("default_value").getTextContent();
+            String placeholder = attributes.getNamedItem("placeholder").getTextContent();
+
+            TemplateField templateField;
+
+            // If current field is table, parse its columns and add it to list.
+            if (field == TemplateFieldType.TABLE) {
+
+                templateField = new TableField(name, text, field, required);
+
+                NodeList columns = ((Element) fieldNode).getElementsByTagName("column");
+
+                for (int j = 0; j < columns.getLength(); j++) {
+                    String columnName = columns.item(j).getAttributes().getNamedItem("text").getTextContent();
+                    String columnDefaultValue = columns.item(j).getAttributes().getNamedItem("default_value").getTextContent();
+
+                    ((TableField) templateField).addColumn(new TableColumnField(columnName, columnDefaultValue));
+                }
+
+            } else {
+
+                // Otherwise create normal template field.
+                templateField = new TemplateField(name, text, field, required, defaultValue, placeholder);
+            }
+
+            // Add field to list.
+            fieldList.add(templateField);
+        }
+
+        return fieldList;
+    }
+
+    private static List<AntipatternLabel> readLabels(Document doc) {
+        List<AntipatternLabel> labelList = new ArrayList<>();
+
+        NodeList labels = doc.getElementsByTagName("label");
+
+        // Iterate through every label in configuration.
+        for (int i = 0; i < labels.getLength(); i++) {
+
+            Node fieldNode = labels.item(i);
+
+            String name = fieldNode.getTextContent();
+            Color color = Color.web(fieldNode.getAttributes().getNamedItem("color").getTextContent());
+
+            AntipatternLabel label = new AntipatternLabel(name, color);
+
+            // Add label to list.
+            labelList.add(label);
+        }
+
+        return labelList;
+    }
+
     /**
      * Load configuration for git (branch name, ...).
      * @param propertiesFilePath - Path to properties file.
@@ -133,10 +158,12 @@ public class FileLoader {
         String branchName = "";
         String repositoryUrl = "";
         String personalAccessToken = "";
+        int fetchPeriod = -1;
 
         // Get username and password from properties file.
         File propertiesFile = new File(propertiesFilePath);
 
+        log.info("properties file path: " + propertiesFile.getPath() + " exists: " + propertiesFile.exists());
         if (propertiesFile.exists()) {
 
             Properties properties = new Properties();
@@ -148,6 +175,12 @@ public class FileLoader {
                 branchName = properties.getProperty("branch");
                 repositoryUrl = properties.getProperty("repository");
 
+                try {
+                    fetchPeriod = Integer.parseInt(properties.getProperty("fetchPeriod"));
+                } catch (NumberFormatException exception) {
+                    log.info("Invalid value of fetchPeriod property from git properties file. Using default value.");
+                }
+
             } catch (Exception e) {
 
                 // Do nothing.
@@ -157,7 +190,7 @@ public class FileLoader {
         }
 
         log.info("Git attributes was loaded successfully.");
-        return new CustomGitObject(branchName, repositoryUrl, personalAccessToken);
+        return new CustomGitObject(branchName, repositoryUrl, personalAccessToken, fetchPeriod);
     }
 
     /**

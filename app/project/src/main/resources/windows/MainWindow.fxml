@@ -5,7 +5,8 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
-<VBox prefHeight="825.0" prefWidth="1193.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
+<VBox prefHeight="825.0" prefWidth="1193.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
   <children>
       <AnchorPane minHeight="17.0" prefHeight="31.0" prefWidth="1193.0" styleClass="menu-bar">
          <children>

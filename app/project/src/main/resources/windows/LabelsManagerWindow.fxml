@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.*?>
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" spacing="16.0" xmlns="http://javafx.com/javafx/11"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.LabelsManagerWindowController">
+    <children>
+        <AnchorPane prefHeight="17.0" prefWidth="568.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="167.0" text="Labels" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.topAnchor="0.0"/>
+                <Button fx:id="btnNewReference" mnemonicParsing="false" onAction="#btnNewLabelAction" text="New label"
+                        AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </children>
+        </AnchorPane>
+        <ListView fx:id="lvLabels" prefHeight="371.0" prefWidth="339.0" VBox.vgrow="ALWAYS"/>
+        <AnchorPane maxHeight="35.0" minHeight="35.0" prefHeight="35.0" VBox.vgrow="NEVER">
+            <children>
+                <Button fx:id="btnDone" layoutX="287.0" mnemonicParsing="false" onAction="#btnDoneAction" prefHeight="35.0" prefWidth="79.0"
+                        text="Done" AnchorPane.rightAnchor="0.0"/>
+            </children>
+        </AnchorPane>
+    </children>
+    <padding>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+    </padding>
+</VBox>

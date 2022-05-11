@@ -7,37 +7,35 @@
 
 n/a na a
 
+## Labels (Optional)
+
+[![Generic badge](https://img.shields.io/badge/-OSS-AAAAAA.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/-People-BBBBBB.svg)](https://shields.io/) 
 
 ## Summary
 
-- A manager who engages in avoidance behavior or is invisible for long time periods.
-**alfa**_**beta**_
+ - A manager who engages in avoidance behavior or is invisible for long time periods.
 
+**alfa**_**beta**_
 
 ## Context
 
 ss
 
-
 ## Unbalanced Forces
 
 ss
 
-
 ## Symptoms and Consequences
 
-- TBD
-
+ - TBD
 
 ## Causes
 
 ss
 
-
 ## (Refactored) Solution
 
 s
-
 
 ## Variations (Optional)
 
@@ -52,8 +50,8 @@ s
 |Anti-pattern|Relation|
 |---|---|
 |aa|bb
-|[Absetn](catalogue/Absetn.md)|Absentee Manager -> Absetn
-|[Absetn2](catalogue/Absetn2.md)|Relation
+|Absetn|Absentee Manager -> Absetn
+|Absetn2|Relation
 
 
 ## Notes (Optional)
@@ -62,5 +60,4 @@ s
 
 ## Sources
 
-[[NEI'18]](../References.md), [[AMB'14-2]](../References.md), [[HAR'16]](../References.md), [[CUN'13]](../References.md), [[LAP'05]](../References.md)
-
+[[NEI'18]](http://www.personal.psu.edu/cjn6/Personal/Effectiv), [[AMB'14-2]](http://www.ambysoft.com/essays/changePrevention.html), [[HAR'16]](https://www.chargify.com/blog/feature-creep/), [[CUN'13]](http://wiki.c2.com/?AntiPatternsCatalog), [LAP'05]

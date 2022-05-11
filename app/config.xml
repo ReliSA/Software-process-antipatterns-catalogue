@@ -1,23 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-	<antipattern>
-		<fields>
-			<field name="antipattern_name" 	text="The Anti-pattern Name" 		field="textfield" 	required="yes"	default_value=""	placeholder="Anti-pattern name"/>
-			<field name="known_as" 			text="Also Known As" 				field="textfield" 	required="yes"	default_value="N/A"	placeholder="Another name for anti-pattern, use ';' as separator. Default value: N/A"/>
-			<field name="summary" 			text="Summary" 						field="textarea" 	required="yes"	default_value=""	placeholder="Summary of anti-pattern"/>
-			<field name="context" 			text="Context" 						field="textarea" 	required="yes"	default_value=""	placeholder="Context of anti-pattern"/>
-			<field name="unbalanced_forces" text="Unbalanced Forces" 			field="textarea" 	required="yes"	default_value=""	placeholder="Unbalanced forces"/>
-			<field name="symptoms" 			text="Symptoms and Consequences" 	field="textarea" 	required="yes"	default_value=""	placeholder="Symptoms and consequences of using this anti-pattern"/>
-			<field name="causes" 			text="Causes" 						field="textarea" 	required="yes"	default_value=""	placeholder="Causes of this anti-pattern"/>
-			<field name="solution" 			text="(Refactored) Solution" 		field="textarea" 	required="yes"	default_value=""	placeholder="Solutions to prevent using this anti-pattern"/>
-			<field name="variations"		text="Variations" 					field="textarea" 	required="no"	default_value=""	placeholder="Other variations of anti-pattern"/>
-			<field name="examples" 			text="Example(s)" 					field="textarea" 	required="no"	default_value=""	placeholder="Examples"/>
-			<field name="related" 			text="Related Anti-patterns" 		field="table" 		required="yes"	default_value=""	placeholder="">
-				<column text="Anti-pattern" 					default_value="Anti-pattern name"/>
-				<column text="Relation" 						default_value="Relation"/>
-			</field>
-			<field name="notes" 			text="Notes" 						field="textarea" 	required="no"	default_value=""	placeholder="Additional notes for this anti-pattern"/>
-			<field name="sources" 			text="Sources" 						field="select" 		required="yes"	default_value=""	placeholder="Sources for this anti-pattern"/>
-		</fields>
-	</antipattern>
+<?xml version="1.0" encoding="UTF-8"?><configuration>
+    <antipattern>
+        <fields>
+            <field default_value="" field="textfield" name="antipattern_name" placeholder="Anti-pattern name" required="yes" text="The Anti-pattern Name"/>
+            <field default_value="N/A" field="textfield" name="known_as" placeholder="Another name for anti-pattern, use ';' as separator. Default value: N/A" required="yes" text="Also Known As"/>
+            <field default_value="" field="select" name="labels" placeholder="Labels for this anti-pattern" required="no" text="Labels"/>
+            <field default_value="" field="textarea" name="summary" placeholder="Summary of anti-pattern" required="yes" text="Summary"/>
+            <field default_value="" field="textarea" name="context" placeholder="Context of anti-pattern" required="yes" text="Context"/>
+            <field default_value="" field="textarea" name="unbalanced_forces" placeholder="Unbalanced forces" required="yes" text="Unbalanced Forces"/>
+            <field default_value="" field="textarea" name="symptoms" placeholder="Symptoms and consequences of using this anti-pattern" required="yes" text="Symptoms and Consequences"/>
+            <field default_value="" field="textarea" name="causes" placeholder="Causes of this anti-pattern" required="yes" text="Causes"/>
+            <field default_value="" field="textarea" name="solution" placeholder="Solutions to prevent using this anti-pattern" required="yes" text="(Refactored) Solution"/>
+            <field default_value="" field="textarea" name="variations" placeholder="Other variations of anti-pattern" required="no" text="Variations"/>
+            <field default_value="" field="textarea" name="examples" placeholder="Examples" required="no" text="Example(s)"/>
+            <field default_value="" field="table" name="related" placeholder="" required="yes" text="Related Anti-patterns">
+                <column default_value="Anti-pattern name" text="Anti-pattern"/>
+                <column default_value="Relation" text="Relation"/>
+            </field>
+            <field default_value="" field="textarea" name="notes" placeholder="Additional notes for this anti-pattern" required="no" text="Notes"/>
+            <field default_value="" field="select" name="sources" placeholder="Sources for this anti-pattern" required="yes" text="Sources"/>
+        </fields>
+    </antipattern>
+    <labels>
+        <label color="#AAAAAA">OSS</label>
+        <label color="#BBBBBB">People</label>
+        <label color="#CCCCCC">Code</label>
+        <label color="#DDDDDD">Process</label>
+        <label color="#EEEEEE">Specific projects</label>
+    </labels>
 </configuration>
