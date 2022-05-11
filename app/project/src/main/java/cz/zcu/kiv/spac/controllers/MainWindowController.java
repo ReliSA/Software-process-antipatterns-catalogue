@@ -40,8 +40,6 @@ import java.util.*;
  */
 public class MainWindowController {
 
-    private static final int FETCH_PERIOD_MINUTES = 20;
-
     // FXML elements.
     @FXML
     private ListView<String> listAntipatterns;
@@ -182,7 +180,7 @@ public class MainWindowController {
      * Start the periodical fetch timer.
      */
     private Timer startFetch() {
-        TimerTask pullTask = new TimerTask() {
+        TimerTask fetchTask = new TimerTask() {
             @Override
             public void run() {
                 GitJobExecutor gitJobExecutor = new GitJobExecutor(customGitObject);
@@ -195,11 +193,11 @@ public class MainWindowController {
             }
         };
 
-        Timer pullTimer = new Timer("Git pull timer");
-        long period = 1000L * 60 * FETCH_PERIOD_MINUTES;
-        pullTimer.scheduleAtFixedRate(pullTask, period, period);
+        Timer fetchTimer = new Timer("Git fetch timer");
+        long period = 1000L * 60 * CustomGitObject.fetchPeriodMinutes;
+        fetchTimer.scheduleAtFixedRate(fetchTask, period, period);
 
-        return pullTimer;
+        return fetchTimer;
     }
 
     /**

@@ -26,6 +26,8 @@ import java.util.Map;
  */
 public class CustomGitObject {
 
+    public static int fetchPeriodMinutes = 20;
+
     private Git git;
 
     // Git attributes.
@@ -43,11 +45,15 @@ public class CustomGitObject {
      * @param repositoryUrl - Git Repository url.
      * @param personalAccessToken  - Access token for git.
      */
-    public CustomGitObject(String branchName, String repositoryUrl, String personalAccessToken) {
+    public CustomGitObject(String branchName, String repositoryUrl, String personalAccessToken, int fetchPeriod) {
 
         this.branchName = branchName;
         this.repositoryUrl = repositoryUrl;
         this.personalAccessToken = personalAccessToken;
+
+        if (fetchPeriod > 0) {
+            fetchPeriodMinutes = fetchPeriod;
+        }
 
         // Get repository name.
         String[] splittedUrl = repositoryUrl.split("/");

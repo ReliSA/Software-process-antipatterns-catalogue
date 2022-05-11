@@ -133,6 +133,7 @@ public class FileLoader {
         String branchName = "";
         String repositoryUrl = "";
         String personalAccessToken = "";
+        int fetchPeriod = -1;
 
         // Get username and password from properties file.
         File propertiesFile = new File(propertiesFilePath);
@@ -148,6 +149,12 @@ public class FileLoader {
                 branchName = properties.getProperty("branch");
                 repositoryUrl = properties.getProperty("repository");
 
+                try {
+                    fetchPeriod = Integer.parseInt(properties.getProperty("fetchPeriod"));
+                } catch (NumberFormatException exception) {
+                    log.info("Invalid value of fetchPeriod property from git properties file. Using default value.");
+                }
+
             } catch (Exception e) {
 
                 // Do nothing.
@@ -157,7 +164,7 @@ public class FileLoader {
         }
 
         log.info("Git attributes was loaded successfully.");
-        return new CustomGitObject(branchName, repositoryUrl, personalAccessToken);
+        return new CustomGitObject(branchName, repositoryUrl, personalAccessToken, fetchPeriod);
     }
 
     /**
