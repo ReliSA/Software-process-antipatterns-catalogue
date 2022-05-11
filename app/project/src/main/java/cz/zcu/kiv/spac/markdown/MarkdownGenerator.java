@@ -6,7 +6,6 @@ import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
-import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.data.reference.Reference;
@@ -18,7 +17,6 @@ import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
 import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.utils.Utils;
-import javafx.scene.paint.Color;
 import org.apache.commons.io.FilenameUtils;
 import org.jbibtex.BibTeXEntry;
 import org.jbibtex.BibTeXObject;
@@ -706,18 +704,5 @@ public class MarkdownGenerator {
         }
 
         return  usedReferences;
-    }
-
-    public static List<AntipatternLabel> parseUsedLabels(String antipatternLabelInMarkdown) {
-        List<AntipatternLabel> labelList = new ArrayList<>();
-        String[] labels = antipatternLabelInMarkdown.split(" \\[!\\[");
-        for (String labelString : labels) {
-            int labelStart = labelString.indexOf('-');
-            int labelEnd = labelString.indexOf(".svg");
-            String[] labelParts = labelString.substring(labelStart + 1, labelEnd).split("-");
-            labelList.add(new AntipatternLabel(labelParts[0], Color.web(labelParts[1])));
-        }
-
-        return labelList;
     }
 }

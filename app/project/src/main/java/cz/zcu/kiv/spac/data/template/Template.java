@@ -2,10 +2,10 @@ package cz.zcu.kiv.spac.data.template;
 
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
+import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
-import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,31 +16,19 @@ import java.util.List;
 public class Template {
 
     private List<TemplateField> fieldList;
-    private List<AntipatternLabel> labelList;
 
     /**
      * Constructor.
      * @param fieldList - List of template fields.
      */
-    public Template(List<TemplateField> fieldList, List<AntipatternLabel> labelList) {
+    public Template(List<TemplateField> fieldList) {
 
         this.fieldList = fieldList;
-        this.labelList = labelList;
     }
 
     public List<TemplateField> getFieldList() {
 
         return fieldList;
-    }
-
-    public List<AntipatternLabel> getLabelList() {
-
-        return labelList;
-    }
-
-    public void setLabelList(List<AntipatternLabel> labelList) {
-
-        this.labelList = labelList;
     }
 
     /**

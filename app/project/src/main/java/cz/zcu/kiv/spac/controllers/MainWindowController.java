@@ -40,6 +40,8 @@ import java.util.*;
  */
 public class MainWindowController {
 
+    private static final int FETCH_PERIOD_MINUTES = 20;
+
     // FXML elements.
     @FXML
     private ListView<String> listAntipatterns;
@@ -86,7 +88,6 @@ public class MainWindowController {
 
         // Load configurations.
         template = FileLoader.loadTemplate(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME);
-
         customGitObject = FileLoader.loadGitConfiguration(Utils.getRootDir() + "/" + Constants.PROPERTIES_NAME);
 
         if (template == null || customGitObject == null || customGitObject.getGit() == null) {
@@ -181,7 +182,7 @@ public class MainWindowController {
      * Start the periodical fetch timer.
      */
     private Timer startFetch() {
-        TimerTask fetchTask = new TimerTask() {
+        TimerTask pullTask = new TimerTask() {
             @Override
             public void run() {
                 GitJobExecutor gitJobExecutor = new GitJobExecutor(customGitObject);
@@ -194,11 +195,11 @@ public class MainWindowController {
             }
         };
 
-        Timer fetchTimer = new Timer("Git fetch timer");
-        long period = 1000L * 60 * CustomGitObject.fetchPeriodMinutes;
-        fetchTimer.scheduleAtFixedRate(fetchTask, period, period);
+        Timer pullTimer = new Timer("Git pull timer");
+        long period = 1000L * 60 * FETCH_PERIOD_MINUTES;
+        pullTimer.scheduleAtFixedRate(pullTask, period, period);
 
-        return fetchTimer;
+        return pullTimer;
     }
 
     /**
@@ -1098,35 +1099,5 @@ public class MainWindowController {
         }
 
         return item;
-    }
-
-    private void openGraphGeneratorWindow() {
-        Stage stage = new Stage();
-
-        try {
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_GRAPH_GENERATOR_WINDOW)));
-            Parent root = loader.load();
-
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/richtext/rich-text.css").toExternalForm());
-
-            // Set stage.
-            stage.setTitle("DOT graph generator");
-            stage.setScene(scene);
-            stage.setResizable(true);
-            stage.initModality(Modality.APPLICATION_MODAL);
-
-            DotGraphGeneratorController dotGraphGeneratorController = loader.getController();
-            dotGraphGeneratorController.setAntipatterns(antipatterns.values());
-
-            stage.showAndWait();
-        } catch (IOException e) {
-            log.error("Invalid TemplateManagerWindow scene.");
-            e.printStackTrace();
-        }
-    }
-
-    public void menuGenerateGraphAction(ActionEvent actionEvent) {
-        openGraphGeneratorWindow();
     }
 }

@@ -1,3 +1,0 @@
- - select/deselect all
- - select releated
- - checkboxes
