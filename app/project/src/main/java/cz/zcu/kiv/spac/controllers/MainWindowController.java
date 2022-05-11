@@ -1100,4 +1100,34 @@ public class MainWindowController {
 
         return item;
     }
+
+    private void openGraphGeneratorWindow() {
+        Stage stage = new Stage();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_GRAPH_GENERATOR_WINDOW)));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/richtext/rich-text.css").toExternalForm());
+
+            // Set stage.
+            stage.setTitle("DOT graph generator");
+            stage.setScene(scene);
+            stage.setResizable(true);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            DotGraphGeneratorController dotGraphGeneratorController = loader.getController();
+            dotGraphGeneratorController.setAntipatterns(antipatterns.values());
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            log.error("Invalid TemplateManagerWindow scene.");
+            e.printStackTrace();
+        }
+    }
+
+    public void menuGenerateGraphAction(ActionEvent actionEvent) {
+        openGraphGeneratorWindow();
+    }
 }

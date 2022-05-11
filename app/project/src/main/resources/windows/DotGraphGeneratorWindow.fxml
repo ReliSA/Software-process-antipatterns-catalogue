@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="800.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cz.zcu.kiv.spac.controllers.DotGraphGeneratorController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <children>
+        <ListView fx:id="lvAntipatterns" layoutX="40.0" layoutY="78.0" prefHeight="267.0" prefWidth="360.0" AnchorPane.bottomAnchor="85.0"
+                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0"/>
+        <Button fx:id="btnSave" disable="true" layoutX="544.0" layoutY="407.0" mnemonicParsing="false" onAction="#btnSaveAction"
+                prefHeight="35.0" prefWidth="79.0" text="Save" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+        <CheckBox fx:id="chckSelectAll" layoutX="60.0" layoutY="40.0" mnemonicParsing="false" onAction="#chckSelectAllAction"
+                  prefHeight="17.0" prefWidth="150.0" text="Select all" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="210.0"
+                  AnchorPane.topAnchor="0.0"/>
+        <Button fx:id="btnSelectReleated" disable="true" layoutX="20.0" layoutY="387.0" mnemonicParsing="false"
+                onAction="#btnSelectRelatedAction" prefHeight="25.0" text="Select releated" AnchorPane.bottomAnchor="55.0"
+                AnchorPane.leftAnchor="0.0"/>
+        <Button fx:id="btnBack" layoutX="20.0" layoutY="432.0" mnemonicParsing="false" onAction="#btnBackAction" prefHeight="35.0"
+                prefWidth="79.0" text="Back" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"/>
+        <Label layoutX="287.0" layoutY="714.0" text="Selected: " AnchorPane.bottomAnchor="59.0" AnchorPane.rightAnchor="30.0"/>
+        <Label fx:id="lblSelectedCount" alignment="CENTER_RIGHT" layoutX="441.0" layoutY="714.0" prefWidth="26.0" text="0"
+               AnchorPane.bottomAnchor="59.0" AnchorPane.rightAnchor="0.0"/>
+    </children>
+</AnchorPane>
