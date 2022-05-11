@@ -44,10 +44,10 @@ public class Constants {
     public static final String RESOURCE_GIT_WINDOW_STYLES_CSS = "/css/GitWindowStyles.css";
 
     // Prefix for development - use this when developing application.
-    public static final String PREFIX = "../";
+    // public static final String PREFIX = "../";
 
     // Prefix for release.
-    // public static final String PREFIX = "";
+    public static final String PREFIX = "";
 
     public static final String CATALOGUE_NAME = "../Antipatterns_catalogue.md";
     public static final String PROPERTIES_NAME = PREFIX + "git.properties";
