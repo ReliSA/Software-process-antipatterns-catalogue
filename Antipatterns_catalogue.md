@@ -58,7 +58,7 @@ Buff And Shine A Rusty Car
 
 [Business As Usual](catalogue/Business_As_Usual.md)
 
-Bystander Apathy
+[Bystander Apathy](catalogue/Bystander_Apathy.md)
 
 ## C
 Cage Match Negotiator
@@ -418,7 +418,7 @@ Ultimate Weapon
 
 Unjustified Criticizer
 
-Unknown Poster
+[Unknown Poster](catalogue/Unknown_Poster.md)
 
 Unordered Product Backlog
 
@@ -455,7 +455,7 @@ Yes Man
 
 Yet Another Meeting Will Solve It
 
-Yet Another Programmer
+[Yet Another Programmer](catalogue/Yet_Another_Programmer.md)
 
 Yet Another Thread Will Solve It
 
