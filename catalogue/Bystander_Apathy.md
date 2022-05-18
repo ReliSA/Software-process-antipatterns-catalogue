@@ -4,7 +4,7 @@
 
 ## Also Known As
 
-Bystander effect
+Bystander Effect
 
 ## Summary
 
