@@ -307,6 +307,8 @@ public class MarkdownGenerator {
                     Antipattern antipattern = antipatterns.get(formattedName);
 
                     if (antipattern != null && antipattern.isLinking() && !catalogue.isAntipatternPresentedInCatalogue(antipattern.getName())) {
+                    if (antipattern != null && antipattern.isLinking() &&
+                            !catalogue.isAntipatternPresentedInCatalogue(antipattern.getName(), antipattern.getLinkedAntipatternName())) {
 
                         String linkedAntipatternName = Utils.getFilenameFromStringPath(antipattern.getPath());
                         linkedAntipatternName = FilenameUtils.removeExtension(linkedAntipatternName);

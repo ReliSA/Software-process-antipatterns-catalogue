@@ -58,6 +58,10 @@ public class Catalogue {
         if (record != null) {
 
             if (record.getPath().toLowerCase().contains(antipatternName.toLowerCase())) {
+            if (record.getPath().toLowerCase().contains(antipatternName.toLowerCase()
+                    .replace(" ", "_")
+                    .replace("'", "")
+                    .replace("’", ""))) {
 
                 return false;
             }

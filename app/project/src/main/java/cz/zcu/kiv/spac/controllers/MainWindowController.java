@@ -918,7 +918,6 @@ public class MainWindowController {
         }
 
         // Create new catalogue content.
-        String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns);
         String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns, template.getLabelList());
 
         // Replace old catalogue content with new catalogue content.
@@ -1058,7 +1057,10 @@ public class MainWindowController {
 
         String path = Constants.CATALOGUE_FOLDER + "/" + Utils.getFilenameFromStringPath(antipattern.getPath());
 
-        catalogueRecords.add(new CatalogueRecord(linkedAntipattern.getName(), path));
+        CatalogueRecord newRecord = new CatalogueRecord(linkedAntipattern.getName(), path);
+        if (!catalogueRecords.contains(newRecord)) {
+            catalogueRecords.add(newRecord);
+        }
 
         // Push it to catalogue.
         catalogue.addCatalogueInstance(firstLetter, catalogueRecords);
@@ -1105,7 +1107,6 @@ public class MainWindowController {
             }
 
             // Create new catalogue content.
-            String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns);
             String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns, template.getLabelList());
 
             // Replace old catalogue content with new catalogue content.

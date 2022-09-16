@@ -291,8 +291,23 @@ public class AntipatternWindowController {
 
                     // Get value from antipattern heading.
                     if (heading != null) {
+                        if (templateField.getName().equals("known_as")) {
 
-                        textField.setText(((AntipatternTextHeading) heading).getValue());
+                            String[] knownAsParts = ((AntipatternTextHeading) heading).getValue().split(Constants.LINE_BREAKER_CRLF);
+                            Iterator<String> iterator = Arrays.stream(knownAsParts).iterator();
+                            StringBuilder sb = new StringBuilder();
+                            while (iterator.hasNext()) {
+                                String part = iterator.next();
+                                sb.append(part);
+                                if (iterator.hasNext()) {
+                                    sb.append(", ");
+                                }
+                            }
+                            textField.setText(sb.toString());
+                        } else {
+
+                            textField.setText(((AntipatternTextHeading) heading).getValue());
+                        }
                     }
 
                     // Set bounds for field.
