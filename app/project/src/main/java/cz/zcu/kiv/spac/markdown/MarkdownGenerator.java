@@ -306,7 +306,6 @@ public class MarkdownGenerator {
                     String formattedName = Utils.formatAntipatternName(record.getAntipatternName());
                     Antipattern antipattern = antipatterns.get(formattedName);
 
-                    if (antipattern != null && antipattern.isLinking() && !catalogue.isAntipatternPresentedInCatalogue(antipattern.getName())) {
                     if (antipattern != null && antipattern.isLinking() &&
                             !catalogue.isAntipatternPresentedInCatalogue(antipattern.getName(), antipattern.getLinkedAntipatternName())) {
 

@@ -57,7 +57,6 @@ public class Catalogue {
         CatalogueRecord record = getCatalogueRecordByAntipatternName(knownAs);
         if (record != null) {
 
-            if (record.getPath().toLowerCase().contains(antipatternName.toLowerCase())) {
             if (record.getPath().toLowerCase().contains(antipatternName.toLowerCase()
                     .replace(" ", "_")
                     .replace("'", "")

@@ -76,7 +76,20 @@ public class CustomGitObject {
 
         try {
 
-            git = Git.open(new File(Utils.getRootDir() + "/" + Constants.GIT_FOLDER));
+            git = Git.open(new File(Utils.getRootDir() + "/" + Constants.GIT_FOLDER));/*
+            List<String> branches = git.branchList().call()
+                    .stream()
+                    .map(ref -> ref.getName().substring(ref.getName().lastIndexOf('/') + 1))
+                    .collect(Collectors.toList());
+            if (!branches.isEmpty()) {
+                int masterIndex = branches.indexOf("master");
+                if (masterIndex >= 0) {
+                    branchName = branches.get(masterIndex);
+                } else {
+                    branchName = branches.get(0);
+                }
+            }*/
+            System.out.println("opened: " + branchName);
             git.checkout().setName(branchName).call();
 
         } catch (Exception e) {
