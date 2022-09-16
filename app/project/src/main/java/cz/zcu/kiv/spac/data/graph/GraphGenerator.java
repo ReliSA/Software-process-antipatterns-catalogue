@@ -15,12 +15,12 @@ public class GraphGenerator {
 
     private static Logger log = LogManager.getLogger(GraphGenerator.class);
 
-    private final List<Antipattern> antipatterns;
+    private final Set<Antipattern> antipatterns;
 
     private final Map<String, String> ap;
 
     public GraphGenerator(Collection<Antipattern> antipatterns) {
-        this.antipatterns = new ArrayList<>(antipatterns);
+        this.antipatterns = new HashSet<>(antipatterns);
         this.ap = new HashMap<>();
     }
 
@@ -29,12 +29,13 @@ public class GraphGenerator {
             bw.write(String.format("graph %s {", graphName));
             bw.newLine();
 
-            for (int i = 0; i < antipatterns.size(); i++) {
-                Antipattern antipattern = antipatterns.get(i);
+            int i = 0;
+            for (Antipattern at : antipatterns) {
                 String nodeName = "node" + (i + 1);
-                ap.put(antipattern.getName(), nodeName);
-                bw.write(nodeName + " [label=\"" + antipattern.getName() + "\"];");
+                ap.put(at.getName(), nodeName);
+                bw.write(nodeName + " [label=\"" + at.getName() + "\"];");
                 bw.newLine();
+                i++;
             }
 
             for (Antipattern antipattern : antipatterns) {

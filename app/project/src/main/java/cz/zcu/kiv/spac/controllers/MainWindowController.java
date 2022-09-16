@@ -1157,6 +1157,7 @@ public class MainWindowController {
             stage.initModality(Modality.APPLICATION_MODAL);
 
             DotGraphGeneratorController dotGraphGeneratorController = loader.getController();
+            dotGraphGeneratorController.setLabels(template.getLabelList());
             dotGraphGeneratorController.setAntipatterns(antipatterns.values());
 
             stage.showAndWait();

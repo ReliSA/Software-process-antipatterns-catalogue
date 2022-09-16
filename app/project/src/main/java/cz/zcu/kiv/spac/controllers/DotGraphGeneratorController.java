@@ -2,13 +2,17 @@ package cz.zcu.kiv.spac.controllers;
 
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
+import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.graph.GraphGenerator;
+import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -17,9 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collection;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 public class DotGraphGeneratorController implements Initializable {
 
@@ -28,7 +30,7 @@ public class DotGraphGeneratorController implements Initializable {
     @FXML
     public CheckBox chckSelectAll;
     @FXML
-    public ListView<Antipattern> lvAntipatterns;
+    public TreeView<Antipattern> tvAntipatterns;
     @FXML
     public Button btnSelectReleated;
 
@@ -40,9 +42,12 @@ public class DotGraphGeneratorController implements Initializable {
     @FXML
     public Button btnBack;
 
+    private List<AntipatternLabel> labels;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        lvAntipatterns.setCellFactory(TextFieldListCell.forListView(new StringConverter<>() {
+        tvAntipatterns.setShowRoot(false);
+        tvAntipatterns.setCellFactory(TextFieldTreeCell.forTreeView(new StringConverter<>() {
             @Override
             public String toString(Antipattern antipattern) {
                 return antipattern.getName();
@@ -54,9 +59,9 @@ public class DotGraphGeneratorController implements Initializable {
             }
         }));
 
-        lvAntipatterns.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Antipattern>) c -> {
-            int allSize = lvAntipatterns.getItems().size();
-            int selectedSize = lvAntipatterns.getSelectionModel().getSelectedItems().size();
+        tvAntipatterns.getSelectionModel().getSelectedItems().addListener((ListChangeListener<TreeItem<Antipattern>>) c -> {
+            int allSize = tvAntipatterns.getRoot().getChildren().size();
+            int selectedSize = tvAntipatterns.getSelectionModel().getSelectedItems().size();
             chckSelectAll.setSelected(allSize == selectedSize);
             chckSelectAll.setIndeterminate(0 < selectedSize && selectedSize < allSize);
             btnSelectReleated.setDisable(0 == selectedSize);
@@ -64,11 +69,40 @@ public class DotGraphGeneratorController implements Initializable {
             lblSelectedCount.setText(Integer.toString(selectedSize));
         });
 
-        lvAntipatterns.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tvAntipatterns.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     public void setAntipatterns(Collection<Antipattern> antipatterns) {
-        this.lvAntipatterns.getItems().setAll(antipatterns);
+        TreeItem<Antipattern> root = new TreeItem<>();
+
+        for (AntipatternLabel label : labels) {
+            TreeItem<Antipattern> labelItem = new TreeItem<>(new Antipattern(label.getName(), null, ""));
+            root.getChildren().add(labelItem);
+        }
+
+        TreeItem<Antipattern> allItem = new TreeItem<>(new Antipattern("All", null, ""));
+        for (Antipattern antipattern : antipatterns) {
+            TreeItem<Antipattern> antipatternItem = new TreeItem<>(antipattern);
+            allItem.getChildren().add(antipatternItem);
+            AntipatternHeading heading = antipattern.getAntipatternHeading("labels");
+            if (heading != null) {
+                List<AntipatternLabel> usedLabels = MarkdownParser.parseUsedLabels(((AntipatternTextHeading) heading).getValue());
+                for (AntipatternLabel label : usedLabels) {
+                    for (TreeItem<Antipattern> child : root.getChildren()) {
+                        if (child.getValue().getName().equals(label.getName())) {
+                            child.getChildren().add(antipatternItem);
+                        }
+                    }
+                }
+            }
+        }
+        root.getChildren().add(allItem);
+
+        tvAntipatterns.setRoot(root);
+    }
+
+    public void setLabels(List<AntipatternLabel> labels) {
+        this.labels = labels;
     }
 
     public void btnSaveAction(ActionEvent actionEvent) {
@@ -78,11 +112,14 @@ public class DotGraphGeneratorController implements Initializable {
         chooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Dot files", "*.dot"),
                 new FileChooser.ExtensionFilter("All files", "*.*"));
-        File file = chooser.showSaveDialog(lvAntipatterns.getScene().getWindow());
+        File file = chooser.showSaveDialog(tvAntipatterns.getScene().getWindow());
         if (file != null) {
-            GraphGenerator generator = new GraphGenerator(lvAntipatterns.getSelectionModel().getSelectedItems());
+            Set<Antipattern> selectedAntipatterns = new HashSet<>();
+            for (TreeItem<Antipattern> antipatternItem : tvAntipatterns.getSelectionModel().getSelectedItems()) {
+                selectedAntipatterns.add(antipatternItem.getValue());
+            }
+            GraphGenerator generator = new GraphGenerator(selectedAntipatterns);
             generator.generateDotGraph(file.getName().substring(0, file.getName().indexOf('.')), file);
-
             showInfoAlert();
         }
     }
@@ -98,15 +135,15 @@ public class DotGraphGeneratorController implements Initializable {
     }
 
     public void btnSelectRelatedAction(ActionEvent actionEvent) {
-        for (Antipattern antipattern : lvAntipatterns.getSelectionModel().getSelectedItems()) {
-            Set<AntipatternRelation> relations = antipattern.getRelations();
+        for (TreeItem<Antipattern> antipatternItem : tvAntipatterns.getSelectionModel().getSelectedItems()) {
+            Set<AntipatternRelation> relations = antipatternItem.getValue().getRelations();
             if (relations != null) {
                 relations.forEach(at -> {
-                    lvAntipatterns.getItems().forEach(antipattern1 -> {
-                        if (antipattern1.getName().equals(at.getAntipattern())) {
-                            int index = lvAntipatterns.getItems().indexOf(antipattern1);
+                    tvAntipatterns.getRoot().getChildren().forEach(antipattern1 -> {
+                        if (antipattern1.getValue().getName().equals(at.getAntipattern())) {
+                            int index = tvAntipatterns.getRoot().getChildren().indexOf(antipattern1);
                             if (index >= 0) {
-                                lvAntipatterns.getSelectionModel().select(index);
+                                tvAntipatterns.getSelectionModel().select(index);
                             }
                         }
                     });
@@ -120,10 +157,11 @@ public class DotGraphGeneratorController implements Initializable {
     }
 
     public void chckSelectAllAction(ActionEvent actionEvent) {
+        // TODO:
         if (chckSelectAll.isSelected()) {
-            lvAntipatterns.getSelectionModel().selectAll();
+            tvAntipatterns.getSelectionModel().selectAll();
         } else {
-            lvAntipatterns.getSelectionModel().clearSelection();
+            tvAntipatterns.getSelectionModel().clearSelection();
         }
     }
 }

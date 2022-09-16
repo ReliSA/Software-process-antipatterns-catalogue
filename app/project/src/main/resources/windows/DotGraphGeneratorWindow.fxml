@@ -9,7 +9,7 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
     <children>
-        <ListView fx:id="lvAntipatterns" layoutX="40.0" layoutY="78.0" prefHeight="267.0" prefWidth="360.0" AnchorPane.bottomAnchor="85.0"
+        <TreeView fx:id="tvAntipatterns" layoutX="40.0" layoutY="78.0" prefHeight="267.0" prefWidth="360.0" AnchorPane.bottomAnchor="85.0"
                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0"/>
         <Button fx:id="btnSave" disable="true" layoutX="544.0" layoutY="407.0" mnemonicParsing="false" onAction="#btnSaveAction"
                 prefHeight="35.0" prefWidth="79.0" text="Save" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
