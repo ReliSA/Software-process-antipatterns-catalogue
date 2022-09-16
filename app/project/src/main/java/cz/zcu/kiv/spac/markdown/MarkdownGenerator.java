@@ -6,6 +6,7 @@ import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.data.reference.Reference;
@@ -259,7 +260,8 @@ public class MarkdownGenerator {
      * @param antipatterns - Antipatterns
      * @return Markdown content for catalogue.
      */
-    public static String createCatalogueMarkdownContent(Catalogue catalogue, Map<String, Antipattern> antipatterns) {
+    public static String createCatalogueMarkdownContent(Catalogue catalogue, Map<String, Antipattern> antipatterns,
+                                                        List<AntipatternLabel> labels) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -274,6 +276,15 @@ public class MarkdownGenerator {
 
         sb.append("[Template](" + Constants.CATALOGUE_FOLDER + "/" + Constants.TEMPLATE_FILE + ") for new anti-pattern contents.");
         sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+
+        sb.append("# Labels");
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        labels.sort(Comparator.comparing(AntipatternLabel::getName));
+        for (AntipatternLabel label : labels) {
+            sb.append(getLabelMD(label)).append(" ");
+        }
         sb.append(Constants.LINE_BREAKER_CRLF);
         sb.append(Constants.LINE_BREAKER_CRLF);
 
@@ -315,6 +326,30 @@ public class MarkdownGenerator {
             }
 
         }
+
+        return sb.toString();
+    }
+
+    public static String createLabelMarkdownContent(AntipatternLabel label, List<Antipattern> antipatterns) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[Home](" + Constants.README_NAME + ") > [Catalogue](" + Constants.CATALOGUE_NAME + ") > ").append(label.getName().toLowerCase());
+
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+
+        sb.append("# ");
+        sb.append(label.getName());
+
+        sb.append(Constants.LINE_BREAKER_CRLF);
+        sb.append(Constants.LINE_BREAKER_CRLF);
+
+        for (Antipattern antipattern : antipatterns) {
+            sb.append("[").append(antipattern.getName()).append("](").append(antipattern.getPath()).append(")");
+
+            sb.append(Constants.LINE_BREAKER_CRLF);
+            sb.append(Constants.LINE_BREAKER_CRLF);
+        }
+
 
         return sb.toString();
     }
@@ -685,24 +720,9 @@ public class MarkdownGenerator {
         return new References(markdownText.toString(), referenceMap);
     }
 
-    /**
-     * Parse all references used in antipattern and create a list from them.
-     * @param antipatternReferencesInMarkdown - References in antipattern in markdown.
-     * @return List of references names.
-     */
-    public static List<String> parseUsedReferences(String antipatternReferencesInMarkdown) {
-
-        List<String> usedReferences = new ArrayList<>();
-
-        String patternString = "\\[([^\\]\\[\\r\\n]*)\\]";
-        Pattern pattern = Pattern.compile(patternString);
-
-        Matcher matcher = pattern.matcher(antipatternReferencesInMarkdown);
-
-        while (matcher.find()) {
-            usedReferences.add(matcher.group(0));
-        }
-
-        return  usedReferences;
+    public static String getLabelMD(AntipatternLabel label) {
+        return String.format("[![Generic badge](https://img.shields.io/badge/-%s-%s.svg)](%s.md)",
+                label.getName().replaceAll(" ", "%20"), Utils.getColorRGBHexString(label.getColor()),
+                label.getName().toLowerCase().replaceAll(" ", "_"));
     }
 }

@@ -18,13 +18,15 @@ import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
+import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.data.template.TemplateField;
 import cz.zcu.kiv.spac.enums.AntipatternHeadingType;
-import cz.zcu.kiv.spac.data.template.Template;
 import cz.zcu.kiv.spac.html.HTMLGenerator;
 import cz.zcu.kiv.spac.utils.Utils;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -335,8 +337,11 @@ public class MarkdownParser {
                 // If node is Heading.
                 if (node.getClass() == Heading.class) {
 
-                    // In catalogue, first heading is "Antipatterns Catalogue", so we need to skip it.
-                    if (!firstHeadingSkipped) {
+                    // Get heading node and its name.
+                    Heading catalogueInstance = (Heading) node;
+
+                    // In catalogue, first heading is "Antipatterns Catalogue" or it is the Labels heading, so we need to skip it.
+                    if (!firstHeadingSkipped || catalogueInstance.getLevel() != 2) {
 
                         firstHeadingSkipped = true;
                         continue;
@@ -352,9 +357,6 @@ public class MarkdownParser {
                     records = new ArrayList<>();
 
                     parsingCatalogueInstance = true;
-
-                    // Get heading node and its name.
-                    Heading catalogueInstance = (Heading) node;
 
                     if (catalogueInstance.getFirstChild() != null) {
 
@@ -430,6 +432,45 @@ public class MarkdownParser {
         }
 
         return catalogue;
+    }
+
+
+
+    /**
+     * Parse all references used in antipattern and create a list from them.
+     * @param antipatternReferencesInMarkdown - References in antipattern in markdown.
+     * @return List of references names.
+     */
+    public static List<String> parseUsedReferences(String antipatternReferencesInMarkdown) {
+
+        List<String> usedReferences = new ArrayList<>();
+
+        String patternString = "\\[([^\\]\\[\\r\\n]*)\\]";
+        Pattern pattern = Pattern.compile(patternString);
+
+        Matcher matcher = pattern.matcher(antipatternReferencesInMarkdown);
+
+        while (matcher.find()) {
+            usedReferences.add(matcher.group(0));
+        }
+
+        return  usedReferences;
+    }
+
+    public static List<AntipatternLabel> parseUsedLabels(String antipatternLabelInMarkdown) {
+        List<AntipatternLabel> labelList = new ArrayList<>();
+        antipatternLabelInMarkdown = antipatternLabelInMarkdown.replaceAll("%20", " ");
+        String[] labels = antipatternLabelInMarkdown.split("\n");
+        if (labels.length > 1 || !labels[0].equals("")) {
+            for (String labelString : labels) {
+                int labelStart = labelString.indexOf('-');
+                int labelEnd = labelString.indexOf(".svg");
+                String[] labelParts = labelString.substring(labelStart + 1, labelEnd).split("-");
+                AntipatternLabel label = new AntipatternLabel(labelParts[0], Color.web(labelParts[1]), true);
+                labelList.add(label);
+            }
+        }
+        return labelList;
     }
 
     /**

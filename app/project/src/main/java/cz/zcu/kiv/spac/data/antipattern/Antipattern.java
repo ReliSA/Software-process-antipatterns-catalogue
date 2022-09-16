@@ -1,8 +1,8 @@
 package cz.zcu.kiv.spac.data.antipattern;
 
-import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.utils.Utils;
 
 import java.util.*;
@@ -25,6 +25,8 @@ public class Antipattern {
     private String relationsHeadingName;
     private List<String> linkingAntipatterns;
 
+    private List<AntipatternLabel> labels;
+
     /**
      * Constructor.
      * @param name - Antipattern name.
@@ -39,11 +41,12 @@ public class Antipattern {
         this.path = path;
         this.antipatternHeadings = new LinkedHashMap<>();
         this.linkingAntipatterns = new ArrayList<>();
+        this.labels = new ArrayList<>();
 
         relationsHeadingName = "";
         linkedAntipatternName = "";
 
-        if (path.equals("")) {
+        if (!path.contains(name.replace(" ", "_"))) {
 
             created = false;
 
@@ -196,5 +199,14 @@ public class Antipattern {
     public void setLinkedAntipatternName(String linkedAntipatternName) {
 
         this.linkedAntipatternName = linkedAntipatternName;
+    }
+
+    public List<AntipatternLabel> getLabels() {
+        return this.labels;
+    }
+
+    public void setLabels(List<AntipatternLabel> labels) {
+
+        this.labels = labels;
     }
 }

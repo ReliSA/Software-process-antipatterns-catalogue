@@ -2,9 +2,9 @@ package cz.zcu.kiv.spac.utils;
 
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
-import cz.zcu.kiv.spac.file.FileLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -178,5 +178,9 @@ public class Utils {
         alert.setContentText(contentText);
         alert.getDialogPane().setMinWidth(minWidth);
         alert.showAndWait();
+    }
+
+    public static String getColorRGBHexString(Color color) {
+        return String.format("%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
     }
 }

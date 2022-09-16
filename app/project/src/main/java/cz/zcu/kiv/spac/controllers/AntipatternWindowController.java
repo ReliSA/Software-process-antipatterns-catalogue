@@ -8,6 +8,7 @@ import cz.zcu.kiv.spac.data.antipattern.AntipatternRelationTable;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTableHeading;
 import cz.zcu.kiv.spac.data.antipattern.heading.AntipatternTextHeading;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.reference.Reference;
 import cz.zcu.kiv.spac.data.reference.References;
@@ -324,61 +325,47 @@ public class AntipatternWindowController {
                 case SELECT:
                     field = new TextArea();
                     TextArea textArea = (TextArea) field;
-                    Button btnManageReferences = new Button("Manage references");
-                    List<String> usedReferences = MarkdownGenerator.parseUsedReferences(((AntipatternTextHeading) heading).getValue());
-                    for(String ref : usedReferences) {
-                        references.getReferenceMap().get(ref).setSelected(true);
-                    }
-                    btnManageReferences.setOnAction(action -> {
-                        try {
-                            showManageReferencesWindow();
-                            textArea.setText(references.getReferenceMap().values().stream().filter(Reference::isSelected)
-                                    .map(Reference::getShortcut).collect(Collectors.joining(", ")));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    textArea.setText(templateField.getDefaultValue());
+
+                    Button btnManage = new Button("Manage " + templateField.getText().toLowerCase());
+                    List<String> usedReferences;
+                    boolean isReferences = templateField.getName().equals("sources");
+                    boolean isLabels = templateField.getName().equals("labels");
+                    if (heading != null) {
+                        if (isReferences) {
+                            usedReferences = MarkdownParser.parseUsedReferences(((AntipatternTextHeading) heading).getValue());
+                            for (String ref : usedReferences) {
+                                references.getReferenceMap().get(ref).setSelected(true);
+                            }
+                        } else if (isLabels) {
+                             List<AntipatternLabel> usedLabels =
+                                    MarkdownParser.parseUsedLabels(((AntipatternTextHeading) heading).getValue());
+                            for (AntipatternLabel label : template.getLabelList()) {
+                                if (usedLabels.contains(label)) {
+                                    label.setSelected(true);
+                                }
+                            }
                         }
-                    });
+                    }
 
-                    setRegionBounds(btnManageReferences, templateFieldLabel);
+                    if (isReferences) {
+                        btnManage.setOnAction(action -> referencesManageAction(textArea));
+                        writeReferencesToTextArea(textArea);
+                    } else if (isLabels) {
+                        btnManage.setOnAction(action -> labelsManageAction(textArea));
+                        manageLabels();
+                        writeLabelsToTextArea(textArea);
+                    }
 
-                    btnManageReferences.setMaxWidth(150);
-                    btnManageReferences.setMinWidth(150);
-                    btnManageReferences.setPrefWidth(150);
+                    setRegionBounds(btnManage, templateFieldLabel);
+
+                    btnManage.setMaxWidth(150);
+                    btnManage.setMinWidth(150);
+                    btnManage.setPrefWidth(150);
 
                     layoutY += Constants.TEXTFIELD_OFFSET_Y;
 
-                    childrens.add(btnManageReferences);
-
-                    // Create text area.
-                    textArea.setText(templateField.getDefaultValue());
-
-                    // Get value from antipattern heading.
-                    if (heading != null) {
-
-                        // Get all references in antipattern.
-                        usedReferences = MarkdownGenerator.parseUsedReferences(((AntipatternTextHeading) heading).getValue());
-                        Iterator<String> it = usedReferences.iterator();
-
-                        // Get all references.
-                        Set<String> allReferences = references.getReferenceMap().keySet();
-
-                        StringBuilder content = new StringBuilder();
-
-                        // Iterate through every reference, append reference to final text and try to select reference in combobox.
-                        while (it.hasNext()) {
-
-                            String usedReference = it.next();
-
-                            content.append(usedReference);
-
-                            if (it.hasNext()) {
-
-                                content.append(", ");
-                            }
-                        }
-
-                        textArea.setText(content.toString());
-                    }
+                    childrens.add(btnManage);
 
                     textArea.setEditable(false);
 
@@ -598,6 +585,20 @@ public class AntipatternWindowController {
         }
     }
 
+    private void referencesManageAction(TextArea textArea) {
+        try {
+            showManageReferencesWindow();
+            writeReferencesToTextArea(textArea);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeReferencesToTextArea(TextArea textArea) {
+        textArea.setText(references.getReferenceMap().values().stream().filter(Reference::isSelected)
+                .map(Reference::getShortcut).collect(Collectors.joining(", ")));
+    }
+
     private void showManageReferencesWindow() throws IOException {
         Stage stage = new Stage();
         String title = "Manage references";
@@ -618,6 +619,43 @@ public class AntipatternWindowController {
         stage.showAndWait();
 
         this.references = controller.getReferences();
+    }
+
+    private void labelsManageAction(TextArea textArea) {
+        try {
+            showManageLabelsWindow();
+            writeLabelsToTextArea(textArea);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showManageLabelsWindow() throws IOException {
+        Stage stage = new Stage();
+        String title = "Manage labels";
+
+        // Load antipattern window template.
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(Constants.RESOURCE_LABELS_MANAGER_WINDOW)));
+        Parent root = loader.load();
+        LabelsManagerWindowController controller = loader.getController();
+        controller.initLabels(template.getLabelList());
+
+        Scene scene = new Scene(root);
+
+        // Set stage.
+        stage.setTitle(title);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        stage.showAndWait();
+
+        template.setLabelList(controller.getLabels());
+        FileWriter.saveTemplate(Utils.getRootDir() + "/" + Constants.CONFIGURATION_NAME, template);
+    }
+
+    private void writeLabelsToTextArea(TextArea textArea) {
+        textArea.setText(template.getLabelList().stream().filter(AntipatternLabel::isSelected)
+                .map(AntipatternLabel::getName).collect(Collectors.joining(", ")));
     }
 
     /**
@@ -800,31 +838,17 @@ public class AntipatternWindowController {
                         String allReferencesString = ((TextArea) node).getText();
 
                         // Get all references from antipattern.
-                        List<String> allReferences = Arrays.asList(allReferencesString.split(","));
-                        Iterator<String> it = allReferences.iterator();
+                        List<String> allItems = Arrays.asList(allReferencesString.split(","));
+                        Iterator<String> it = allItems.iterator();
 
-                        StringBuilder headingText = new StringBuilder();
-
-                        // Convert [shortcut] to [[shortcut]](URL).
-                        while (it.hasNext()) {
-                            String reference = it.next();
-                            if (reference.trim().isEmpty()) {
-                                continue;
-                            }
-                            reference = reference.replace(" ", "");
-                            Reference ref = references.getReferenceMap().get(reference);
-                            if (ref.getUrl() != null && !ref.getUrl().isEmpty()) {
-                                reference = "[" + reference + "](" + references.getReferenceMap().get(reference).getUrl() + ")";
-                            }
-                            headingText.append(reference);
-
-                            if (it.hasNext()) {
-
-                                headingText.append(", ");
-                            }
+                        String headingText = "";
+                        if (field.getName().equals("sources")) {
+                            headingText = manageReferences(it);
+                        } else if (field.getName().equals("labels")) {
+                            headingText = manageLabels();
                         }
 
-                        heading = new AntipatternTextHeading(headingText.toString());
+                        heading = new AntipatternTextHeading(headingText);
                         heading.setType(AntipatternHeadingType.TEXT);
                         break;
 
@@ -990,6 +1014,50 @@ public class AntipatternWindowController {
         // Set created markdown content to antipattern.
         tempAntipattern.setContent(markdownContent);
         return true;
+    }
+
+    private String manageReferences(Iterator<String> it) {
+        // Convert [shortcut] to [[shortcut]](URL).
+        StringBuilder headingText = new StringBuilder();
+
+        while (it.hasNext()) {
+            String reference = it.next();
+            if (reference.trim().isEmpty()) {
+                continue;
+            }
+            reference = reference.replace(" ", "");
+            Reference ref = references.getReferenceMap().get(reference);
+            if (ref != null && ref.getUrl() != null && !ref.getUrl().isEmpty()) {
+                reference = "[" + reference + "](" + references.getReferenceMap().get(reference).getUrl() + ")";
+            }
+            headingText.append(reference);
+
+            if (it.hasNext()) {
+
+                headingText.append(", ");
+            }
+        }
+
+        return headingText.toString();
+    }
+
+    private String manageLabels() {
+        StringBuilder headingText = new StringBuilder();
+
+        Iterator<AntipatternLabel> it = template.getLabelList().iterator();
+        while (it.hasNext()) {
+            AntipatternLabel label = it.next();
+            if (label.isSelected()) {
+                headingText.append(MarkdownGenerator.getLabelMD(label));
+
+                if (it.hasNext()) {
+
+                    headingText.append("\n");
+                }
+            }
+        }
+
+        return headingText.toString();
     }
 
     /**

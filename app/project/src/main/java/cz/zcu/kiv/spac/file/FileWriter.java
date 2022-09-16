@@ -1,6 +1,7 @@
 package cz.zcu.kiv.spac.file;
 
 import cz.zcu.kiv.spac.data.Constants;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.template.TableColumnField;
 import cz.zcu.kiv.spac.data.template.TableField;
 import cz.zcu.kiv.spac.data.template.Template;
@@ -114,6 +115,17 @@ public class FileWriter {
                 }
                 fieldsElement.appendChild(fieldElement);
             }
+
+            Element labelsElement = doc.createElement("labels");
+            configurationElement.appendChild(labelsElement);
+
+            for (AntipatternLabel label : template.getLabelList()) {
+                Element labelElement = doc.createElement("label");
+                labelElement.setAttribute("color", "#" + Utils.getColorRGBHexString(label.getColor()));
+                labelElement.setTextContent(label.getName());
+                labelsElement.appendChild(labelElement);
+            }
+
             DOMSource source = new DOMSource(doc);
 
             StreamResult file = new StreamResult(new File(configurationPath));

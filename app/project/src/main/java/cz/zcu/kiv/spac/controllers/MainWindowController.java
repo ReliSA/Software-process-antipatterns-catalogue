@@ -4,6 +4,7 @@ import cz.zcu.kiv.spac.bibtex.BibtexParser;
 import cz.zcu.kiv.spac.data.Constants;
 import cz.zcu.kiv.spac.data.antipattern.Antipattern;
 import cz.zcu.kiv.spac.data.antipattern.AntipatternRelation;
+import cz.zcu.kiv.spac.data.antipattern.label.AntipatternLabel;
 import cz.zcu.kiv.spac.data.catalogue.Catalogue;
 import cz.zcu.kiv.spac.data.catalogue.CatalogueRecord;
 import cz.zcu.kiv.spac.data.git.CustomGitObject;
@@ -918,9 +919,45 @@ public class MainWindowController {
 
         // Create new catalogue content.
         String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns);
+        String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns, template.getLabelList());
 
         // Replace old catalogue content with new catalogue content.
         FileWriter.write(new File(Constants.CATALOGUE_FILE), catalogueMarkdownContent);
+
+        saveLabelsToFile();
+    }
+
+
+    private void saveLabelsToFile() {
+        Map<AntipatternLabel, List<Antipattern>> labelsAntipatternsMap = getLabelsAntipatterns(template.getLabelList(),
+                new ArrayList<>(antipatterns.values()));
+        for (AntipatternLabel label : template.getLabelList()) {
+            String labelsMarkdownContent = MarkdownGenerator.createLabelMarkdownContent(label, labelsAntipatternsMap.get(label));
+            String filename = label.getName().toLowerCase().replace(" ", "_");
+            File labelFile = new File(Utils.getAntipatternFolderPath() + Constants.CATALOGUE_FOLDER + "/" + filename + ".md");
+            FileWriter.write(labelFile, labelsMarkdownContent);
+        }
+    }
+
+    private Map<AntipatternLabel, List<Antipattern>> getLabelsAntipatterns(List<AntipatternLabel> labels, List<Antipattern> antipatterns) {
+        Map<AntipatternLabel, List<Antipattern>> labelsAntipatternsMap = new HashMap<>();
+
+        for (AntipatternLabel label : labels) {
+            List<Antipattern> antipatternList = labelsAntipatternsMap.get(label);
+            if (antipatternList == null) {
+                antipatternList = new ArrayList<>();
+            }
+            for (Antipattern antipattern : antipatterns) {
+                if (!antipattern.getLabels().isEmpty()) {
+                    if (antipattern.getLabels().contains(label)) {
+                        antipatternList.add(antipattern);
+                    }
+                }
+            }
+
+            labelsAntipatternsMap.put(label, antipatternList);
+        }
+        return labelsAntipatternsMap;
     }
 
     /**
@@ -1069,9 +1106,12 @@ public class MainWindowController {
 
             // Create new catalogue content.
             String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns);
+            String catalogueMarkdownContent = MarkdownGenerator.createCatalogueMarkdownContent(catalogue, antipatterns, template.getLabelList());
 
             // Replace old catalogue content with new catalogue content.
             FileWriter.write(new File(Constants.CATALOGUE_FILE), catalogueMarkdownContent);
+
+            saveLabelsToFile();
 
             log.info("New antipattern '" + newAntipattern.getName() + "' was created successfully and pushed to catalogue.");
 
