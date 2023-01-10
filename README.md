@@ -1,7 +1,7 @@
 Home
 # Software process antipatterns catalogue
 
-We started this catalogue to collect and consolidate the knowledge of software project management anti-patterns, as commonly occurring solutions with known negative effects, and furthermore to facilitate their detection by analyzing data of projects.  It is an on-going effort with the aim to to create a space where others can contribute and thus together we can reconcile the various sources and foster community discussion on understanding and descriptions of the individual anti-patterns. So feel free to fork this repository and send us pull requests when you have something to contribute.
+We started this catalogue to collect and consolidate the knowledge of software project management anti-patterns, as commonly occurring solutions with known negative effects, and furthermore to facilitate their detection by analyzing data of projects.  It is an on-going effort with the aim to to create a space where others can contribute and thus together we can reconcile the various sources and foster community discussion on understanding and descriptions of the individual anti-patterns. So feel free to fork this repository and send us pull requests when you have something to contribute. WXAMPLE
 
 ## [Antipatterns catalogue](Antipatterns_catalogue.md)
 
