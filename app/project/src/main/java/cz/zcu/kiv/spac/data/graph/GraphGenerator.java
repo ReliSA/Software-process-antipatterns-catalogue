@@ -9,7 +9,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GraphGenerator {
 
@@ -17,25 +19,18 @@ public class GraphGenerator {
 
     private final Set<Antipattern> antipatterns;
 
-    private final Map<String, String> ap;
-
     public GraphGenerator(Collection<Antipattern> antipatterns) {
         this.antipatterns = new HashSet<>(antipatterns);
-        this.ap = new HashMap<>();
     }
 
     public void generateDotGraph(String graphName, File file) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-            bw.write(String.format("graph %s {", graphName));
+            bw.write(String.format("digraph %s {", graphName));
             bw.newLine();
 
-            int i = 0;
             for (Antipattern at : antipatterns) {
-                String nodeName = "node" + (i + 1);
-                ap.put(at.getName(), nodeName);
-                bw.write(nodeName + " [label=\"" + at.getName() + "\"];");
+                bw.write("\"" + at.getName() +"\"");
                 bw.newLine();
-                i++;
             }
 
             for (Antipattern antipattern : antipatterns) {
@@ -44,11 +39,10 @@ public class GraphGenerator {
                         int from = Math.max(relation.getAntipattern().indexOf("[") + 1, 0);
                         int to = relation.getAntipattern().indexOf("]") > 0 ? relation.getAntipattern().indexOf("]") :
                                 relation.getAntipattern().length();
-                        String name = ap.get(relation.getAntipattern().substring(from, to));
-                        if (name != null) {
-                            bw.write(ap.get(antipattern.getName()) + " -- " + name + ";");
+                        String antipatternName = relation.getAntipattern().substring(from, to);
+                            bw.write("\"" + antipattern.getName() + "\"" + " -> " + "\"" + antipatternName + "\"" + " [label=\"" +
+                                    relation.getRelation().replace("\"", "\\\"") + "\"];");
                             bw.newLine();
-                        }
                     }
                 }
             }
