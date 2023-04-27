@@ -5,7 +5,8 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
-<VBox prefHeight="825.0" prefWidth="1193.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
+<?import org.controlsfx.control.CheckComboBox?>
+<VBox prefHeight="825.0" prefWidth="1193.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zcu.kiv.spac.controllers.MainWindowController">
   <children>
       <AnchorPane minHeight="17.0" prefHeight="31.0" prefWidth="1193.0" styleClass="menu-bar">
          <children>
@@ -34,7 +35,7 @@
       </AnchorPane>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="809.0" prefWidth="1193.0" VBox.vgrow="ALWAYS">
          <children>
-            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="78.0" onMouseClicked="#antipatternSelected" prefHeight="669.0" prefWidth="363.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="78.0" />
+            <ListView fx:id="listAntipatterns" layoutX="14.0" layoutY="114.0" onMouseClicked="#antipatternSelected" prefHeight="633.0" prefWidth="363.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="114.0" />
             <Label layoutX="132.0" layoutY="8.0" text="Anti-patterns">
                <font>
                   <Font name="System Bold" size="20.0" />
@@ -56,6 +57,8 @@
             <Button fx:id="btnEditAP" layoutX="1102.0" layoutY="758.0" mnemonicParsing="false" onAction="#btnEditAPAction" prefHeight="35.0" prefWidth="79.0" text="Edit AP" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="12.0" />
             <Button fx:id="btnNewAP" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" onAction="#btnNewAPAction" prefHeight="25.0" prefWidth="30.0" text="+" />
             <Label fx:id="lblGitStatus" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="852.0" layoutY="767.0" prefHeight="17.0" prefWidth="700.0" AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="101.0" />
+            <CheckComboBox fx:id="selectAPLabelFilter" layoutX="112.0" layoutY="79.0" prefHeight="25.0" prefWidth="265.0" />
+            <Label layoutX="14.0" layoutY="83.0" prefHeight="17.0" prefWidth="91.0" text="Label filter:" />
          </children>
     </AnchorPane>
   </children>

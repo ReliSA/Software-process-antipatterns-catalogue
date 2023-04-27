@@ -17,6 +17,9 @@ import cz.zcu.kiv.spac.file.FileWriter;
 import cz.zcu.kiv.spac.markdown.MarkdownGenerator;
 import cz.zcu.kiv.spac.markdown.MarkdownParser;
 import cz.zcu.kiv.spac.utils.Utils;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,8 +31,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.CheckComboBox;
 import org.jbibtex.BibTeXDatabase;
 
 import java.io.File;
@@ -53,6 +58,9 @@ public class MainWindowController {
 
     @FXML
     private ChoiceBox selectAPFilter;
+
+    @FXML
+    private CheckComboBox<AntipatternLabel> selectAPLabelFilter;
 
     @FXML
     private Button btnEditAP;
@@ -149,6 +157,41 @@ public class MainWindowController {
 
                 selectedAPFilterChoice = choice;
                 fillAntipatternList();
+            }
+        });
+
+        selectAPLabelFilter.getItems().addAll(FXCollections.observableArrayList(template.getLabelList()));
+        selectAPLabelFilter.setConverter(new StringConverter<AntipatternLabel>() {
+            @Override
+            public String toString(AntipatternLabel label) {
+                return label.getName();
+            }
+
+            @Override
+            public AntipatternLabel fromString(String string) {
+                return null;
+            }
+        });
+
+        selectAPLabelFilter.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(Change c) {
+                listAntipatterns.getItems().clear();
+                List<String> filteredAntipatterns = new ArrayList<>();
+                for (Antipattern antipattern : antipatterns.values()) {
+                    ObservableList<AntipatternLabel> selectedLabels = selectAPLabelFilter.getCheckModel().getCheckedItems();
+                    if (selectedLabels.isEmpty()) {
+                        fillAntipatternList();
+                        break;
+                    }
+                    for (AntipatternLabel label : selectedLabels) {
+                        String antipatternName = prepareAntipatternName(antipattern);
+                        if (antipattern.getLabels().contains(label) && !filteredAntipatterns.contains(antipatternName)) {
+                            filteredAntipatterns.add(antipatternName);
+                        }
+                    }
+                }
+                listAntipatterns.getItems().addAll(filteredAntipatterns);
             }
         });
 
