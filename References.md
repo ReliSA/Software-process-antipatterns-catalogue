@@ -17,7 +17,7 @@ _(Ordered alphabetically by the key.)_
 
 [BRO'98] Brown, William H. and Malveau, Raphael C. and McCormick, Hays W. and Mowbray, Thomas J. (1998). AntiPatterns: refactoring software, architectures, and projects in crisis. 
 
-[COP'04] Coplien, James O and Harrison, Neil B (2004). Organizational patterns of agile software development. 
+[COP'04] Coplien, James O and Harrison, Neil B (2004). [Organizational patterns of agile software development](https://www.isbns.net/author/James_O_Coplien). 
 
 [CUN'10] Cunningham, Ward (2010). Management Anti Pattern Road Map [online]. http://wiki.c2.com/?ManagementAntiPatternRoadMap. accessed november 14th, 2018
 
