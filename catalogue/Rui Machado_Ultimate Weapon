@@ -1,0 +1,37 @@
+Also Known As
+n/a
+
+Summary
+Happens when an organization places all faith in one thing, can be a service, product or a person.
+
+Context
+The organization believes that the ultimate weapon is going to solve the problems of the organization.
+
+Symptoms and Consequences
+-	Excess of enthusiasm in the team.
+-	Organization has the view that a new solution that it was found is better than the old one.
+-	Big desolation if it doesn’t solve the problems that are expected to solve.
+-	Decisions are taken emotionally.
+-	Big costs in terms of money and time.
+-	Every or almost every critical task relies on the ultimate weapon.
+-	If it is a person, he/she is not letting others get the same opportunities.
+
+Causes
+-	Lack of skepticism towards the new solution.
+-	Emotions take over the people.
+-	Bad management.
+-	“Hero” culture. If it is a person, the person will solve.
+
+Solution
+-	Try to make a better diagnosis. Avoid complexity if it’s not necessary.
+-	Evaluate trade-offs.
+-	Try to innovate with the tool that is already in the organization.
+-	Empower other people so they can highlight themselves.
+-	Minimize dependencies.
+
+Related Anti-patterns
+Silver Bullet
+
+Sources
+https://www.iankduncan.com/engineering/2025-05-26-when-is-complexity-accidental/
+https://softobiz.com/software-antipatterns/
