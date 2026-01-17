@@ -453,7 +453,7 @@ Wild Goose Chase
 ## Y
 [Yes Man](catalogue/Yes_Man.md)
 
-Yet Another Meeting Will Solve It
+[Yet Another Meeting Will Solve It](catalogue/Yet_Another_Meeting_Will_Solve_It.md)
 
 [Yet Another Programmer](catalogue/Yet_Another_Programmer.md)
 

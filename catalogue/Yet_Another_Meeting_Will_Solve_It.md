@@ -4,7 +4,7 @@
 
 ## Also Known As
 
-n/a
+Meeting Overload
 
 ## Summary
 
@@ -44,6 +44,5 @@ Analysis Paralysis, Death by Planning
 
 ## Sources
 
-https://www.minware.com/guide/anti-patterns/meeting-overload
-https://hbr.org/2023/05/reducing-information-overload-in-your-organization
+[[KLE'23]](../References.md), [[MIN'26]](../References.md)
 
