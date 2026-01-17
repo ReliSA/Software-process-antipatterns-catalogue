@@ -414,7 +414,7 @@ Turf Wars
 Typecasting
 
 ## U
-Ultimate Weapon
+[Ultimate Weapon](catalogue/Ultimate_Weapon.md)
 
 Unjustified Criticizer
 

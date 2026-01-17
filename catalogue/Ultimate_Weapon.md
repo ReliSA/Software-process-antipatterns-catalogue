@@ -43,9 +43,8 @@ The organization believes that the ultimate weapon is going to solve the problem
 
 ## Related Anti-patterns
 
-Silver Bullet
+[Silver Bullet](Silver_Bullet.md)
 
 ## Sources
 
-https://www.iankduncan.com/engineering/2025-05-26-when-is-complexity-accidental/
-https://softobiz.com/software-antipatterns/
+[[DUN'25]](../References.md), [[MUR'21]](../References.md)
