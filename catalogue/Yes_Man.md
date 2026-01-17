@@ -43,6 +43,5 @@ n/a
 
 ## Sources
 
-https://medium.com/the-pub/begone-culture-of-yes-man-5c427538a62a
-https://www.paradiserodriguez-bordeaux.com/post/the-pitfalls-of-yes-man-culture
+[[DAR'23]](../References.md), [[PAR'25]](../References.md)
 

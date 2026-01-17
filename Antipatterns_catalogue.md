@@ -451,7 +451,7 @@ Wild Goose Chase
 [Work Estimates Given To Teams](catalogue/Work_Estimates_Given_to_Teams.md)
 
 ## Y
-Yes Man
+[Yes Man](catalogue/Yes_Man.md)
 
 Yet Another Meeting Will Solve It
 
