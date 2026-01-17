@@ -41,5 +41,4 @@ Visibility Gets You Shot, Yes Man
 
 ## Sources
 
-https://www.hqnotes.com/shooting-the-messenger/
-https://www.strategypeeps.com/post/shooting-the-messenger-a-self-defeating-practice-in-project-management
+[[STR'23]](../References.md), [[WAL'23]](../References.md)
