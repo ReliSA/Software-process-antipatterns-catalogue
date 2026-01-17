@@ -3,21 +3,30 @@
 
 # Band Aid
 
-**Also Known As:** The Quick Fix, Cosmetic Surgery
+## Also Known As
 
+The Quick Fix, Cosmetic Surgery
 
 ## Summary
 
-There is a deep-rooted problem in a company/project that will cause the company/project to fail unless addressed. The person(s) solving the problem wants the solution to be quick and painless for the majority or to satisfy the "pointy haired bosses".  The workaround solution gives the company/project a new gloss when really nothing has changed.
+The Band Aid anti-pattern occurs when a deep-rooted problem in a company or project is addressed with a superficial, quick, and painless workaround rather than a structural solution. The primary goal is often to create the appearance of progress or success—frequently to satisfy upper management—while leaving the underlying issues unresolved. Although the project may temporarily seem improved, the fundamental problems persist and typically resurface in more severe forms.
 
+## Context
 
-## Symptoms
+## Unbalanced Forces
 
- - TBD
+## Symptoms and Consequences
 
-## Specific To
+-	Repeated application of short-term fixes to the same or similar problems.
+-	Emphasis on visible improvements rather than long-term effectiveness.
+-	Technical or process debt accumulates over time.
+-	Root cause analysis is skipped or discouraged.
+-	Problems reappear shortly after being “fixed”.
+-	Decisions prioritize managerial perception over project sustainability.
 
-any
+## Causes
+
+## (Refactored) Solution
 
 ## Related Anti-patterns
 
