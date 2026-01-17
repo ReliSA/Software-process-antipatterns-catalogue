@@ -31,6 +31,8 @@ _(Ordered alphabetically by the key.)_
 
 [HEB'12] Hebig, Regina and Gabrysiak, Gregor and Giese, Holger (2012). Towards patterns for MDE-related processes to detect and handle changeability risks. *Proceedings of the International Conference on Software and System Process* IEEE Press
 
+[JAI'22] Jain, Nikhila (2022). Scrum Estimation: Tips for Improving Engineering Estimates [online]. https://runsteady.com/blog/scrum-estimation-tips-for-improving-engineering-estimates. accessed january 17th, 2026
+
 [KUR'04] Kuranuki, Yoshihito and Hiranabe, Kenji (2004). Antipractices: Antipatterns for XP practices. *Agile Development Conference, 2004* IEEE
 
 [LAP'05] Laplante, Phillip A. and Neill, Colin J. (2005). Antipatterns: Identification, Refactoring, and Management. 
@@ -52,5 +54,7 @@ _(Ordered alphabetically by the key.)_
 [STA'10] Stamelos, Ioannis (2010). Software project management anti-patterns. *Journal of Systems and Software*, 83(1), 52-59. Elsevier
 
 [TAM'18] Tamburri, Damian A. and Palomba, Fabio and Serebrenik, Alexander and Zaidman, Andy (2018). Discovering Community Patterns in Open-Source: A Systematic Approach and Its Evaluation. *Empirical Software Engineering*, 23, 1-49. Springer
+
+[THO'25] Thom, Maureen (2025). Top-Down Estimating: Definition, Methods, and When to Use It [online]. https://galorath.com/estimation/top-down-estimating. accessed january 17th, 2026
 
 [WIK'18] Wikipedia (2018). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018
