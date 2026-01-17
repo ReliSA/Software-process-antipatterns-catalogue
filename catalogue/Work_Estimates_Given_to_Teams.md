@@ -40,5 +40,4 @@ n/a
 
 ## Sources
 
-https://galorath.com/estimation/top-down-estimating/	
-https://runsteady.com/blog/scrum-estimation-tips-for-improving-engineering-estimates/
+[[JAI'22]](../References.md), [[THO'25]](../References.md)
