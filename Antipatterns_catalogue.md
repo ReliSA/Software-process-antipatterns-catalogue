@@ -435,7 +435,7 @@ Vendor Lock-In
 
 [Viewgraph Engineering](catalogue/Viewgraph_Engineering.md)
 
-Visibility Gets You Shot
+[Visibility Gets You Shot](catalogue/Visibility_Gets_You_Shot.md)
 
 ## W
 [Warm Bodies](catalogue/Warm_Bodies.md)

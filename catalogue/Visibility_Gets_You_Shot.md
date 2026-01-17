@@ -4,7 +4,7 @@
 
 ## Also Known As
 
-Shoot The Messenger
+n/a
 
 ## Summary
 
@@ -39,9 +39,9 @@ Once this and the antipattern “Shoot the Messenger” share some information i
 
 ## Related Anti-patterns
 
-Shoot the Messenger, Yes Man
+[Shoot the Messenger](Shoot_the_Messenger.md)
+[Yes Man](Yes_Man.md)
 
 ## Sources
 
-https://porcelainpublishing.com/journal/JCHRM/16/1/10.47297/wspchrmWSP2040-800503.20251601
-https://human-insight.com/en/fear-based-work-culture/
+[[HU'25]](../References.md)

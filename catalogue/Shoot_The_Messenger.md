@@ -4,7 +4,7 @@
 
 ## Also Known As
 
-Visibility Gets You Shot
+n/a
 
 ## Summary
 
@@ -37,7 +37,8 @@ Once this and the antipattern “Visibility Gets You Shot” share some informat
 
 ## Related Anti-patterns
 
-Visibility Gets You Shot, Yes Man
+[Visibility Gets You Shot](Visibility_Gets_You_Shot.md)
+[Yes Man](Yes_Man.md)
 
 ## Sources
 
