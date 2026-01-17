@@ -405,7 +405,7 @@ Three Headed Knight
 
 [Too Long Sprint](catalogue/Too_Long_Sprint.md)
 
-Train The Trainer
+[Train The Trainer](catalogue/Train_The_Trainer.md)
 
 True Believer
 

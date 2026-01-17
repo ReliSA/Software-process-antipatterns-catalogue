@@ -42,5 +42,4 @@ n/a
 
 ## Sources
 
-https://wiki.c2.com/?TrainTheTrainer
-https://www.zandax.com/education-blog/most-common-train-the-trainer-mistakes
+[[CUN'10]](../References.md), [[JAM'26]](../References.md)
