@@ -87,7 +87,7 @@ Corncob
 
 Corporate Shark
 
-Cosmetic Surgery
+[Cosmetic Surgery](Band_Aid.md)
 
 Creation Dependence
 
@@ -389,7 +389,7 @@ The Feud
 
 The Grand Old Duke Of York
 
-The Quick Fix
+[The Quick Fix](Band_Aid.md)
 
 The Process Is The Deliverable
 
