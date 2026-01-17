@@ -4,7 +4,7 @@
 
 ## Also Known As
 
-Escalation of Commitment
+n/a
 
 ## Summary
 
@@ -37,11 +37,8 @@ This anti-pattern is very similar to “Escalation of Commitment” that’s why
 
 ## Related Anti-patterns
 
-Escalation of Commitment
+[Escalation of Commitment](Escalation_of_Commitment.md)
 
 ## Sources
 
-chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://gwern.net/doc/psychology/cognitive-bias/sunk-cost/2002-mcnamara.pdf
-https://en.wikipedia.org/wiki/Escalation_of_commitment
-https://grokipedia.com/page/Escalation_of_commitment?utm_source=chatgpt.com
-Book: “The Mythical Man-Month” from Fred Brooks
+[[BRO'74]](../References.md), [[GRO'26]](../References.md), [[MCN'02]](../References.md), [[WIK'25]](../References.md)

@@ -431,7 +431,7 @@ Varying Sprint Length
 
 Vendor Lock-In
 
-Vietnam War
+[Vietnam War](catalogue/Vietnam_War.md)
 
 [Viewgraph Engineering](catalogue/Viewgraph_Engineering.md)
 

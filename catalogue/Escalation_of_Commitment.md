@@ -4,7 +4,7 @@
 
 ## Also Known As
 
-Vietnam War
+n/a
 
 ## Summary
 
@@ -35,7 +35,7 @@ This anti-pattern is very similar to “Vietnam War” that’s why they have th
 
 ## Related Anti-patterns
 
-Vietnam War
+[Vietnam War](Vietnam_War.md)
 
 ## Sources
 
