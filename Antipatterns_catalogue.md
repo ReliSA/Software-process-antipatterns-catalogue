@@ -135,7 +135,7 @@ Email Is Dangerous
 
 [Empire Building](catalogue/Empire_Building.md)
 
-Escalation Of Commitment
+[Escalation Of Commitment](catalogue/Escalation_of_Commitment.md)
 
 Every Fool Their Own Tool
 

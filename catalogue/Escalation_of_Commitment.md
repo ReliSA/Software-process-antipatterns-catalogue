@@ -39,6 +39,4 @@ Vietnam War
 
 ## Sources
 
-https://grokipedia.com/page/Escalation_of_commitment?utm_source=chatgpt.com
-https://en.wikipedia.org/wiki/Escalation_of_commitment
-chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://gwern.net/doc/psychology/cognitive-bias/sunk-cost/2002-mcnamara.pdf
+[[GRO'26]](../References.md), [[MCN'02]](../References.md), [[WIK'25]](../References.md)
