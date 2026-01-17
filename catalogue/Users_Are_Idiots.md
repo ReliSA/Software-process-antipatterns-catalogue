@@ -41,5 +41,4 @@ n/a
 
 ## Sources
 
-https://www.joetheitguy.com/how-a-user-error-can-be-a-constructive-tool/#
-https://blog.kingland.com/why-im-over-blaming-the-user
+[[JOE'17]](../References.md), [[NYS'21]](../References.md)

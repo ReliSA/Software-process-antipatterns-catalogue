@@ -424,7 +424,7 @@ Unordered Product Backlog
 
 [Untested But Finished](catalogue/Untested_But_Finished.md)
 
-Users Are Idiots
+[Users Are Idiots](catalogue/Users_Are_Idiots.md)
 
 ## V
 Varying Sprint Length
