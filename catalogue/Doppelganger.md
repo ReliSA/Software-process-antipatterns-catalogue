@@ -1,14 +1,35 @@
 [Home](../README.md) > [Catalogue](../Antipatterns_catalogue.md) > Doppelganger
+
 # Doppelganger
-**Also Known As:**
+
+## Also Known As
+
+n/a
+
 ## Summary
-A person (a manager or peer) beeing nice and easy to work with one moment, vicious and unreasonable the next.
-## Symptoms
- - unbalanced tone in communication and attitude
- - unexpected switches between the two personalities leading to miscomunications, uncertain results and other problems
- - two different but distinct communication patterns in one person switching back and forth in time
-## Specific To
+
+Doppelganger is an anti-pattern in which a person—typically a manager or a peer—exhibits two markedly different and alternating behaviors. At times the individual is cooperative, supportive, and easy to work with; at other times the same person becomes hostile, unreasonable, or aggressive. These unpredictable switches create confusion, mistrust, and communication breakdowns within the team, ultimately affecting collaboration and performance.
+
+## Context
+
+## Unbalanced Forces
+
+## Symptoms and Consequences
+
+-	Inconsistent tone and attitude in communication.
+-	Sudden and unexpected shifts between cooperative and hostile behavior.
+-	Two distinct communication patterns exhibited by the same individual.
+-	Team members feel uncertain about how interactions will unfold.
+-	Increased misunderstandings and miscommunication.
+-	Reduced trust and psychological safety within the team.
+
+## Causes
+
+## (Refactored) Solution
 
 ## Related Anti-patterns
+
+n/a
+
 ## Sources
 [[LAP'05]](../References.md), [[LIV'08]](../References.md)
