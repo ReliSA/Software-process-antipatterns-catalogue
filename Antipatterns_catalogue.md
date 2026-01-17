@@ -346,8 +346,9 @@ Semi-Functional Teams
 
 Shaken But Not Stirred
 
+[Shoot The Messenger](catalogue/Shoot_The_Messenger.md)
 
-Silver Bullet
+[Silver Bullet](catalogue/Silver_Bullet.md)
 
 [Size Isn’t Everything](catalogue/Brooks_Law.md)
 

@@ -44,7 +44,4 @@ Ultimate Weapon
 
 ## Sources
 
-Fred Brooks in essay “No Silver Bullet — Essence and Accident in Software Engineering”
-https://softobiz.com/software-antipatterns/
-https://permacomputing.net/silver_bullet/
-https://en.wikipedia.org/wiki/No_Silver_Bullet
+[[BRO'86]](../References.md), [[MUR'21]](../References.md)
