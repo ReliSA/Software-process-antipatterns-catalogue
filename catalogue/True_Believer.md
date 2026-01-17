@@ -42,6 +42,4 @@ Cargo Cult, Escalation of Commitment
 
 ## Sources
 
-Eric Hoffer’s book: “The True Believer”
-https://en.wikipedia.org/wiki/The_True_Believer
-https://www.psychologytoday.com/us/blog/psych-unseen/202503/the-psychology-of-the-true-believer
+[[HOF'51]](../References.md), [[PIE'25]](../References.md)

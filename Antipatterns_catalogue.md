@@ -407,7 +407,7 @@ Three Headed Knight
 
 [Train The Trainer](catalogue/Train_The_Trainer.md)
 
-True Believer
+[True Believer](catalogue/True_Believer.md)
 
 Turf Wars
 
