@@ -43,7 +43,4 @@ n/a
 
 ## Sources
 
-https://sourcemaking.com/design_patterns
-https://age-of-product.com/sprint-anti-patterns-2/
-https://www.zenhub.com/blog-posts/software-cycle-time-a-comprehensive-guide-to-measurement-and-improvement
-https://promanconsulting.hu/en/iteration/
+[[ASH'25]](../References.md), [[PRO'23]](../References.md), [[SOU'18]](../References.md), [[WOL'24]](../References.md)

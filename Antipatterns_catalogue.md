@@ -403,7 +403,7 @@ Three Headed Knight
 
 [Thrown Over The Wall](catalogue/Thrown_Over_The_Wall.md)
 
-Too Long Sprint
+[Too Long Sprint](catalogue/Too_Long_Sprint.md)
 
 Train The Trainer
 

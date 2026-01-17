@@ -9,6 +9,8 @@ _(Ordered alphabetically by the key.)_
 
 [AMB'14-2] Ambler, Scott W. (2014). The ""Change Prevention Proces"" Anti-Pattern [online]. http://www.ambysoft.com/essays/changeprevention.html. accessed november 14th, 2018
 
+[ASH'25] Ashcroft, Chaissan (2025). Software Cycle Time: A Comprehensive Guide to Measurement and Improvement [online]. https://www.zenhub.com/blog-posts/software-cycle-time-a-comprehensive-guide-to-measurement-and-improvement. accessed january 17th, 2026
+
 [AYD'15] Aydinli, Dilem (2015). Software project management anti-patterns in innovation projects. University of Tampere
 
 [AYD'16] Aydinli, Dilem and Berki, Eleni and Poranen, Timo and Stamelos, Ioannis (2016). Management anti-patterns in IT innovation projects. *Proceedings of the 20th International Academic Mindtrek Conference* ACM
@@ -45,6 +47,8 @@ _(Ordered alphabetically by the key.)_
 
 [NEI'18] Neill, Colin J. (2018). Effective Teams | Management Antipatterns -- how NOT to manage teams [online]. http://www.personal.psu.edu/cjn6/personal/effective\%20teams.htm. accessed november 14th, 2018
 
+[PRO'23] ProMan Consulting Ltd. (2023). The meaning and role of iteration in project management [online]. https://promanconsulting.hu/en/iteration. accessed january 17th, 2026
+
 [RAP'12] Raptopoulou, Charikleia and Berki, Eleni and Poranen, Timo and Stamelos, Ioannis and Aggelis, Lefteris (2012). Management anti-patterns in finnish software industry. *Proceedings of the SQM/INSPIRE 2012 Conference* School of Information Sciences of the University of Tampere and the BCS
 
 [SOU'18] Sourcemaking.com (2018). AntiPatterns [online]. https://sourcemaking.com/antipatterns. accessed november 14th, 2018
@@ -58,3 +62,5 @@ _(Ordered alphabetically by the key.)_
 [THO'25] Thom, Maureen (2025). Top-Down Estimating: Definition, Methods, and When to Use It [online]. https://galorath.com/estimation/top-down-estimating. accessed january 17th, 2026
 
 [WIK'18] Wikipedia (2018). Anti-Pattern [online]. https://en.wikipedia.org/wiki/anti-pattern. accessed november 14th, 2018
+
+[WOL'24] Wolpers, Stefan (2024). Sprint Anti-Patterns [online]. https://age-of-product.com/sprint-anti-patterns-2. accessed january 17th, 2026 
