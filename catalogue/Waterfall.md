@@ -42,7 +42,6 @@ n/a
 
 ## Sources
 
-https://www.appvizer.com/magazine/operations/project-management/advantages-of-waterfall-model
-https://www.lucidchart.com/blog/pros-and-cons-of-waterfall-methodology
+[[CAV'24]](../References.md), [[LUC'26]](../References.md)
 
 
