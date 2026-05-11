@@ -26,6 +26,8 @@ Bad Management By Metrics
 
 [Band Aid](catalogue/Band_Aid.md)
 
+[Berlin Wall](catalogue/Berlin_Wall.md)
+
 Bicycle Shed
 
 Big Design Up Front
@@ -70,6 +72,8 @@ Car Park Syndrome
 [Cargo Cult](catalogue/Cargo_Cult.md)
 
 [Cart Before The Horse](catalogue/Cart_Before_The_Horse.md)
+
+[Cascading  Branches](catalogue/Cascading_Branches.md)
 
 Cash Cow
 

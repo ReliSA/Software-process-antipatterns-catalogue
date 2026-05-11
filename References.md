@@ -17,6 +17,10 @@ _(Ordered alphabetically by the key.)_
 
 [AYD'16] Aydinli, Dilem and Berki, Eleni and Poranen, Timo and Stamelos, Ioannis (2016). Management anti-patterns in IT innovation projects. *Proceedings of the 20th International Academic Mindtrek Conference* ACM
 
+[BIR'06] Birmele, Chris (2006). Branching and Merging Primer [online]. Microsoft Learn. https://learn.microsoft.com/en-us/previous-versions/aa730834(v=vs.80). accessed april 30th, 2026
+
+[BRO'22] Broadhead, Rob (2022). Warm Bodies – A Subtraction By Addition Anti-pattern [online]. Develpreneur. https://develpreneur.com/warm-bodies-a-subtraction-by-addition-anti-pattern/. accessed april 30th, 2026
+
 [BRO'74] Brooks, Fred P. (1974). The mythical man-month. *Datamation*, 20.12, 44-52.
 
 [BRO'86] Brooks, Fred P. (1986). No silver bullet - Essence and accident in software engineering. 
@@ -34,6 +38,8 @@ _(Ordered alphabetically by the key.)_
 [CUN'13] Cunningham, Ward (2013). Anti Patterns Catalog [online]. http://wiki.c2.com/?antipatternscatalog. accessed november 14th, 2018
 
 [DAR'23] Darian (2023). Begone culture of Yes-Man! [online]. https://medium.com/the-pub/begone-culture-of-yes-man-5c427538a62a.  accessed january 17th, 2026 
+
+[DOR'24] Dorasamy, Rennay (2024). 5 Reasons Why Architects Who Can't Code, Can't Architect [online]. https://www.rennay.dev/5-reasons-why-architects-who-cant-code-cant-architect/ accessed april 30th, 2026
 
 [DUN'25] Duncan, Ian (2025). Accidental or Essential? Understanding Complexity in Software Design. https://www.iankduncan.com/engineering/2025-05-26-when-is-complexity-accidental/. accessed january 17th, 2026
 
@@ -61,6 +67,8 @@ _(Ordered alphabetically by the key.)_
 
 [KUR'04] Kuranuki, Yoshihito and Hiranabe, Kenji (2004). Antipractices: Antipatterns for XP practices. *Agile Development Conference, 2004* IEEE
 
+[LAN'12] Langsworth, Anthony (2012). Should Software Architects Write Code? [online]. https://randomactsofarchitecture.com/2012/11/20/should-software-architects-write-code/. accessed april 30th, 2026
+
 [LAP'05] Laplante, Phillip A. and Neill, Colin J. (2005). Antipatterns: Identification, Refactoring, and Management. 
 
 [LIV'08] Livejournal (2008). Antipatterns [online]. https://thespleen.livejournal.com/109833.html. accessed november 14th, 2018
@@ -79,6 +87,10 @@ _(Ordered alphabetically by the key.)_
 
 [NEI'18] Neill, Colin J. (2018). Effective Teams | Management Antipatterns -- how NOT to manage teams [online]. http://www.personal.psu.edu/cjn6/personal/effective\%20teams.htm. accessed november 14th, 2018
 
+[NEW'24] Neward & Associated (2024). Antipattern: The Absentee Manager [online]. https://blogs.newardassociates.com/manager-tips/absentee-manager.html. accessed april 30th, 2026
+
+[NIS'22] Nißle, Christoph (2022). Anti patterns in software organisations [online]. Medium. https://medium.com/@christophnissle/anti-patterns-in-software-organisations-6a4fc3073a2b accessed april 30th, 2026
+
 [NYS'21] Nystrom, Nick (2021). Why I'm Over Blaming the User [online]. https://blog.kingland.com/why-im-over-blaming-the-user. accessed january 17th, 2026
 
 [PAR'25] Rodriguez-Bordeaux, Paradise (2025). The Pitfalls of Yes-Man Culture [online]. https://www.paradiserodriguez-bordeaux.com/post/the-pitfalls-of-yes-man-culture. accessed january 17th, 2026
@@ -89,6 +101,8 @@ _(Ordered alphabetically by the key.)_
 
 [RAP'12] Raptopoulou, Charikleia and Berki, Eleni and Poranen, Timo and Stamelos, Ioannis and Aggelis, Lefteris (2012). Management anti-patterns in finnish software industry. *Proceedings of the SQM/INSPIRE 2012 Conference* School of Information Sciences of the University of Tampere and the BCS
 
+[SMY'18] Smythe, Dick (2018). Absentee leaders are worst of all [online]. https://productivityknowhow.com/drivers/absentee-leaders-worst/. accessed april 30th, 2026
+
 [SOU'18] Sourcemaking.com (2018). AntiPatterns [online]. https://sourcemaking.com/antipatterns. accessed november 14th, 2018
 
 [SIL'15] Silva, Pedro and Moreno, Ana M and Peters, Lawrence (2015). Software Project Management: Learning from Our Mistakes. *IEEE Software*, 32(3), 40-43. IEEE
@@ -96,6 +110,8 @@ _(Ordered alphabetically by the key.)_
 [STA'10] Stamelos, Ioannis (2010). Software project management anti-patterns. *Journal of Systems and Software*, 83(1), 52-59. Elsevier
 
 [STR'23] Strategy Peeps (2023). Shooting the Messenger: A Self-Defeating Practice in Project Management [online]. https://www.strategypeeps.com/post/shooting-the-messenger-a-self-defeating-practice-in-project-management. accessed january 17th, 2026
+
+[SWC'nd] SWC RWTH Aachen (n.d.). Enterprise Architecture Smells [online]. https://swc-public.pages.rwth-aachen.de/smells/ea-smells/. accessed april 30th, 2026
 
 [TAM'18] Tamburri, Damian A. and Palomba, Fabio and Serebrenik, Alexander and Zaidman, Andy (2018). Discovering Community Patterns in Open-Source: A Systematic Approach and Its Evaluation. *Empirical Software Engineering*, 23, 1-49. Springer
 
