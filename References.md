@@ -23,7 +23,9 @@ _(Ordered alphabetically by the key.)_
 
 [BRO'74] Brooks, Fred P. (1974). The mythical man-month. *Datamation*, 20.12, 44-52.
 
-[BRO'86] Brooks, Fred P. (1986). No silver bullet - Essence and accident in software engineering. 
+[BRO'86] Brooks, Fred P. (1986). No silver bullet - Essence and accident in software engineering.
+
+[BRO'95] Brooks, Fred P. (1995). The mythical man-month (anniversary ed.). Addison-Wesley Longman Publishing Co., Inc.,.
 
 [BRO'00] Brown, William J. and McCormick, Hays W. and Thomas, Scott W. (2000). Anti-patterns project management. 
 

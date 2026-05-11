@@ -21,6 +21,8 @@ Anybody Syndrome
 
 [Architects Play Golf](catalogue/Architects_Play_Golf.md)
 
+[Astronaut Architects](catalogue/Architects_Dont_Code.md)
+
 ## B
 Bad Management By Metrics
 
@@ -220,6 +222,8 @@ Invisible Progress
 [Irrational Management](catalogue/Irrational_Management.md)
 
 It's Not Rocket Science
+
+[Ivory Tower Architects](catalogue/Architects_Dont_Code.md)
 
 ## J
 JAR Hell
