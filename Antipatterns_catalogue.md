@@ -104,7 +104,7 @@ Customer Caused Disruption
 Customer Product Owner
 
 ## D
-Deadwood
+[Deadwood](catalogue/Warm_Bodies.md)
 
 [Death By Planning](catalogue/Death_By_Planning.md)
 
@@ -271,7 +271,7 @@ Mushroom Management
 
 Myopic Delivery
 
-Mythical Man Month
+[Mythical Man Month](catalogue/Warm_Bodies.md)
 
 ## N
 [Net Negative Producing Programmer](catalogue/Net_Negative_Producing_Programmer.md)
